@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- إعدادات خاصة بالآيفون (iOS Safari) لتشغيله كتطبيق مستقل بملء الشاشة -->
+    <!-- إعدادات خاصة بالآيفون (iOS Safari) لتشغيله كتطبيق مستقل بملء الشاشة وبشكل ملكي -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lounge">
     
-    <title>تطبيق Lounge الرسمي</title>
+    <title>تطبيق Lounge الملكي الرسمي</title>
 
     <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-WZ3RF79X"></script>
     <script>
@@ -22,119 +22,119 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
-        *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
-        body{margin:0;padding:15px;background:radial-gradient(circle at center,#131826 0%,#070913 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-        .container{width:100%;max-width:420px;padding-bottom:80px}
+        *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);-webkit-tap-highlight-color:transparent}
+        body{margin:0;padding:12px;background:radial-gradient(circle at center,#131826 0%,#070913 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+        .container{width:100%;max-width:420px;padding-bottom:85px}
         .screen-page{display:none;width:100%;min-height:85vh;flex-direction:column;justify-content:flex-start}
         .screen-page.active{display:flex}
         
-        .ticker-wrap { width: 100%; background: rgba(147, 51, 234, 0.2); border: 1px solid rgba(192, 132, 252, 0.4); border-radius: 12px; overflow: hidden; margin-bottom: 12px; padding: 6px 0; display: flex; align-items: center; }
-        .ticker-title { background: #9333ea; color: #fff; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; margin-right: 6px; white-space: nowrap; }
-        .ticker-text { display: inline-block; white-space: nowrap; padding-right: 100%; -webkit-animation: ticker 18s linear infinite; animation: ticker 18s linear infinite; font-size: 11px; color: #f0abfc; font-weight: bold; }
+        .ticker-wrap { width: 100%; background: rgba(147, 51, 234, 0.15); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 14px; overflow: hidden; margin-bottom: 12px; padding: 7px 0; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .ticker-title { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-right: 8px; white-space: nowrap; box-shadow: 0 2px 8px rgba(147,51,234,0.4); }
+        .ticker-text { display: inline-block; white-space: nowrap; padding-right: 100%; -webkit-animation: ticker 20s linear infinite; animation: ticker 20s linear infinite; font-size: 11px; color: #f0abfc; font-weight: bold; }
         @-webkit-keyframes ticker { 0% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); } 100% { -webkit-transform: translate3d(100%, 0, 0); transform: translate3d(100%, 0, 0); } }
         @keyframes ticker { 0% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); } 100% { -webkit-transform: translate3d(100%, 0, 0); transform: translate3d(100%, 0, 0); } }
 
-        .badge-tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; box-shadow: 0 0 8px rgba(168,85,247,0.5); }
-        .badge-tag.agent { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; }
+        .badge-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 14px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
+        .badge-tag.agent { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
 
-        .verified-badge-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: #a855f7; color: #fff; font-size: 10px; font-weight: bold; -webkit-clip-path: polygon(50% 0%, 65% 15%, 85% 10%, 90% 30%, 105% 45%, 90% 60%, 85% 80%, 65% 85%, 50% 100%, 35% 85%, 15% 80%, 10% 60%, -5% 45%, 10% 30%, 15% 10%, 35% 15%); clip-path: polygon(50% 0%, 65% 15%, 85% 10%, 90% 30%, 105% 45%, 90% 60%, 85% 80%, 65% 85%, 50% 100%, 35% 85%, 15% 80%, 10% 60%, -5% 45%, 10% 30%, 15% 10%, 35% 15%); box-shadow: 0 0 6px rgba(168,85,247,0.8); margin-right: 4px; vertical-align: middle; }
+        .verified-badge-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #a855f7; color: #fff; font-size: 9px; font-weight: bold; -webkit-clip-path: polygon(50% 0%, 65% 15%, 85% 10%, 90% 30%, 105% 45%, 90% 60%, 85% 80%, 65% 85%, 50% 100%, 35% 85%, 15% 80%, 10% 60%, -5% 45%, 10% 30%, 15% 10%, 35% 15%); clip-path: polygon(50% 0%, 65% 15%, 85% 10%, 90% 30%, 105% 45%, 90% 60%, 85% 80%, 65% 85%, 50% 100%, 35% 85%, 15% 80%, 10% 60%, -5% 45%, 10% 30%, 15% 10%, 35% 15%); box-shadow: 0 0 8px rgba(168,85,247,0.9); margin-right: 4px; vertical-align: middle; }
 
         @-webkit-keyframes darkHorrorWave { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes darkHorrorWave { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        #authScreen.screen-page.active { background: linear-gradient(-45deg, #020617, #0f172a, #3b0764, #18181b, #000000); background-size: 500% 500%; -webkit-animation: darkHorrorWave 10s ease infinite; animation: darkHorrorWave 10s ease infinite; justify-content: center; align-items: center; border-radius: 20px; }
+        #authScreen.screen-page.active { background: linear-gradient(-45deg, #020617, #0f172a, #3b0764, #18181b, #000000); background-size: 500% 500%; -webkit-animation: darkHorrorWave 12s ease infinite; animation: darkHorrorWave 12s ease infinite; justify-content: center; align-items: center; border-radius: 24px; }
 
-        .auth-card{background:rgba(15,23,42,0.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(168,85,247,0.5);border-radius:24px;padding:24px 20px;box-shadow:0 25px 50px rgba(0,0,0,0.95), 0 0 20px rgba(168,85,247,0.2);text-align:center;width:100%;position:relative;z-index:10}
+        .auth-card{background:rgba(15,23,42,0.94);-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px);border:1px solid rgba(168,85,247,0.45);border-radius:28px;padding:28px 22px;box-shadow:0 30px 60px rgba(0,0,0,0.98), 0 0 25px rgba(168,85,247,0.25);text-align:center;width:100%;position:relative;z-index:10}
         
-        @-webkit-keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); } 50% { -webkit-transform: scale(1.05); transform: scale(1.05); -webkit-filter: drop-shadow(0 0 22px rgba(239,68,68,0.9)) brightness(1.2); filter: drop-shadow(0 0 22px rgba(239,68,68,0.9)) brightness(1.2); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); } }
-        @keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); } 50% { -webkit-transform: scale(1.05); transform: scale(1.05); -webkit-filter: drop-shadow(0 0 22px rgba(239,68,68,0.9)) brightness(1.2); filter: drop-shadow(0 0 22px rgba(239,68,68,0.9)) brightness(1.2); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 8px rgba(168,85,247,0.6)); } }
-        .animated-logo-container{-webkit-animation:horrorGlow 3s ease-in-out infinite;animation:horrorGlow 3s ease-in-out infinite;display:inline-block;margin-bottom:10px}
+        @-webkit-keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); } 50% { -webkit-transform: scale(1.06); transform: scale(1.06); -webkit-filter: drop-shadow(0 0 25px rgba(239,68,68,0.85)) brightness(1.25); filter: drop-shadow(0 0 25px rgba(239,68,68,0.85)) brightness(1.25); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); } }
+        @keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); } 50% { -webkit-transform: scale(1.06); transform: scale(1.06); -webkit-filter: drop-shadow(0 0 25px rgba(239,68,68,0.85)) brightness(1.25); filter: drop-shadow(0 0 25px rgba(239,68,68,0.85)) brightness(1.25); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.6)); } }
+        .animated-logo-container{-webkit-animation:horrorGlow 3.5s ease-in-out infinite;animation:horrorGlow 3.5s ease-in-out infinite;display:inline-block;margin-bottom:12px}
         
-        .tab-switch{display:flex;background:rgba(15,23,42,0.9);border-radius:12px;padding:4px;margin-bottom:16px;direction:rtl;border:1px solid rgba(255,255,255,0.05)}
-        .tab-btn{flex:1;padding:8px;border:none;background:transparent;color:#94a3b8;font-weight:bold;font-size:12px;border-radius:8px;cursor:pointer;text-align:center}
-        .tab-btn.active{background:linear-gradient(135deg,#9333ea,#c084fc);color:#fff;box-shadow:0 4px 15px rgba(147,51,234,0.4)}
-        .input-box,.select-box{width:100%;padding:11px;margin-bottom:10px;background:rgba(2,6,23,0.85);border:1px solid rgba(168,85,247,0.3);border-radius:10px;color:#fff;font-size:12px;outline:none;text-align:right}
-        .input-box:focus{border-color:#c084fc;box-shadow:0 0 10px rgba(192,132,252,0.3)}
+        .tab-switch{display:flex;background:rgba(15,23,42,0.92);border-radius:14px;padding:5px;margin-bottom:18px;direction:rtl;border:1px solid rgba(255,255,255,0.06);box-shadow:inset 0 2px 5px rgba(0,0,0,0.5)}
+        .tab-btn{flex:1;padding:9px;border:none;background:transparent;color:#94a3b8;font-weight:bold;font-size:12px;border-radius:10px;cursor:pointer;text-align:center}
+        .tab-btn.active{background:linear-gradient(135deg,#9333ea,#c084fc);color:#fff;box-shadow:0 4px 15px rgba(147,51,234,0.45)}
+        .input-box,.select-box{width:100%;padding:12px 14px;margin-bottom:12px;background:rgba(2,6,23,0.9);border:1px solid rgba(168,85,247,0.35);border-radius:12px;color:#fff;font-size:12px;outline:none;text-align:right;box-shadow:inset 0 2px 4px rgba(0,0,0,0.6)}
+        .input-box:focus{border-color:#c084fc;box-shadow:0 0 12px rgba(192,132,252,0.4), inset 0 2px 4px rgba(0,0,0,0.6)}
         
-        .top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-        .nav-btn{background:rgba(30,41,59,0.8);border:1px solid rgba(255,255,255,0.1);color:#c084fc;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:bold;cursor:pointer;position:relative}
-        .nav-btn.back{color:#38bdf8;border-color:rgba(56,189,248,0.3)}
-        .notification-badge{position:absolute;top:-2px;right:-2px;width:8px;height:8px;background-color:#ef4444;border-radius:50%;display:none}
-        .card{background:rgba(30,30,30,0.65);border:1px solid rgba(255,255,255,0.08);padding:12px 14px;border-radius:14px;margin-bottom:10px;text-align:center}
-        .new-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+        .nav-btn{background:rgba(30,41,59,0.85);border:1px solid rgba(255,255,255,0.12);color:#c084fc;padding:7px 14px;border-radius:10px;font-size:11px;font-weight:bold;cursor:pointer;position:relative;box-shadow:0 4px 10px rgba(0,0,0,0.3)}
+        .nav-btn.back{color:#38bdf8;border-color:rgba(56,189,248,0.35)}
+        .notification-badge{position:absolute;top:-3px;right:-3px;width:9px;height:9px;background-color:#ef4444;border-radius:50%;display:none;box-shadow:0 0 6px #ef4444}
+        .card{background:rgba(25,33,48,0.7);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);padding:14px 16px;border-radius:18px;margin-bottom:12px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.35)}
+        .new-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
         .user-greeting-box{display:flex;align-items:center;gap:10px}
-        .user-avatar-small{width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #c084fc;background:#111}
-        .top-logout-btn{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#ef4444;padding:5px 12px;border-radius:12px;font-size:11px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:4px}
+        .user-avatar-small{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #c084fc;background:#111;box-shadow:0 0 12px rgba(192,132,252,0.5)}
+        .top-logout-btn{background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.45);color:#ef4444;padding:6px 12px;border-radius:12px;font-size:11px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 4px 10px rgba(239,68,68,0.2)}
         .bell-icon-btn{background:none;border:none;font-size:20px;cursor:pointer;position:relative;padding:0;margin-left:8px}
-        .top-profile-card{background:rgba(15,23,42,0.85);border:1px solid rgba(192,132,252,0.3);border-radius:16px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+        .top-profile-card{background:rgba(15,23,42,0.9);border:1px solid rgba(192,132,252,0.35);border-radius:20px;padding:14px;margin-bottom:14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
         
-        .coin-center-emblem{width:55px;height:55px;border-radius:50%;background:radial-gradient(circle,#3b0764 0%,#090514 100%);border:2px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 12px rgba(192,132,252,0.5);margin:0 auto}
-        .spinning-coin{font-size:14px;font-weight:900;color:#c084fc;-webkit-animation:pulseLounge 2s ease-in-out infinite;animation:pulseLounge 2s ease-in-out infinite}
+        .coin-center-emblem{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle,#3b0764 0%,#090514 100%);border:2px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 16px rgba(192,132,252,0.6);margin:0 auto}
+        .spinning-coin{font-size:13px;font-weight:900;color:#c084fc;-webkit-animation:pulseLounge 2s ease-in-out infinite;animation:pulseLounge 2s ease-in-out infinite}
         @-webkit-keyframes pulseLounge{0%{opacity:0.6}50%{opacity:1}100%{opacity:0.6}}
         @keyframes pulseLounge{0%{opacity:0.6}50%{opacity:1}100%{opacity:0.6}}
 
-        .timer-mini-bar{display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:2px 6px;gap:6px;margin-top:6px}
-        .timer-time-text{font-family:monospace;font-size:10px;font-weight:bold;color:#fff}
-        .power-btn{width:20px;height:20px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .timer-mini-bar{display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.95);border:1px solid rgba(255,255,255,0.18);border-radius:22px;padding:3px 8px;gap:8px;margin-top:8px;box-shadow:0 4px 10px rgba(0,0,0,0.4)}
+        .timer-time-text{font-family:monospace;font-size:11px;font-weight:bold;color:#fff}
+        .power-btn{width:22px;height:22px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
         .power-btn.red-pulse{background:#ef4444;color:#fff;-webkit-animation:pulseRed 1.5s infinite alternate;animation:pulseRed 1.5s infinite alternate}
         @-webkit-keyframes pulseRed{0%{-webkit-transform:scale(0.95);transform:scale(0.95)}100%{-webkit-transform:scale(1.05);transform:scale(1.05)}}
         @keyframes pulseRed{0%{-webkit-transform:scale(0.95);transform:scale(0.95)}100%{-webkit-transform:scale(1.05);transform:scale(1.05)}}
         .power-btn.green-pulse{background:#10b981;color:#fff}
-        .assets-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-        .asset-box{background:rgba(30,41,59,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:10px;display:flex;align-items:center;justify-content:space-between}
+        .assets-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+        .asset-box{background:rgba(30,41,59,0.75);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 18px rgba(0,0,0,0.3)}
         
-        .grid-buttons-custom{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-        .grid-btn-item{background:rgba(30,41,59,0.75);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:right;box-shadow:0 6px 15px rgba(0,0,0,0.3);position:relative}
+        .grid-buttons-custom{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+        .grid-btn-item{background:rgba(30,41,59,0.8);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:right;box-shadow:0 8px 20px rgba(0,0,0,0.35);position:relative}
         .grid-btn-item span{font-size:13px;color:#fff;font-weight:bold}
         .grid-btn-item .icon-circle{font-size:22px}
 
-        @-webkit-keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
-        @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
+        @-webkit-keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.95); transform: scale(0.95); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
+        @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.95); transform: scale(0.95); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
-        .bottom-nav-bar{position:fixed;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:100%;max-width:420px;background:rgba(15,23,42,0.98);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;padding:10px 8px;z-index:999;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+        .bottom-nav-bar{position:fixed;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:100%;max-width:420px;background:rgba(15,23,42,0.98);-webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px);border-top:1px solid rgba(255,255,255,0.12);display:flex;justify-content:space-around;align-items:center;padding:12px 10px;z-index:999;padding-bottom:calc(12px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,0.6)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;font-size:10px;cursor:pointer;gap:3px}
-        .bottom-nav-item.active{color:#c084fc}
+        .bottom-nav-item.active{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)}
         .bottom-nav-item span{font-size:18px}
-        .bottom-nav-rooms-circle{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#9333ea,#ec4899);border:2px solid #c084fc;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;margin-top:-18px;box-shadow:0 4px 15px rgba(236,72,153,0.6);cursor:pointer}
+        .bottom-nav-rooms-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#9333ea,#ec4899);border:2px solid #c084fc;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;margin-top:-20px;box-shadow:0 6px 20px rgba(236,72,153,0.7);cursor:pointer}
 
-        button.action-btn{width:100%;padding:8px;border:none;border-radius:8px;font-weight:bold;font-size:11px;cursor:pointer}
+        button.action-btn{width:100%;padding:10px;border:none;border-radius:10px;font-weight:bold;font-size:11px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
         .btn-gold{background:linear-gradient(135deg,#9333ea,#7e22ce);color:#fff}
         .btn-blue{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff}
         .btn-purple{background:linear-gradient(135deg,#a855f7,#7e22ce);color:#fff}
         .btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
         
-        .shop-tabs{display:flex;gap:6px;margin-bottom:12px}
-        .shop-tab-btn{flex:1;padding:8px;background:rgba(30,41,59,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#94a3b8;font-weight:bold;font-size:11px;cursor:pointer;text-align:center}
-        .shop-tab-btn.active-gold{background:linear-gradient(135deg,#9333ea,#c084fc);color:#fff}
-        .shop-tab-btn.active-diamond{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff}
-        .shop-tab-btn.active-legend{background:linear-gradient(135deg,#a855f7,#7e22ce);color:#fff}
+        .shop-tabs{display:flex;gap:8px;margin-bottom:14px}
+        .shop-tab-btn{flex:1;padding:9px;background:rgba(30,41,59,0.7);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#94a3b8;font-weight:bold;font-size:11px;cursor:pointer;text-align:center}
+        .shop-tab-btn.active-gold{background:linear-gradient(135deg,#9333ea,#c084fc);color:#fff;box-shadow:0 4px 15px rgba(147,51,234,0.4)}
+        .shop-tab-btn.active-diamond{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;box-shadow:0 4px 15px rgba(14,165,233,0.4)}
+        .shop-tab-btn.active-legend{background:linear-gradient(135deg,#a855f7,#7e22ce);color:#fff;box-shadow:0 4px 15px rgba(168,85,247,0.4)}
         .shop-tier-content{display:none}
         .shop-tier-content.active{display:block}
-        .counter-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);border:1px solid #1e293b;padding:8px 10px;border-radius:8px;margin-bottom:6px;text-align:right}
+        .counter-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);border:1px solid #1e293b;padding:10px 12px;border-radius:10px;margin-bottom:8px;text-align:right}
         
-        .profile-box{text-align:center;background:rgba(30,41,59,0.7);border:1px solid rgba(192,132,252,0.3);border-radius:16px;padding:16px;margin-bottom:12px}
-        .large-avatar-container{position:relative;width:85px;height:85px;margin:0 auto 6px auto}
-        .large-avatar{width:85px;height:85px;border-radius:50%;object-fit:cover;display:block;background:#222;cursor:pointer}
+        .profile-box{text-align:center;background:rgba(30,41,59,0.75);border:1px solid rgba(192,132,252,0.35);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+        .large-avatar-container{position:relative;width:90px;height:90px;margin:0 auto 8px auto}
+        .large-avatar{width:90px;height:90px;border-radius:50%;object-fit:cover;display:block;background:#222;cursor:pointer;border:2px solid #c084fc;box-shadow:0 0 18px rgba(192,132,252,0.6)}
         
-        .wheel-box{width:140px;height:140px;border-radius:50%;border:6px solid #c084fc;margin:8px auto;position:relative;overflow:hidden;-webkit-transition:-webkit-transform 5s cubic-bezier(0.1,0.9,0.1,1);transition:transform 5s cubic-bezier(0.1,0.9,0.1,1);background:conic-gradient(#ef4444 0deg 60deg,#3b82f6 60deg 120deg,#10b981 120deg 180deg,#9333ea 180deg 240deg,#8b5cf6 240deg 300deg,#ec4899 300deg 360deg)}
-        .wheel-pointer{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:15px solid #fff;margin:0 auto;margin-bottom:-6px;z-index:10;position:relative}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000;padding:15px}
-        .modal-content{background:#090514;border:1px solid rgba(192,132,252,0.4);border-radius:16px;width:100%;max-width:380px;padding:16px;max-height:90vh;overflow-y:auto}
+        .wheel-box{width:150px;height:150px;border-radius:50%;border:6px solid #c084fc;margin:10px auto;position:relative;overflow:hidden;-webkit-transition:-webkit-transform 5s cubic-bezier(0.1,0.9,0.1,1);transition:transform 5s cubic-bezier(0.1,0.9,0.1,1);background:conic-gradient(#ef4444 0deg 60deg,#3b82f6 60deg 120deg,#10b981 120deg 180deg,#9333ea 180deg 240deg,#8b5cf6 240deg 300deg,#ec4899 300deg 360deg);box-shadow:0 0 25px rgba(192,132,252,0.5)}
+        .wheel-pointer{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid #fff;margin:0 auto;margin-bottom:-7px;z-index:10;position:relative;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8))}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:1000;padding:15px}
+        .modal-content{background:#090514;border:1px solid rgba(192,132,252,0.5);border-radius:20px;width:100%;max-width:390px;padding:18px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,0.95), 0 0 25px rgba(192,132,252,0.25)}
         
-        .admin-badge{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:bold;border:1px solid #f87171;cursor:pointer;display:none;margin-bottom:10px;box-shadow:0 0 15px rgba(239,68,68,0.5)}
+        .admin-badge{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;padding:7px 16px;border-radius:12px;font-size:12px;font-weight:bold;border:1px solid #f87171;cursor:pointer;display:none;margin-bottom:12px;box-shadow:0 0 20px rgba(239,68,68,0.6)}
 
-        .agent-copy-btn { background: rgba(147, 51, 234, 0.3); border: 1px solid #c084fc; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-right: 4px; display: inline-flex; align-items: center; gap: 2px; }
-        .withdraw-methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-        .withdraw-method-btn { background: rgba(30,41,59,0.8); border: 1px solid rgba(192,132,252,0.3); border-radius: 8px; padding: 8px 4px; font-size: 10px; font-weight: bold; color: #cbd5e1; cursor: pointer; text-align: center; }
-        .withdraw-method-btn.active { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border-color: #c084fc; box-shadow: 0 0 10px rgba(192,132,252,0.4); }
+        .agent-copy-btn { background: rgba(147, 51, 234, 0.35); border: 1px solid #c084fc; color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 10px; cursor: pointer; margin-right: 6px; display: inline-flex; align-items: center; gap: 3px; }
+        .withdraw-methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .withdraw-method-btn { background: rgba(30,41,59,0.85); border: 1px solid rgba(192,132,252,0.3); border-radius: 10px; padding: 10px 6px; font-size: 10px; font-weight: bold; color: #cbd5e1; cursor: pointer; text-align: center; }
+        .withdraw-method-btn.active { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border-color: #c084fc; box-shadow: 0 0 12px rgba(192,132,252,0.5); }
 
-        .neon-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
-        .neon-popup-card { width: 100%; max-width: 330px; background: #070913; border: 2px solid #a855f7; border-radius: 22px; padding: 30px 20px 20px 20px; text-align: center; position: relative; box-shadow: 0 0 25px rgba(168,85,247,0.5), inset 0 0 15px rgba(168,85,247,0.2); }
-        .neon-popup-icon-circle { width: 65px; height: 65px; background: #070913; border: 2px solid #c084fc; border-radius: 50%; position: absolute; top: -35px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(192,132,252,0.8); }
-        .neon-popup-msg { color: #fff; font-size: 13px; font-weight: bold; line-height: 1.6; margin-bottom: 20px; margin-top: 10px; word-break: break-word; }
-        .neon-popup-btn { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border: none; border-radius: 12px; padding: 10px 30px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 12px rgba(147,51,234,0.6); }
+        .neon-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .neon-popup-card { width: 100%; max-width: 330px; background: #070913; border: 2px solid #a855f7; border-radius: 24px; padding: 35px 22px 22px 22px; text-align: center; position: relative; box-shadow: 0 0 30px rgba(168,85,247,0.6), inset 0 0 18px rgba(168,85,247,0.25); }
+        .neon-popup-icon-circle { width: 70px; height: 70px; background: #070913; border: 2px solid #c084fc; border-radius: 50%; position: absolute; top: -38px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 18px rgba(192,132,252,0.9); }
+        .neon-popup-msg { color: #fff; font-size: 13px; font-weight: bold; line-height: 1.6; margin-bottom: 22px; margin-top: 12px; word-break: break-word; }
+        .neon-popup-btn { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border: none; border-radius: 14px; padding: 11px 32px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 15px rgba(147,51,234,0.7); }
 
-        .system-notification-item { background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95)); border: 1px solid rgba(192,132,252,0.3); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: flex-start; gap: 8px; }
+        .system-notification-item { background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98)); border: 1px solid rgba(192,132,252,0.35); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; text-align: right; box-shadow: 0 6px 15px rgba(0,0,0,0.45); display: flex; align-items: flex-start; gap: 10px; }
     </style>
 </head>
 <body>
@@ -142,13 +142,13 @@
     <div id="authScreen" class="screen-page active">
         <div class="auth-card">
             <div class="animated-logo-container">
-                <div style="width:75px;height:75px;border-radius:50%;background:radial-gradient(circle,#3b0764 0%,#090514 100%);border:2px solid #c084fc;display:flex;flex-direction:column;justify-content:center;align-items:center;margin:0 auto;box-shadow:0 0 20px rgba(192,132,252,0.6)">
-                    <span style="font-size:20px;font-weight:900;color:#c084fc">Lounge</span>
-                    <span style="font-size:10px;font-weight:bold;color:#fff">App</span>
+                <div style="width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#3b0764 0%,#090514 100%);border:2px solid #c084fc;display:flex;flex-direction:column;justify-content:center;align-items:center;margin:0 auto;box-shadow:0 0 25px rgba(192,132,252,0.7)">
+                    <span style="font-size:21px;font-weight:900;color:#c084fc">Lounge</span>
+                    <span style="font-size:10px;font-weight:bold;color:#fff"> الملكي</span>
                 </div>
             </div>
-            <h2 style="color:#c084fc;margin:0 0 5px 0">تطبيق Lounge الرسمي</h2>
-            <p style="color:#94a3b8;font-size:12px;margin-bottom:15px">تسجيل الدخول أو إنشاء حساب جديد بأمان</p>
+            <h2 style="color:#c084fc;margin:0 0 6px 0">تطبيق Lounge الملكي</h2>
+            <p style="color:#94a3b8;font-size:12px;margin-bottom:18px">تسجيل الدخول أو إنشاء حساب جديد بأمان تام</p>
             <div class="tab-switch">
                 <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">تسجيل الدخول</button>
                 <button class="tab-btn" id="signupTabBtn" onclick="switchAuthTab('signup')">حساب جديد</button>
@@ -168,11 +168,11 @@
 
     <div id="mainScreen" class="screen-page">
         <div class="ticker-wrap">
-            <span class="ticker-title">📢 إعلان</span>
-            <div class="ticker-text" id="tickerTextDisplay">أهلاً بكم في تطبيق Lounge الرسمي! أسرع وأحدث نظام شحن وأرباح.</div>
+            <span class="ticker-title">📢 إعلان ملكي</span>
+            <div class="ticker-text" id="tickerTextDisplay">أهلاً بكم في تطبيق Lounge الملكي! أسرع وأحدث نظام شحن وأرباح.</div>
         </div>
 
-        <div style="text-align:center"><button id="adminPanelMainBtn" class="admin-badge" onclick="openAdminPanelModal()">👑 لوحة تحكم الإدارة الخاصة</button></div>
+        <div style="text-align:center"><button id="adminPanelMainBtn" class="admin-badge" onclick="openAdminPanelModal()">👑 لوحة تحكم الإدارة الملكية</button></div>
         <div class="new-header-bar">
             <div style="display:flex;align-items:center">
                 <button class="top-logout-btn" onclick="handleLogout()"><span>خروج</span> 🚪</button>
@@ -180,7 +180,7 @@
             </div>
             <div class="user-greeting-box" style="cursor:pointer" onclick="navigateTo('profileScreen')">
                 <div style="text-align:left">
-                    <div style="font-size:11px;color:#94a3b8">أهلاً بك</div>
+                    <div style="font-size:11px;color:#94a3b8">أهلاً بك يا ملك</div>
                     <div style="font-size:13px;font-weight:bold;color:#fff" id="headerUserName">المستخدم</div>
                     <div id="userHeaderBadgeArea"></div>
                 </div>
@@ -221,19 +221,19 @@
             </div>
         </div>
 
-        <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.4);margin-bottom:12px;padding:12px">
+        <div class="card" style="background:rgba(15,23,42,0.92);border:1px solid rgba(56,189,248,0.45);margin-bottom:14px;padding:14px">
             <div style="display:flex;justify-content:space-between;align-items:center">
                 <div style="text-align:right">
                     <b style="color:#38bdf8;font-size:13px">🧠 تحدي الـ 100 سؤال (50 نقطة يومياً)</b>
-                    <div style="font-size:10px;color:#cbd5e1;margin-top:2px">أجب عن الأسئلة اليومية واكسب 50 نقطة!</div>
+                    <div style="font-size:10px;color:#cbd5e1;margin-top:3px">أجب عن الأسئلة اليومية واكسب 50 نقطة!</div>
                 </div>
-                <button class="action-btn btn-blue" style="width:auto;padding:6px 14px;font-size:11px" onclick="navigateTo('quizScreen')">دخول التحدي 🚀</button>
+                <button class="action-btn btn-blue" style="width:auto;padding:7px 15px;font-size:11px" onclick="navigateTo('quizScreen')">دخول التحدي 🚀</button>
             </div>
         </div>
 
         <div class="grid-buttons-custom">
             <div class="grid-btn-item" onclick="navigateTo('agentsScreen')">
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <div class="icon-circle">🏢</div>
                     <span>قائمة الوكلاء المعتمدين</span>
                 </div>
@@ -241,7 +241,7 @@
             </div>
 
             <div class="grid-btn-item" onclick="openWithdrawModal()">
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <div class="icon-circle">💸</div>
                     <span>سحب الأرباح النقدية</span>
                 </div>
@@ -249,30 +249,30 @@
             </div>
 
             <div class="grid-btn-item" onclick="navigateTo('leaderboardScreen')">
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <div class="icon-circle">🏆</div>
                     <span>التصنيف الأسبوعي (لوحة الشرف)</span>
                 </div>
                 <div style="font-size:12px; color:#c084fc;">‹</div>
             </div>
             
-            <div id="clickAndWinMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(147,51,234,0.4), rgba(10,185,129,0.3)); border: 1.5px solid #c084fc;" onclick="handleUserClickAndWin()">
-                <div style="display:flex; align-items:center; gap:10px;">
+            <div id="clickAndWinMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(147,51,234,0.45), rgba(10,185,129,0.35)); border: 1.5px solid #c084fc;" onclick="handleUserClickAndWin()">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <div class="icon-circle" style="font-size:22px;">👇⚡</div>
                     <div style="text-align:right;">
                         <span style="font-size:13px; color:#fff; font-weight:900; display:block;">كبس وأربح (100 نقطة + 100 جوهرة 💎)</span>
-                        <div style="font-size:10px; color:#34d399; font-weight:bold; margin-top:2px;" id="clickLiveCounterDisplay">العداد اللحظي: 0 / 500,000 تكبيسة</div>
+                        <div style="font-size:10px; color:#34d399; font-weight:bold; margin-top:3px;" id="clickLiveCounterDisplay">العداد اللحظي: 0 / 500,000 تكبيسة</div>
                     </div>
                 </div>
                 <div style="font-size:11px; color:#f0abfc;">اضغط 🚀</div>
             </div>
 
-            <div id="counterTradingMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(16,185,129,0.35), rgba(59,7,100,0.4)); border: 1.5px solid #10b981;" onclick="navigateTo('counterTradingScreen')">
-                <div style="display:flex; align-items:center; gap:10px;">
+            <div id="counterTradingMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(16,185,129,0.4), rgba(59,7,100,0.45)); border: 1.5px solid #10b981;" onclick="navigateTo('counterTradingScreen')">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <div class="icon-circle" style="font-size:22px;">🛒🤝</div>
                     <div style="text-align:right;">
                         <span style="font-size:13px; color:#fff; font-weight:900; display:block;">سوق بيع وشراء العدادات اليومية</span>
-                        <div style="font-size:10px; color:#34d399; margin-top:2px;">تداول العدادات بين المستخدمين بأمان تام</div>
+                        <div style="font-size:10px; color:#34d399; margin-top:3px;">تداول العدادات بين المستخدمين بأمان تام</div>
                     </div>
                 </div>
                 <div style="font-size:11px; color:#34d399;">دخول 🚀</div>
@@ -290,81 +290,81 @@
 
     <div id="roomsScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#ec4899;font-size:15px">💬 غرف الدردشة والهدايا</h3>
+            <h3 style="margin:0;color:#ec4899;font-size:15px">💬 غرف الدردشة والهدايا الملكية</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
 
-        <div id="createRoomSectionCard" class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:12px;text-align:right">
+        <div id="createRoomSectionCard" class="card" style="background:rgba(15,23,42,0.92);border:1px solid rgba(236,72,153,0.45);margin-bottom:14px;text-align:right">
             <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ أنشئ غرفتك الخاصة مجاناً</h4>
-            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="openCreateRoomModal()">إنشاء غرفة جديدة مجاناً 🚀</button>
+            <button class="action-btn btn-purple" style="padding:9px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="openCreateRoomModal()">إنشاء غرفة جديدة مجاناً 🚀</button>
         </div>
 
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
             <input type="text" id="searchRoomIdInput" class="input-box" placeholder="ابحث برقم الـ ID الخاص بالغرفة..." style="margin:0;flex:1;">
-            <button class="action-btn btn-blue" style="width:auto;padding:8px 12px;font-size:11px;" onclick="searchRoomById()">بحث 🔍</button>
+            <button class="action-btn btn-blue" style="width:auto;padding:8px 14px;font-size:11px;" onclick="searchRoomById()">بحث 🔍</button>
         </div>
 
-        <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:6px;text-align:right">🏠 قائمة الغرف المتاحة حالياً:</div>
-        <div id="roomsListContainer" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:right">🏠 قائمة الغرف المتاحة حالياً:</div>
+        <div id="roomsListContainer" style="display:flex;flex-direction:column;gap:10px;">
             <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل الغرف...</div>
         </div>
     </div>
 
     <div id="singleRoomScreen" class="screen-page">
         <div class="top-nav">
-            <div style="display:flex;align-items:center;gap:8px">
-                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
+            <div style="display:flex;align-items:center;gap:10px">
+                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #ec4899" alt="صورة الروم">
                 <div>
                     <h3 id="currentRoomTitleDisplay" style="margin:0;color:#f472b6;font-size:13px">اسم الغرفة</h3>
                     <span id="currentRoomIdDisplay" style="font-size:9px;color:#94a3b8">ID: ---</span>
                 </div>
             </div>
-            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج من الغرفة</button>
+            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج</button>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
-            <div id="roomMessagesArea" style="height:230px;overflow-y:auto;background:rgba(0,0,0,0.4);padding:8px;border-radius:10px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
-            <div style="width:90px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px;overflow-y:auto;max-height:230px">
-                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:4px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:10px">
+            <div id="roomMessagesArea" style="height:240px;overflow-y:auto;background:rgba(0,0,0,0.45);padding:10px;border-radius:12px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
+            <div style="width:95px;background:rgba(15,23,42,0.85);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:8px;overflow-y:auto;max-height:240px">
+                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:6px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
                 <div id="roomUsersListContainer" style="font-size:10px;color:#cbd5e1"></div>
             </div>
         </div>
 
-        <div style="background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="background:rgba(15,23,42,0.96);border:1px solid rgba(236,72,153,0.35);border-radius:14px;padding:10px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                 <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 صندوق الهدايا السريع:</span>
-                <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px">
+                <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:5px;font-size:10px">
                     <option value="all">الجميع (الشات العام)</option>
                 </select>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.35);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
             </div>
         </div>
 
-        <div style="display:flex;gap:4px;align-items:center">
+        <div style="display:flex;gap:6px;align-items:center">
             <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
-            <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
+            <button class="action-btn btn-purple" style="width:70px;padding:0;height:40px;background:linear-gradient(135deg,#db2777,#9333ea)">إرسال</button>
         </div>
     </div>
 
     <div id="counterTradingScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#10b981;font-size:15px">🛒 سوق بيع وشراء العدادات</h3>
+            <h3 style="margin:0;color:#10b981;font-size:15px">🛒 سوق بيع وشراء العدادات الملكي</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.4);margin-bottom:12px;text-align:right">
-            <h4 style="margin:0 0 4px 0;color:#34d399;font-size:13px">💡 اعرض عدادك للبيع أو اشترِ عداداً جاهزاً</h4>
-            <p style="font-size:10px;color:#cbd5e1;margin-bottom:8px">يمكنك عرض عدادك الحالي للبيع مع بقاء عدادك يعمل لديك حتى يتم شراؤه.</p>
-            <button class="action-btn btn-green" style="padding:8px;font-size:11px" onclick="openSellCounterModal()">عرض عدادي للبيع الآن ➕</button>
+        <div class="card" style="background:rgba(15,23,42,0.92);border:1px solid rgba(16,185,129,0.45);margin-bottom:14px;text-align:right">
+            <h4 style="margin:0 0 6px 0;color:#34d399;font-size:13px">💡 اعرض عدادك للبيع أو اشترِ عداداً جاهزاً</h4>
+            <p style="font-size:10px;color:#cbd5e1;margin-bottom:10px">يمكنك عرض عدادك الحالي للبيع مع بقاء عدادك يعمل لديك حتى يتم شراؤه.</p>
+            <button class="action-btn btn-green" style="padding:9px;font-size:11px" onclick="openSellCounterModal()">عرض عدادي للبيع الآن ➕</button>
         </div>
-        <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:6px;text-align:right">📦 العدادات المعروضة حالياً للسوق:</div>
-        <div id="tradingCountersListContainer" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:right">📦 العدادات المعروضة حالياً للسوق:</div>
+        <div id="tradingCountersListContainer" style="display:flex;flex-direction:column;gap:10px;">
             <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل العروض...</div>
         </div>
     </div>
@@ -374,14 +374,14 @@
             <h3 style="margin:0;color:#facc15;font-size:15px">🏢 الوكلاء المعتمدون والتسجيل</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(234,179,8,0.4);margin-bottom:10px;text-align:right">
+        <div class="card" style="background:rgba(15,23,42,0.92);border:1px solid rgba(234,179,8,0.45);margin-bottom:12px;text-align:right">
             <h4 style="margin:0 0 6px 0;color:#eab308;font-size:13px">🤝 التقديم على وكالة معتمدة</h4>
-            <p style="font-size:10px;color:#cbd5e1;margin-bottom:8px">رسوم التقديم للوكالة (6,000,000 نقطة) تُخصم حصراً من رصيدك:</p>
-            <button class="action-btn btn-gold" style="padding:8px;font-size:11px" onclick="openAgentApplyModal()">تقديم طلب وكالة جديد 📝</button>
+            <p style="font-size:10px;color:#cbd5e1;margin-bottom:10px">رسوم التقديم للوكالة (6,000,000 نقطة) تُخصم حصراً من رصيدك:</p>
+            <button class="action-btn btn-gold" style="padding:9px;font-size:11px" onclick="openAgentApplyModal()">تقديم طلب وكالة جديد 📝</button>
         </div>
         <div class="card" style="text-align:right">
-            <h4 style="margin:0 0 8px 0;color:#38bdf8;font-size:13px">⭐ قائمة الوكلاء المعتمدين</h4>
-            <div id="approvedAgentsList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:11px;color:#cbd5e1">جاري التحميل...</div>
+            <h4 style="margin:0 0 10px 0;color:#38bdf8;font-size:13px">⭐ قائمة الوكلاء المعتمدين</h4>
+            <div id="approvedAgentsList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;font-size:11px;color:#cbd5e1">جاري التحميل...</div>
         </div>
     </div>
 
@@ -390,14 +390,14 @@
             <h3 style="margin:0;color:#38bdf8;font-size:15px">🧠 تحدي الأسئلة اليومي (100 سؤال)</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div id="daily-quiz-container" style="padding:15px; background:rgba(15,23,42,0.95); color:#fff; border-radius:16px; border:1px solid rgba(56,189,248,0.3); text-align:right;">
-            <div id="quiz-stats" style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; background:rgba(30,41,59,0.8); padding:10px; border-radius:10px;">
+        <div id="daily-quiz-container" style="padding:16px; background:rgba(15,23,42,0.96); color:#fff; border-radius:18px; border:1px solid rgba(56,189,248,0.35); text-align:right;">
+            <div id="quiz-stats" style="display:flex; justify-content:space-between; margin-bottom:16px; font-size:12px; background:rgba(30,41,59,0.85); padding:12px; border-radius:12px;">
                 <span>السؤال الحالي: <strong id="question-index-text" style="color:#38bdf8;">1</strong> / 100</span>
                 <span>الربح اليومي: <strong id="earned-points" style="color:#eab308;">0</strong> / 50 🪙</span>
             </div>
-            <div id="question-box" style="background:rgba(30,41,59,0.9); padding:15px; border-radius:10px; margin-bottom:15px; min-height:75px; display:flex; align-items:center; font-size:14px; font-weight:bold; color:#f8fafc; border:1px solid rgba(255,255,255,0.05);">جاري تحميل السؤال...</div>
-            <div id="options-box" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;"></div>
-            <button id="answer-action-btn" disabled style="width:100%; padding:12px; background:#475569; color:#fff; border:none; border-radius:10px; font-size:13px; font-weight:bold; cursor:not-allowed;">أجب عن الأسئلة اليومية</button>
+            <div id="question-box" style="background:rgba(30,41,59,0.95); padding:16px; border-radius:12px; margin-bottom:16px; min-height:80px; display:flex; align-items:center; font-size:14px; font-weight:bold; color:#f8fafc; border:1px solid rgba(255,255,255,0.06);">جاري تحميل السؤال...</div>
+            <div id="options-box" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;"></div>
+            <button id="answer-action-btn" disabled style="width:100%; padding:14px; background:#475569; color:#fff; border:none; border-radius:12px; font-size:13px; font-weight:bold; cursor:not-allowed;">أجب عن الأسئلة اليومية</button>
         </div>
     </div>
 
@@ -406,26 +406,26 @@
             <h3 style="margin:0;color:#c084fc;font-size:15px">🏆 التصنيف الأسبوعي (لوحة الشرف)</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div class="card" style="text-align:right;background:rgba(30,41,59,0.7);border:1px solid rgba(192,132,252,0.4)">
-            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:center;">👆 ملوك التكبيس الأسبوعي (يتصفّر كل جمعة 6:00 ص)</div>
+        <div class="card" style="text-align:right;background:rgba(30,41,59,0.75);border:1px solid rgba(192,132,252,0.45)">
+            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:10px;text-align:center;">👆 ملوك التكبيس الأسبوعي (يتصفّر كل جمعة 6:00 ص)</div>
             <div id="leaderboardClickingList" style="font-size:11px;color:#cbd5e1">جاري التحميل...</div>
         </div>
     </div>
 
     <div id="shopScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#c084fc;font-size:15px">🛒 متجر العدادات والإيداع</h3>
+            <h3 style="margin:0;color:#c084fc;font-size:15px">🛒 متجر العدادات والإيداع الملكي</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div class="card" style="text-align:right;background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.5);margin-bottom:12px;padding:12px">
-            <h4 style="margin:0 0 6px 0;color:#34d399;font-size:13px">📥 إيداع USDT TRC20 وطلب عداد مخصص</h4>
-            <div style="background:rgba(2,6,23,0.9);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <div class="card" style="text-align:right;background:rgba(15,23,42,0.92);border:1px solid rgba(16,185,129,0.55);margin-bottom:14px;padding:14px">
+            <h4 style="margin:0 0 8px 0;color:#34d399;font-size:13px">📥 إيداع USDT TRC20 وطلب عداد مخصص</h4>
+            <div style="background:rgba(2,6,23,0.92);border:1px solid rgba(16,185,129,0.45);border-radius:12px;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
                 <span id="usdtWalletAddressText" style="font-size:10px;color:#38bdf8;font-family:monospace;word-break:break-all;direction:ltr;text-align:left">TU31n5NnWAnhQ83YTpYFXvjhrAqxNfkn8F</span>
-                <button class="action-btn btn-green" style="width:auto;padding:5px 10px;font-size:10px" onclick="copyUsdtAddress()">📋 نسخ العنوان</button>
+                <button class="action-btn btn-green" style="width:auto;padding:6px 12px;font-size:10px" onclick="copyUsdtAddress()">📋 نسخ العنوان</button>
             </div>
-            <input type="text" id="manualCounterPhone" class="input-box" placeholder="رقم عملية التحويل أو الـ Hash" style="margin-bottom:6px">
-            <input type="text" id="manualCounterDetails" class="input-box" placeholder="العداد المطلوب (مثلا: عداد 5000 نقطة)" style="margin-bottom:8px">
-            <button class="action-btn btn-green" style="padding:8px;font-size:11px" onclick="submitManualCounterOrder()">إرسال طلب الحجز للإدارة 🚀</button>
+            <input type="text" id="manualCounterPhone" class="input-box" placeholder="رقم عملية التحويل أو الـ Hash" style="margin-bottom:8px">
+            <input type="text" id="manualCounterDetails" class="input-box" placeholder="العداد المطلوب (مثلا: عداد 5000 نقطة)" style="margin-bottom:10px">
+            <button class="action-btn btn-green" style="padding:9px;font-size:11px" onclick="submitManualCounterOrder()">إرسال طلب الحجز للإدارة 🚀</button>
         </div>
         <div class="card">
             <div class="shop-tabs">
@@ -434,67 +434,67 @@
                 <button class="shop-tab-btn" id="tabLegend" onclick="switchShopTab('legend')">الأسطوري</button>
             </div>
             <div id="shopGoldContent" class="shop-tier-content active">
-                <div class="counter-row"><div><b>عداد 100 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 20.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(100,20000, 'عداد 100 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 200 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 40.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(200,40000, 'عداد 200 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 500 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 100.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(500,100000, 'عداد 500 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 1.000 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 200.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(1000,200000, 'عداد 1.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 100 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 20.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(100,20000, 'عداد 100 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 200 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 40.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(200,40000, 'عداد 200 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 500 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 100.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(500,100000, 'عداد 500 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 1.000 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 200.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(1000,200000, 'عداد 1.000 نقطة يومياً')">شراء 🛒</button></div>
             </div>
             <div id="shopDiamondContent" class="shop-tier-content">
-                <div class="counter-row"><div><b>عداد 2.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 400.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(2000,400000, 'عداد 2.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 3.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 600.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(3000,600000, 'عداد 3.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 4.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 800.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(4000,800000, 'عداد 4.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 5.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 1.000.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(5000,1000000, 'عداد 5.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 2.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 400.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(2000,400000, 'عداد 2.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 3.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 600.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(3000,600000, 'عداد 3.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 4.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 800.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(4000,800000, 'عداد 4.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 5.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 1.000.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(5000,1000000, 'عداد 5.000 نقطة يومياً')">شراء 🛒</button></div>
             </div>
             <div id="shopLegendContent" class="shop-tier-content">
-                <div class="counter-row"><div><b>عداد 10.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 2.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(10000,2000000, 'عداد 10.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 20.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 4.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(20000,4000000, 'عداد 20.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 30.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 6.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(30000,6000000, 'عداد 30.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 40.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 8.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(40000,8000000, 'عداد 40.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 10.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 2.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(10000,2000000, 'عداد 10.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 20.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 4.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(20000,4000000, 'عداد 20.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 30.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 6.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(30000,6000000, 'عداد 30.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 40.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 8.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:5px 12px;font-size:10px" onclick="buyCounter(40000,8000000, 'عداد 40.000 نقطة يومياً')">شراء 🛒</button></div>
             </div>
         </div>
     </div>
 
     <div id="wheelScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#a855f7;font-size:15px">🎡 عجلة الحظ</h3>
+            <h3 style="margin:0;color:#a855f7;font-size:15px">🎡 عجلة الحظ الملكية</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
-        <div class="card" style="padding:15px 10px;text-align:center">
+        <div class="card" style="padding:18px 12px;text-align:center">
             <div class="wheel-pointer"></div>
             <div class="wheel-box" id="wheelGraphic"></div>
-            <div style="font-size:13px;color:#c084fc;font-weight:bold;margin:6px 0">تدوير العجلة بـ 100 جوهرة 💎 (هدايا نقاط)</div>
-            <button id="spinBtn" class="action-btn btn-purple" style="padding:8px;margin-top:3px" onclick="spinWheel()">تدوير العجلة</button>
-            <div id="wheelMsg" style="margin-top:8px;font-size:13px;color:#38bdf8;font-weight:bold;min-height:20px;"></div>
+            <div style="font-size:13px;color:#c084fc;font-weight:bold;margin:8px 0">تدوير العجلة بـ 100 جوهرة 💎 (هدايا نقاط)</div>
+            <button id="spinBtn" class="action-btn btn-purple" style="padding:10px;margin-top:4px" onclick="spinWheel()">تدوير العجلة</button>
+            <div id="wheelMsg" style="margin-top:10px;font-size:13px;color:#38bdf8;font-weight:bold;min-height:22px;"></div>
         </div>
     </div>
 
     <div id="profileScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#c084fc;font-size:15px">👤 الملف الشخصي</h3>
+            <h3 style="margin:0;color:#c084fc;font-size:15px">👤 الملف الشخصي الملكي</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         <div class="profile-box">
             <div class="large-avatar-container" id="profileAvatarRingBox"><img id="avatarPreview" class="large-avatar" src="" alt="صورة" onclick="triggerImageUpload()" title="اضغط لتغيير الصورة الشخصية"></div>
             <input type="file" id="hiddenImageInput" accept="image/*" style="display:none" onchange="previewImage(event)">
-            <div style="margin-top:2px;margin-bottom:6px">
+            <div style="margin-top:4px;margin-bottom:8px">
                 <span id="displayUserIdProfile" style="color:#c084fc;font-size:12px;font-weight:bold">ID: ---</span>
-                <div id="profileBadgeDisplay" style="margin-top:4px"></div>
+                <div id="profileBadgeDisplay" style="margin-top:6px"></div>
             </div>
-            <div id="verificationSectionContainer" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:8px;margin-bottom:8px;text-align:right">
+            <div id="verificationSectionContainer" style="background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.35);border-radius:14px;padding:10px;margin-bottom:10px;text-align:right">
                 <div id="verificationStatusDisplay" style="font-size:11px;color:#38bdf8">جاري التحميل...</div>
             </div>
-            <input type="text" id="profileNameInput" class="input-box" placeholder="تعديل الاسم" style="margin-top:4px;margin-bottom:6px">
-            <input type="text" id="profileBioInput" class="input-box" placeholder="اكتب البايو الخاص بك (60 حرف كحد أقصى)" maxlength="60" oninput="validateBioLength(this)" style="margin-top:2px;margin-bottom:6px;font-size:11px">
-            <div id="bioCounter" style="font-size:9px;color:#94a3b8;text-align:left;margin-bottom:6px">0 / 60</div>
-            <div style="margin-top:8px;text-align:right"><button class="action-btn btn-gold" onclick="saveProfileData()">حفظ التعديلات 💾</button></div>
+            <input type="text" id="profileNameInput" class="input-box" placeholder="تعديل الاسم" style="margin-top:6px;margin-bottom:8px">
+            <input type="text" id="profileBioInput" class="input-box" placeholder="اكتب البايو الخاص بك (60 حرف كحد أقصى)" maxlength="60" oninput="validateBioLength(this)" style="margin-top:3px;margin-bottom:6px;font-size:11px">
+            <div id="bioCounter" style="font-size:9px;color:#94a3b8;text-align:left;margin-bottom:8px">0 / 60</div>
+            <div style="margin-top:10px;text-align:right"><button class="action-btn btn-gold" onclick="saveProfileData()">حفظ التعديلات 💾</button></div>
             
-            <div id="agentBagPanel" style="display:none;margin-top:12px;background:rgba(234,179,8,0.15);border:1px solid #eab308;padding:10px;border-radius:12px;text-align:right">
-                <h4 style="margin:0 0 4px 0;color:#eab308;font-size:12px">💼 حقيبة الوكيل المعتمد</h4>
+            <div id="agentBagPanel" style="display:none;margin-top:14px;background:rgba(234,179,8,0.15);border:1px solid #eab308;padding:12px;border-radius:14px;text-align:right">
+                <h4 style="margin:0 0 6px 0;color:#eab308;font-size:12px">💼 حقيبة الوكيل المعتمد</h4>
                 <div style="font-size:11px;color:#fff">رصيد الحقيبة المخصص للشحن: <b id="agentBagBalance" style="color:#34d399">0</b> نقطة</div>
-                <div style="margin-top:8px">
+                <div style="margin-top:10px">
                     <input type="text" id="agentChargeTargetId" class="input-box" placeholder="ID المستخدم المراد شحنه">
                     <input type="number" id="agentChargeAmount" class="input-box" placeholder="عدد النقاط من الحقيبة">
-                    <button class="action-btn btn-green" style="padding:6px;font-size:11px" onclick="agentTransferPoints()">شحن النقاط للمستخدم 🚀</button>
+                    <button class="action-btn btn-green" style="padding:8px;font-size:11px" onclick="agentTransferPoints()">شحن النقاط للمستخدم 🚀</button>
                 </div>
             </div>
         </div>
@@ -506,22 +506,22 @@
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         <div class="card">
-            <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:12px">🔍 البحث وإضافة الأصدقاء</h4>
+            <h4 style="margin:0 0 8px 0;color:#38bdf8;font-size:12px">🔍 البحث وإضافة الأصدقاء</h4>
             <input type="text" id="searchIdInput" class="input-box" placeholder="أدخل ID الصديق (أرقام فقط)">
             <button class="action-btn btn-blue" onclick="sendFriendRequest()">إرسال طلب صداقة 📨</button>
-            <div id="searchResultArea" style="margin-top:4px;font-size:11px;text-align:center"></div>
+            <div id="searchResultArea" style="margin-top:6px;font-size:11px;text-align:center"></div>
         </div>
         <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                 <h4 style="margin:0;color:#10b981;font-size:12px">💬 طلبات الصداقة الواردة</h4>
-                <button onclick="clearRequestsList()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:10px;padding:2px 8px;border-radius:6px;cursor:pointer" title="إفراغ طلبات الصداقة">🗑️ تنظيف القائمة</button>
+                <button onclick="clearRequestsList()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:10px;padding:3px 10px;border-radius:8px;cursor:pointer" title="إفراغ طلبات الصداقة">🗑️ تنظيف القائمة</button>
             </div>
-            <div id="friendRequestsContainer" style="font-size:11px;color:#94a3b8;margin-bottom:10px;text-align:center">لا توجد طلبات صداقة</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px">
+            <div id="friendRequestsContainer" style="font-size:11px;color:#94a3b8;margin-bottom:12px;text-align:center">لا توجد طلبات صداقة</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px">
                 <h4 style="margin:0;color:#38bdf8;font-size:12px">👥 قائمة الأصدقاء</h4>
-                <div style="display:flex;gap:4px">
-                    <button onclick="loadFriendSystem()" style="background:rgba(14,165,233,0.2);border:1px solid #0ea5e9;color:#38bdf8;font-size:10px;padding:2px 6px;border-radius:6px;cursor:pointer" title="تحديث وإظهار الأصدقاء">🔄 تحديث</button>
-                    <button onclick="clearFriendsDisplayList()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:10px;padding:2px 6px;border-radius:6px;cursor:pointer" title="إخفاء من القائمة">🗑️ تنظيف</button>
+                <div style="display:flex;gap:6px">
+                    <button onclick="loadFriendSystem()" style="background:rgba(14,165,233,0.2);border:1px solid #0ea5e9;color:#38bdf8;font-size:10px;padding:3px 8px;border-radius:8px;cursor:pointer" title="تحديث وإظهار الأصدقاء">🔄 تحديث</button>
+                    <button onclick="clearFriendsDisplayList()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:10px;padding:3px 8px;border-radius:8px;cursor:pointer" title="إخفاء من القائمة">🗑️ تنظيف</button>
                 </div>
             </div>
             <div id="friendsListContainer" style="font-size:11px;color:#94a3b8;text-align:center">اختر صديقاً لبدء المحادثة</div>
@@ -530,13 +530,13 @@
 
     <div id="notificationsScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#c084fc;font-size:15px">🔔 صندوق الإشعارات</h3>
-            <div style="display:flex;gap:6px">
-                <button onclick="clearAllNotifications()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer" title="حذف كل الإشعارات">🗑️</button>
+            <h3 style="margin:0;color:#c084fc;font-size:15px">🔔 صندوق الإشعارات الملكي</h3>
+            <div style="display:flex;gap:8px">
+                <button onclick="clearAllNotifications()" style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#ef4444;font-size:12px;padding:5px 10px;border-radius:8px;cursor:pointer" title="حذف كل الإشعارات">🗑️</button>
                 <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
             </div>
         </div>
-        <div class="card" style="text-align:right"><div id="notificationsContainer" style="font-size:12px;color:#94a3b8;max-height:70vh;overflow-y:auto;padding:4px">لا توجد إشعارات جديدة</div></div>
+        <div class="card" style="text-align:right"><div id="notificationsContainer" style="font-size:12px;color:#94a3b8;max-height:70vh;overflow-y:auto;padding:6px">لا توجد إشعارات جديدة</div></div>
     </div>
 </div>
 
@@ -551,167 +551,167 @@
 </div>
 
 <div id="createRoomModal" class="modal">
-    <div class="modal-content" style="text-align:right; max-width:320px; padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div class="modal-content" style="text-align:right; max-width:330px; padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <h4 style="margin:0;color:#f472b6;font-size:13px">✨ إنشاء غرفة دردشة جديدة</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeCreateRoomModal()">✖</button>
+            <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeCreateRoomModal()">✖</button>
         </div>
         <label style="font-size:10px;color:#cbd5e1;">اسم الغرفة:</label>
-        <input type="text" id="newRoomNameInput" class="input-box" placeholder="مثال: روم السوالف والوناسة..." style="margin-bottom:6px">
+        <input type="text" id="newRoomNameInput" class="input-box" placeholder="مثال: روم السوالف والوناسة..." style="margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;">صورة الغرفة (بروفايل أو غلاف):</label>
-        <input type="file" id="newRoomCoverInput" accept="image/*" class="input-box" style="margin-bottom:10px">
-        <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="confirmCreateRoom()">إنشاء الغرفة فوراً 🚀</button>
+        <input type="file" id="newRoomCoverInput" accept="image/*" class="input-box" style="margin-bottom:12px">
+        <button class="action-btn btn-purple" style="padding:9px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="confirmCreateRoom()">إنشاء الغرفة فوراً 🚀</button>
     </div>
 </div>
 
 <div id="sellCounterModal" class="modal">
-    <div class="modal-content" style="text-align:right; max-width:320px; padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div class="modal-content" style="text-align:right; max-width:330px; padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <h4 style="margin:0;color:#34d399;font-size:13px">🛒 عرض عداد للبيع</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeSellCounterModal()">✖</button>
+            <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeSellCounterModal()">✖</button>
         </div>
         <label style="font-size:10px;color:#cbd5e1;">نوع العداد (مثال: 5000):</label>
-        <input type="number" id="sellCounterTypeInput" class="input-box" placeholder="اكتب الرقم فقط مثلا 5000" style="margin-bottom:6px">
+        <input type="number" id="sellCounterTypeInput" class="input-box" placeholder="اكتب الرقم فقط مثلا 5000" style="margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;">سعر البيع المطلوب (بالنقاط):</label>
-        <input type="number" id="sellCounterPriceInput" class="input-box" placeholder="مثال: 100000" style="margin-bottom:10px">
-        <button class="action-btn btn-green" style="padding:8px;font-size:11px" onclick="confirmPublishCounterForSale()">نشر العرض في السوق 🚀</button>
+        <input type="number" id="sellCounterPriceInput" class="input-box" placeholder="مثال: 100000" style="margin-bottom:12px">
+        <button class="action-btn btn-green" style="padding:9px;font-size:11px" onclick="confirmPublishCounterForSale()">نشر العرض في السوق 🚀</button>
     </div>
 </div>
 
 <div id="buyConfirmModal" class="modal">
-    <div class="modal-content" style="text-align:center; max-width:300px; padding:16px;">
-        <h4 style="margin:0 0 8px 0;color:#fde047;font-size:14px">⚠️ تأكيد عملية الشراء</h4>
-        <p id="buyConfirmText" style="font-size:11px;color:#cbd5e1;margin-bottom:14px">هل أنت متأكد من شراء هذا العداد؟</p>
-        <div style="display:flex;gap:8px;">
-            <button class="action-btn btn-green" style="flex:1;padding:8px;font-size:11px;" onclick="executeBuyCounterTransaction()">شراء العرض ✔️</button>
-            <button class="action-btn" style="flex:1;padding:8px;font-size:11px;background:#ef4444;color:#fff;" onclick="closeBuyConfirmModal()">كلا ❌</button>
+    <div class="modal-content" style="text-align:center; max-width:310px; padding:18px;">
+        <h4 style="margin:0 0 10px 0;color:#fde047;font-size:14px">⚠️ تأكيد عملية الشراء</h4>
+        <p id="buyConfirmText" style="font-size:11px;color:#cbd5e1;margin-bottom:16px">هل أنت متأكد من شراء هذا العداد؟</p>
+        <div style="display:flex;gap:10px;">
+            <button class="action-btn btn-green" style="flex:1;padding:9px;font-size:11px;" onclick="executeBuyCounterTransaction()">شراء العرض ✔️</button>
+            <button class="action-btn" style="flex:1;padding:9px;font-size:11px;background:#ef4444;color:#fff;" onclick="closeBuyConfirmModal()">كلا ❌</button>
         </div>
     </div>
 </div>
 
 <div id="agentApplyModal" class="modal">
-    <div class="modal-content agent-modal-input-group" style="text-align:right; max-width:320px; padding:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <div class="modal-content agent-modal-input-group" style="text-align:right; max-width:330px; padding:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <h4 style="margin:0;color:#eab308;font-size:12px">📝 التقديم على وكالة معتمدة</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:15px;cursor:pointer" onclick="closeAgentApplyModal()">✖</button>
+            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeAgentApplyModal()">✖</button>
         </div>
-        <p style="font-size:10px;color:#38bdf8;margin-bottom:6px">رسوم التقديم: 6,000,000 نقطة (تخصم حصراً من رصيدك)</p>
+        <p style="font-size:10px;color:#38bdf8;margin-bottom:8px">رسوم التقديم: 6,000,000 نقطة (تخصم حصراً من رصيدك)</p>
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">اسم المحافظة:</label>
-        <input type="text" id="agentProvinceInput" class="input-box" placeholder="مثال: بغداد..." style="padding:7px;font-size:11px;margin-bottom:6px">
+        <input type="text" id="agentProvinceInput" class="input-box" placeholder="مثال: بغداد..." style="padding:8px;font-size:11px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">يوزر التليجرام:</label>
-        <input type="text" id="agentTelegramInput" class="input-box" placeholder="@username" style="padding:7px;font-size:11px;margin-bottom:6px">
+        <input type="text" id="agentTelegramInput" class="input-box" placeholder="@username" style="padding:8px;font-size:11px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">رقم الواتساب:</label>
-        <input type="text" id="agentWhatsappInput" class="input-box" placeholder="07xxxxxxxxx" style="padding:7px;font-size:11px;margin-bottom:6px">
+        <input type="text" id="agentWhatsappInput" class="input-box" placeholder="07xxxxxxxxx" style="padding:8px;font-size:11px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">صورة الوكيل:</label>
-        <input type="file" id="agentAvatarInput" accept="image/*" class="input-box" style="padding:5px;font-size:10px;margin-bottom:6px">
+        <input type="file" id="agentAvatarInput" accept="image/*" class="input-box" style="padding:6px;font-size:10px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">بطاقة السكن (أمام):</label>
-        <input type="file" id="agentHousingFront" accept="image/*" class="input-box" style="padding:5px;font-size:10px;margin-bottom:6px">
+        <input type="file" id="agentHousingFront" accept="image/*" class="input-box" style="padding:6px;font-size:10px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">بطاقة السكن (خلف):</label>
-        <input type="file" id="agentHousingBack" accept="image/*" class="input-box" style="padding:5px;font-size:10px;margin-bottom:6px">
+        <input type="file" id="agentHousingBack" accept="image/*" class="input-box" style="padding:6px;font-size:10px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">البطاقة الوطنية (أمام):</label>
-        <input type="file" id="agentNationalFront" accept="image/*" class="input-box" style="padding:5px;font-size:10px;margin-bottom:6px">
+        <input type="file" id="agentNationalFront" accept="image/*" class="input-box" style="padding:6px;font-size:10px;margin-bottom:8px">
         <label style="font-size:10px;color:#cbd5e1;margin-bottom:2px">البطاقة الوطنية (خلف):</label>
-        <input type="file" id="agentNationalBack" accept="image/*" class="input-box" style="padding:5px;font-size:10px;margin-bottom:8px">
+        <input type="file" id="agentNationalBack" accept="image/*" class="input-box" style="padding:6px;font-size:10px;margin-bottom:10px">
 
-        <button class="action-btn btn-gold" style="margin-top:2px; padding:8px 12px; font-size:11px;" onclick="submitAgentApplication()">إرسال طلب التقديم للإدارة 🚀</button>
+        <button class="action-btn btn-gold" style="margin-top:4px; padding:9px 12px; font-size:11px;" onclick="submitAgentApplication()">إرسال طلب التقديم للإدارة 🚀</button>
     </div>
 </div>
 
 <div id="adminPanelModal" class="modal">
-    <div class="modal-content" style="text-align:right;max-width:390px;padding:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <h4 style="margin:0;color:#ef4444;font-size:13px">👑 لوحة تحكم الإدارة (المطورة)</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeAdminPanelModal()">✖</button>
+    <div class="modal-content" style="text-align:right;max-width:400px;padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <h4 style="margin:0;color:#ef4444;font-size:13px">👑 لوحة تحكم الإدارة الملكية</h4>
+            <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeAdminPanelModal()">✖</button>
         </div>
-        <div style="background:rgba(168,85,247,0.15);border:1px solid #a855f7;padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#c084fc;font-size:11px">🪪 طلبات التوثيق المعلقة</h4>
-            <div id="adminVerificationRequestsList" style="max-height:90px;overflow-y:auto;font-size:10px">جاري التحميل...</div>
+        <div style="background:rgba(168,85,247,0.15);border:1px solid #a855f7;padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#c084fc;font-size:11px">🪪 طلبات التوثيق المعلقة</h4>
+            <div id="adminVerificationRequestsList" style="max-height:100px;overflow-y:auto;font-size:10px">جاري التحميل...</div>
         </div>
-        <div style="background:rgba(147,51,234,0.15);border:1px solid #9333ea;padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#c084fc;font-size:11px">📢 شريط الإعلانات</h4>
-            <input type="text" id="adminTickerInput" class="input-box" placeholder="نص الإعلان..." style="margin-bottom:2px;padding:6px;font-size:11px">
-            <button class="action-btn btn-purple" style="padding:4px;font-size:10px" onclick="adminUpdateTicker()">نشر 🚀</button>
+        <div style="background:rgba(147,51,234,0.15);border:1px solid #9333ea;padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#c084fc;font-size:11px">📢 شريط الإعلانات</h4>
+            <input type="text" id="adminTickerInput" class="input-box" placeholder="نص الإعلان..." style="margin-bottom:4px;padding:7px;font-size:11px">
+            <button class="action-btn btn-purple" style="padding:5px;font-size:10px" onclick="adminUpdateTicker()">نشر 🚀</button>
         </div>
-        <div style="background:rgba(234,179,8,0.15);border:1px solid #eab308;padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#eab308;font-size:11px">⚡ شحن النقاط (يشمل حساب الإدارة ID: 1)</h4>
-            <input type="text" id="adminDualTargetId" class="input-box" placeholder="ID المستخدم أو الوكيل (أو 1 للإدارة)" style="margin-bottom:2px;padding:6px;font-size:11px">
-            <input type="number" id="adminDualPointsAmount" class="input-box" placeholder="عدد النقاط" style="margin-bottom:4px;padding:6px;font-size:11px">
-            <div style="display:flex;gap:4px">
-                <button class="action-btn" style="flex:1;padding:5px;font-size:10px;background:#0ea5e9;color:#fff" onclick="adminDualChargeAgentBag()">شحن الحقيبة 🎒</button>
-                <button class="action-btn" style="flex:1;padding:5px;font-size:10px;background:#f59e0b;color:#000" onclick="adminDualChargeDirectPoints()">شحن النقاط 🪙</button>
+        <div style="background:rgba(234,179,8,0.15);border:1px solid #eab308;padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#eab308;font-size:11px">⚡ شحن النقاط (يشمل حساب الإدارة ID: 1)</h4>
+            <input type="text" id="adminDualTargetId" class="input-box" placeholder="ID المستخدم أو الوكيل (أو 1 للإدارة)" style="margin-bottom:4px;padding:7px;font-size:11px">
+            <input type="number" id="adminDualPointsAmount" class="input-box" placeholder="عدد النقاط" style="margin-bottom:6px;padding:7px;font-size:11px">
+            <div style="display:flex;gap:6px">
+                <button class="action-btn" style="flex:1;padding:6px;font-size:10px;background:#0ea5e9;color:#fff" onclick="adminDualChargeAgentBag()">شحن الحقيبة 🎒</button>
+                <button class="action-btn" style="flex:1;padding:6px;font-size:10px;background:#f59e0b;color:#000" onclick="adminDualChargeDirectPoints()">شحن النقاط 🪙</button>
             </div>
         </div>
-        <div style="background:rgba(239,68,68,0.15);border:1px solid #ef4444;padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#ef4444;font-size:11px">🚫 تجميد / إلغاء تجميد الحساب</h4>
-            <input type="text" id="adminFreezeTargetId" class="input-box" placeholder="ID المستخدم" style="margin-bottom:4px;padding:6px;font-size:11px">
-            <button class="action-btn" style="padding:5px;font-size:10px;background:#ef4444;color:#fff" onclick="adminToggleFreezeUser()">تجميد / إلغاء تجميد ⚠️</button>
+        <div style="background:rgba(239,68,68,0.15);border:1px solid #ef4444;padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#ef4444;font-size:11px">🚫 تجميد / إلغاء تجميد الحساب</h4>
+            <input type="text" id="adminFreezeTargetId" class="input-box" placeholder="ID المستخدم" style="margin-bottom:6px;padding:7px;font-size:11px">
+            <button class="action-btn" style="padding:6px;font-size:10px;background:#ef4444;color:#fff" onclick="adminToggleFreezeUser()">تجميد / إلغاء تجميد ⚠️</button>
         </div>
-        <div style="background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#c084fc;font-size:11px">⚙️ أزرار الطوارئ والإدارة</h4>
-            <div style="display:flex;gap:4px;margin-bottom:4px">
-                <button id="adminToggleWithdrawBtn" class="action-btn btn-purple" style="flex:1;padding:5px;font-size:9px" onclick="adminToggleWithdrawFeature()">🔒 سحب الأرباح</button>
-                <button id="adminToggleDailyCounterBtn" class="action-btn btn-blue" style="flex:1;padding:5px;font-size:9px" onclick="adminToggleDailyCounterFeature()">⏳ العداد اليومي</button>
+        <div style="background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#c084fc;font-size:11px">⚙️ أزرار الطوارئ والإدارة</h4>
+            <div style="display:flex;gap:6px;margin-bottom:6px">
+                <button id="adminToggleWithdrawBtn" class="action-btn btn-purple" style="flex:1;padding:6px;font-size:9px" onclick="adminToggleWithdrawFeature()">🔒 سحب الأرباح</button>
+                <button id="adminToggleDailyCounterBtn" class="action-btn btn-blue" style="flex:1;padding:6px;font-size:9px" onclick="adminToggleDailyCounterFeature()">⏳ العداد اليومي</button>
             </div>
-            <div style="display:flex;gap:4px">
-                <button onclick="openAdminCounterOrders()" class="action-btn btn-gold" style="flex:1;padding:5px;font-size:9px">📥 العدادات</button>
-                <button onclick="openAdminAgentApplications()" class="action-btn btn-green" style="flex:1;padding:5px;font-size:9px">📝 الوكلاء</button>
+            <div style="display:flex;gap:6px">
+                <button onclick="openAdminCounterOrders()" class="action-btn btn-gold" style="flex:1;padding:6px;font-size:9px">📥 العدادات</button>
+                <button onclick="openAdminAgentApplications()" class="action-btn btn-green" style="flex:1;padding:6px;font-size:9px">📝 الوكلاء</button>
             </div>
         </div>
-        <div style="background:rgba(10,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:6px;border-radius:8px;margin-bottom:6px">
-            <h4 style="margin:0 0 2px 0;color:#10b981;font-size:11px">🔍 فحص ملف المستخدم بالـ ID</h4>
-            <div style="display:flex;gap:4px">
-                <input type="text" id="adminInspectIdInput" class="input-box" placeholder="ID المستخدم" style="margin:0;padding:6px;font-size:10px;flex:1">
-                <button class="action-btn btn-green" style="width:auto;padding:6px 10px;font-size:10px" onclick="adminInspectUser()">فحص 🔎</button>
+        <div style="background:rgba(10,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:8px;border-radius:10px;margin-bottom:8px">
+            <h4 style="margin:0 0 4px 0;color:#10b981;font-size:11px">🔍 فحص ملف المستخدم بالـ ID</h4>
+            <div style="display:flex;gap:6px">
+                <input type="text" id="adminInspectIdInput" class="input-box" placeholder="ID المستخدم" style="margin:0;padding:7px;font-size:10px;flex:1">
+                <button class="action-btn btn-green" style="width:auto;padding:7px 12px;font-size:10px" onclick="adminInspectUser()">فحص 🔎</button>
             </div>
-            <div id="adminInspectResult" style="font-size:10px;color:#cbd5e1;margin-top:4px;background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;display:none;text-align:right;"></div>
+            <div id="adminInspectResult" style="font-size:10px;color:#cbd5e1;margin-top:6px;background:rgba(0,0,0,0.35);padding:8px;border-radius:6px;display:none;text-align:right;"></div>
         </div>
-        <div style="font-size:11px;color:#c084fc;margin-bottom:4px"><b>طلبـات السحب المعلقة (مع إمكانية الموافقة والرفض وإعادة النقاط):</b></div>
-        <div id="adminWithdrawalsArea" class="admin-tab-content" style="max-height:140px;overflow-y:auto;font-size:10px">جاري التحميل...</div>
+        <div style="font-size:11px;color:#c084fc;margin-bottom:6px"><b>طلبـات السحب المعلقة (مع إمكانية الموافقة والرفض وإعادة النقاط):</b></div>
+        <div id="adminWithdrawalsArea" class="admin-tab-content" style="max-height:150px;overflow-y:auto;font-size:10px">جاري التحميل...</div>
     </div>
 </div>
 
 <div id="adminAgentAppsModal" class="modal">
-    <div class="modal-content" style="text-align:right;max-width:390px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div class="modal-content" style="text-align:right;max-width:400px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <h4 style="margin:0;color:#eab308;font-size:13px">📝 طلبات التقديم على الوكالة والمستمسكات</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeAdminAgentApplications()">✖</button>
+            <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeAdminAgentApplications()">✖</button>
         </div>
-        <div id="adminAgentAppsList" style="max-height:280px;overflow-y:auto;font-size:11px">جاري التحميل...</div>
+        <div id="adminAgentAppsList" style="max-height:300px;overflow-y:auto;font-size:11px">جاري التحميل...</div>
     </div>
 </div>
 
 <div id="adminCounterOrdersModal" class="modal">
-    <div class="modal-content" style="text-align:right;max-width:390px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div class="modal-content" style="text-align:right;max-width:400px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <h4 style="margin:0;color:#c084fc;font-size:13px">📥 طلبات شراء العدادات المعلقة والإيداعات</h4>
-            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeAdminCounterOrders()">✖</button>
+            <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeAdminCounterOrders()">✖</button>
         </div>
-        <div id="adminCounterOrdersList" style="max-height:260px;overflow-y:auto;font-size:11px">جاري التحميل...</div>
+        <div id="adminCounterOrdersList" style="max-height:280px;overflow-y:auto;font-size:11px">جاري التحميل...</div>
     </div>
 </div>
 
 <div id="chatModal" class="modal">
-    <div class="modal-content" style="max-width:380px">
-        <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="modal-content" style="max-width:390px">
+        <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <h3 id="chatTitle" style="color:#10b981;margin:0;font-size:13px">الدردشة 👤</h3>
             <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeChatModal()">✖</button>
         </div>
-        <div id="chatMessagesArea" style="height:250px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:8px;border-radius:8px;margin:8px 0;font-size:11px"></div>
-        <div style="display:flex;gap:4px;align-items:center">
+        <div id="chatMessagesArea" style="height:260px;overflow-y:auto;background:rgba(0,0,0,0.35);padding:10px;border-radius:10px;margin:8px 0;font-size:11px"></div>
+        <div style="display:flex;gap:6px;align-items:center">
             <input type="text" id="chatInputMsg" class="input-box" placeholder="اكتب رسالة..." style="margin:0;flex:1">
-            <button class="action-btn btn-blue" style="width:60px;padding:0;height:38px" onclick="sendChatMessage()">إرسال</button>
+            <button class="action-btn btn-blue" style="width:65px;padding:0;height:40px">إرسال</button>
         </div>
     </div>
 </div>
 
 <div id="withdrawModal" class="modal">
     <div class="modal-content" style="text-align:right">
-        <div class="modal-header" style="display:flex;justify-content:space-between;margin-bottom:8px">
-            <h3 style="color:#c084fc;margin:0;font-size:14px">💸 سحب الأرباح</h3>
+        <div class="modal-header" style="display:flex;justify-content:space-between;margin-bottom:10px">
+            <h3 style="color:#c084fc;margin:0;font-size:14px">💸 سحب الأرباح الملكي</h3>
             <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeWithdrawModal()">✖</button>
         </div>
-        <div style="background:rgba(10,185,129,0.15);border:1px solid #10b981;padding:8px;border-radius:8px;margin-bottom:10px;font-size:11px;color:#10b981"><b>💼 قسم سحب الأرباح:</b><br>تُخصم النقاط فوراً من رصيدك عند إرسال الطلب (الحد الأدنى 30,000 نقطة):</div>
-        <label style="font-size:11px;color:#cbd5e1;display:block;margin-bottom:4px">اختر طريقة السحب:</label>
+        <div style="background:rgba(10,185,129,0.15);border:1px solid #10b981;padding:10px;border-radius:10px;margin-bottom:12px;font-size:11px;color:#10b981"><b>💼 قسم سحب الأرباح:</b><br>تُخصم النقاط فوراً من رصيدك عند إرسال الطلب (الحد الأدنى 30,000 نقطة):</div>
+        <label style="font-size:11px;color:#cbd5e1;display:block;margin-bottom:6px">اختر طريقة السحب:</label>
         <div class="withdraw-methods-grid">
             <button class="withdraw-method-btn active" id="wBtnZain" onclick="selectWithdrawMethod('زين كاش (Zain Cash)')">زين كاش</button>
             <button class="withdraw-method-btn" id="wBtnSuper" onclick="selectWithdrawMethod('سوبركي (SuperKey)')">سوبركي</button>
@@ -727,7 +727,7 @@
     let currentEmail='',currentUserKey='',rtdb=null,auth=null;
     let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,customId:'',name:'',avatar:'',bio:'',lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none'};
     let base64Image='',activeChatFriendKey='',activeChatFriendName='',timerInterval=null;
-    let globalAppSettings={withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في تطبيق Lounge الرسمي!'};
+    let globalAppSettings={withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في تطبيق Lounge الملكي الرسمي!'};
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
@@ -872,20 +872,20 @@
 
                 let deleteAdminBtn = '';
                 if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
-                    deleteAdminBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:10px;margin-top:4px;" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف الغرفة (إدارة) 🗑️</button>`;
+                    deleteAdminBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:5px 10px;font-size:10px;margin-top:6px;" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف الغرفة (إدارة) 🗑️</button>`;
                 }
 
-                html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right; margin-bottom:6px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
+                html += `<div style="background:rgba(30,41,59,0.88); border:1px solid rgba(236,72,153,0.35); border-radius:14px; padding:12px; display:flex; justify-content:space-between; align-items:center; text-align:right; margin-bottom:8px; box-shadow:0 6px 18px rgba(0,0,0,0.3);">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="${r.cover}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #ec4899; box-shadow:0 0 10px rgba(236,72,153,0.5);" alt="روم">
                         <div>
                             <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
-                            <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
+                            <div style="font-size:10px; color:#38bdf8; margin-top:3px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
                             ${deleteAdminBtn}
                         </div>
                     </div>
                     <div>
-                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
+                        <button class="action-btn btn-purple" style="padding:7px 14px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
                     </div>
                 </div>`;
             });
@@ -924,16 +924,16 @@
                 let rKey = item.key;
                 if(String(r.roomId) === String(searchId)){
                     found = true;
-                    html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
+                    html += `<div style="background:rgba(30,41,59,0.88); border:1px solid rgba(236,72,153,0.35); border-radius:14px; padding:12px; display:flex; justify-content:space-between; align-items:center; text-align:right; box-shadow:0 6px 18px rgba(0,0,0,0.3);">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <img src="${r.cover}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #ec4899; box-shadow:0 0 10px rgba(236,72,153,0.5);" alt="روم">
                             <div>
                                 <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
-                                <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
+                                <div style="font-size:10px; color:#38bdf8; margin-top:3px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
                             </div>
                         </div>
                         <div>
-                            <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
+                            <button class="action-btn btn-purple" style="padding:7px 14px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
                         </div>
                     </div>`;
                 }
@@ -959,11 +959,11 @@
         rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
             if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "أهلاً بك في الغرفة! ابدأ المحادثة أو أرسل الهدايا."; return; }
+            if(!snap.exists()){ area.innerHTML = "أهلاً بك في الغرفة الملكية! ابدأ المحادثة أو أرسل الهدايا."; return; }
             let h = '';
             snap.forEach(m=>{
                 let msg = m.val();
-                h += `<div style="margin-bottom:6px;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</div>`;
+                h += `<div style="margin-bottom:8px;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</div>`;
             });
             area.innerHTML = h;
             area.scrollTop = area.scrollHeight;
@@ -979,7 +979,7 @@
                 let dat = u.val();
                 let uKey = u.key;
                 count++;
-                uHtml += `<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
+                uHtml += `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
                 if(uKey !== currentUserKey) selectHtml += `<option value="${uKey}">${dat.name}</option>`;
             });
             uList.innerHTML = uHtml;
@@ -1030,7 +1030,7 @@
                 if(targetVal === 'all'){
                     rtdb.ref(`room_messages/${activeRoomKey}`).push({
                         senderKey: 'SYSTEM',
-                        senderName: '🎁 نظام الهدايا',
+                        senderName: '🎁 نظام الهدايا الملكي',
                         text: `أرسل (${userData.name}) هدية (${giftName}) للجميع في الشات العام! ✨`,
                         timestamp: Date.now()
                     });
@@ -1048,7 +1048,7 @@
                                 });
                                 rtdb.ref(`room_messages/${activeRoomKey}`).push({
                                     senderKey: 'SYSTEM',
-                                    senderName: '🎁 نظام الهدايا',
+                                    senderName: '🎁 نظام الهدايا الملكي',
                                     text: `أرسل (${userData.name}) هدية (${giftName}) إلى (${rData.name || 'صديق'}) بنجاح! 💎`,
                                     timestamp: Date.now()
                                 });
@@ -1062,7 +1062,7 @@
     }
 
     function initLoungeTickerAnimation(){
-        const words = ["LOUNGE", "APP", "VIP"];
+        const words = ["LOUNGE", "ROYAL", "VIP"];
         let wIdx = 0, cIdx = 0;
         const el = document.getElementById('loungeTickerWord');
         if(!el) return;
@@ -1120,13 +1120,13 @@
             let html = '';
             snap.forEach(item=>{
                 let d = item.val(), itemKey = item.key;
-                html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(16,185,129,0.4); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
+                html += `<div style="background:rgba(30,41,59,0.88); border:1px solid rgba(16,185,129,0.45); border-radius:14px; padding:12px; display:flex; justify-content:space-between; align-items:center; text-align:right; box-shadow:0 6px 18px rgba(0,0,0,0.3);">
                     <div style="flex:1;">
                         <div style="font-size:12px; color:#fde047; font-weight:bold;">عداد ${Number(d.counterVal).toLocaleString()} نقطة يومياً</div>
-                        <div style="font-size:10px; color:#38bdf8; margin-top:2px;">👤 البائع (ID): ${d.sellerId}</div>
-                        <div style="font-size:11px; color:#34d399; font-weight:bold; margin-top:3px;">💰 السعر: ${Number(d.price).toLocaleString()} نقطة</div>
+                        <div style="font-size:10px; color:#38bdf8; margin-top:3px;">👤 البائع (ID): ${d.sellerId}</div>
+                        <div style="font-size:11px; color:#34d399; font-weight:bold; margin-top:4px;">💰 السعر: ${Number(d.price).toLocaleString()} نقطة</div>
                     </div>
-                    <div><button class="action-btn btn-gold" style="padding:6px 12px; font-size:11px;" onclick="promptBuyTradingCounter('${itemKey}', '${d.sellerKey}', ${d.counterVal}, ${d.price})">شراء 🛒</button></div>
+                    <div><button class="action-btn btn-gold" style="padding:7px 14px; font-size:11px;" onclick="promptBuyTradingCounter('${itemKey}', '${d.sellerKey}', ${d.counterVal}, ${d.price})">شراء 🛒</button></div>
                 </div>`;
             });
             container.innerHTML = html;
@@ -1249,7 +1249,7 @@
         opts.forEach((opt) => {
             const btn = document.createElement('button');
             btn.innerText = opt.text;
-            btn.style.cssText = "padding:14px; background:rgba(30,41,59,0.85); color:#fff; border:1px solid rgba(168,85,247,0.3); border-radius:10px; cursor:pointer; text-align:center; font-weight:bold; font-size:13px;";
+            btn.style.cssText = "padding:15px; background:rgba(30,41,59,0.9); color:#fff; border:1px solid rgba(168,85,247,0.35); border-radius:12px; cursor:pointer; text-align:center; font-weight:bold; font-size:13px;";
             btn.onclick = () => checkQuizAnswer(opt.isCorrect, btn);
             optionsBox.appendChild(btn);
         });
@@ -1279,7 +1279,7 @@
         const actionBtn = document.getElementById('answer-action-btn');
         if (actionBtn) { actionBtn.innerText = message; actionBtn.style.background = '#64748b'; actionBtn.disabled = true; }
         const oBox = document.getElementById('options-box');
-        if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
+        if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:12px;">${message}</p>`;
     }
 
     window.addEventListener('load',()=>{
@@ -1424,7 +1424,7 @@
             }
         });
         rtdb.ref('app_settings').on('value',snap=>{
-            globalAppSettings=snap.exists()?snap.val():{withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في تطبيق Lounge الرسمي!'};
+            globalAppSettings=snap.exists()?snap.val():{withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في تطبيق Lounge الملكي الرسمي!'};
             let tickerElem = document.getElementById('tickerTextDisplay');
             if(tickerElem && globalAppSettings.tickerText) tickerElem.innerText = globalAppSettings.tickerText;
         });
@@ -1495,7 +1495,7 @@
         } else if(userData.verificationStatus === 'pending'){
             statusDisp.innerHTML = `<span style="color:#eab308;font-weight:bold">⏳ طلب التوثيق بالرقم قيد المراجعة...</span>`;
         } else {
-            statusDisp.innerHTML = `<div style="font-size:11px;color:#c084fc;font-weight:bold;margin-bottom:4px">🛡️ طلب توثيق الحساب بالعلامة الزرقاء:</div><div style="display:flex;gap:4px"><input type="text" id="verificationPhoneInput" class="input-box" placeholder="أدخل رقم الهاتف للتوثيق" style="margin:0;flex:1;padding:7px;font-size:11px"><button class="action-btn btn-purple" style="width:40px;height:34px;padding:0;font-size:14px" onclick="submitVerificationRequest()" title="إرسال">✔️</button></div>`;
+            statusDisp.innerHTML = `<div style="font-size:11px;color:#c084fc;font-weight:bold;margin-bottom:6px">🛡️ طلب توثيق الحساب بالعلامة الزرقاء:</div><div style="display:flex;gap:6px"><input type="text" id="verificationPhoneInput" class="input-box" placeholder="أدخل رقم الهاتف للتوثيق" style="margin:0;flex:1;padding:8px;font-size:11px"><button class="action-btn btn-purple" style="width:44px;height:36px;padding:0;font-size:14px" onclick="submitVerificationRequest()" title="إرسال">✔️</button></div>`;
         }
     }
 
@@ -1507,7 +1507,7 @@
             let h = '';
             snap.forEach(req=>{
                 let d = req.val();
-                h += `<div style="background:rgba(255,255,255,0.03);padding:4px;border-radius:4px;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center"><div><b>${d.userName}</b> (ID: ${d.userId})<br>الرقم: <span style="color:#38bdf8">${d.phone}</span></div><div style="display:flex;gap:2px"><button onclick="adminApproveVerification('${d.userKey}','${req.key}','${d.phone}')" style="background:#10b981;color:#fff;border:none;padding:2px 6px;border-radius:3px;cursor:pointer;font-size:8px">موافقة ✔️</button><button onclick="adminRejectVerification('${d.userKey}','${req.key}')" style="background:#ef4444;color:#fff;border:none;padding:2px 6px;border-radius:3px;cursor:pointer;font-size:8px">رفض ✖</button></div></div>`;
+                h += `<div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:6px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center"><div><b>${d.userName}</b> (ID: ${d.userId})<br>الرقم: <span style="color:#38bdf8">${d.phone}</span></div><div style="display:flex;gap:4px"><button onclick="adminApproveVerification('${d.userKey}','${req.key}','${d.phone}')" style="background:#10b981;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:9px">موافقة ✔️</button><button onclick="adminRejectVerification('${d.userKey}','${req.key}')" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:9px">رفض ✖</button></div></div>`;
             });
             c.innerHTML = h;
         });
@@ -1678,17 +1678,17 @@
                 
                 let removeAgentBtn = '';
                 if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
-                    removeAgentBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:3px 6px;font-size:9px;margin-top:6px;width:100%;" onclick="adminRemoveAgentStatus('${u.key}', '${d.name}')">إزالة الوكيل (إدارة) 🗑️</button>`;
+                    removeAgentBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:9px;margin-top:8px;width:100%;" onclick="adminRemoveAgentStatus('${u.key}', '${d.name}')">إزالة الوكيل (إدارة) 🗑️</button>`;
                 }
 
-                h += `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(234,179,8,0.3);padding:6px;border-radius:10px;text-align:right;">
-                    <div style="font-size:11px;color:#facc15;font-weight:bold;margin-bottom:4px;">📍 ${prov}</div>
-                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                        <img src="${av}" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #eab308;" alt="وكيل">
+                h += `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(234,179,8,0.35);padding:8px;border-radius:12px;text-align:right;box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                    <div style="font-size:11px;color:#facc15;font-weight:bold;margin-bottom:6px;">📍 ${prov}</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <img src="${av}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid #eab308;" alt="وكيل">
                         <div><b style="color:#fff;font-size:11px">${d.name}</b><div style="font-size:9px;color:#cbd5e1;">⭐ وكيل معتمد</div></div>
                     </div>
-                    <div style="font-size:9px;color:#cbd5e1;margin-bottom:2px;">تليجرام: ${d.agentTelegram||'---'} <button class="agent-copy-btn" onclick="copyTextToClipboard('${d.agentTelegram||''}')">📋</button></div>
-                    <div style="font-size:9px;color:#cbd5e1;margin-bottom:2px;">واتساب: ${d.agentWhatsapp||'---'} <button class="agent-copy-btn" onclick="copyTextToClipboard('${d.agentWhatsapp||''}')">📋</button></div>
+                    <div style="font-size:9px;color:#cbd5e1;margin-bottom:3px;">تليجرام: ${d.agentTelegram||'---'} <button class="agent-copy-btn" onclick="copyTextToClipboard('${d.agentTelegram||''}')">📋</button></div>
+                    <div style="font-size:9px;color:#cbd5e1;margin-bottom:3px;">واتساب: ${d.agentWhatsapp||'---'} <button class="agent-copy-btn" onclick="copyTextToClipboard('${d.agentWhatsapp||''}')">📋</button></div>
                     ${removeAgentBtn}
                 </div>`;
             });
@@ -1806,7 +1806,7 @@
         if(list.length===0){c.innerHTML="<div style='text-align:center;padding:15px;color:#94a3b8'>لا توجد تكبيسات مسجلة.</div>";return;}
         let html='';list.forEach((it,i)=>{
             let r=i+1,cr=r===1?'👑 ':(r===2?'🥈 ':(r===3?'🥉 ':''));
-            html+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:8px;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)"><div style="display:flex;align-items:center;gap:8px"><span style="font-weight:900;font-size:12px;color:#c084fc;width:22px;text-align:center">#${r}</span><img src="${it.avatar||'https://via.placeholder.com/38'}" style="width:38px;height:38px;border-radius:50%;object-fit:cover" alt="صورة"><div><b style="color:#fff;font-size:12px">${cr}${it.name}</b><div style="font-size:10px;color:#94a3b8">ID: ${it.customId}</div></div></div><div style="text-align:left"><span style="color:#34d399;font-weight:bold;font-size:12px">${it[key].toLocaleString()}</span><div style="font-size:9px;color:#94a3b8">${unit}</div></div></div>`;
+            html+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);padding:10px;border-radius:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 4px 12px rgba(0,0,0,0.3)"><div style="display:flex;align-items:center;gap:10px"><span style="font-weight:900;font-size:12px;color:#c084fc;width:22px;text-align:center">#${r}</span><img src="${it.avatar||'https://via.placeholder.com/38'}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #c084fc" alt="صورة"><div><b style="color:#fff;font-size:12px">${cr}${it.name}</b><div style="font-size:10px;color:#94a3b8">ID: ${it.customId}</div></div></div><div style="text-align:left"><span style="color:#34d399;font-weight:bold;font-size:12px">${it[key].toLocaleString()}</span><div style="font-size:9px;color:#94a3b8">${unit}</div></div></div>`;
         });
         c.innerHTML=html;
     }
@@ -1851,7 +1851,7 @@
         rtdb.ref(`friend_requests/${currentUserKey}`).once('value',snap=>{
             let c=document.getElementById('friendRequestsContainer');if(!c)return;
             if(!snap.exists()){c.innerHTML="لا توجد طلبات صداقة";return;}let h='';
-            snap.forEach(req=>{let d=req.val(),sk=req.key;h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px"><span><b>${d.name}</b> (${d.customId})</span><div style="display:flex;gap:4px"><button onclick="acceptFriend('${sk}','${d.name}','${d.customId}')" style="background:#10b981;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">قبول</button><button onclick="rejectFriend('${sk}')" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">رفض</button></div></div>`;});
+            snap.forEach(req=>{let d=req.val(),sk=req.key;h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);padding:8px;border-radius:8px;margin-bottom:6px"><span><b>${d.name}</b> (${d.customId})</span><div style="display:flex;gap:6px"><button onclick="acceptFriend('${sk}','${d.name}','${d.customId}')" style="background:#10b981;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer">قبول</button><button onclick="rejectFriend('${sk}')" style="background:#ef4444;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer">رفض</button></div></div>`;});
             c.innerHTML=h;
         });
         rtdb.ref(`friends/${currentUserKey}`).once('value',snap=>{
@@ -1859,11 +1859,11 @@
             if(!snap.exists()){c.innerHTML="لا يوجد أصدقاء مضافون";return;}let h='';
             snap.forEach(f=>{
                 let d=f.val(), fk=f.key;
-                h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px">
+                h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);padding:8px;border-radius:8px;margin-bottom:6px">
                     <span style="cursor:pointer">🟢 <b>${d.name}</b></span>
-                    <div style="display:flex;gap:4px">
-                        <button onclick="openChatModal('${fk}','${d.name}')" style="background:#0ea5e9;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">محادثة 💬</button>
-                        <button onclick="removeFriend('${fk}','${d.name}')" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer" title="حذف الصديق">حذف 🗑️</button>
+                    <div style="display:flex;gap:6px">
+                        <button onclick="openChatModal('${fk}','${d.name}')" style="background:#0ea5e9;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer">محادثة 💬</button>
+                        <button onclick="removeFriend('${fk}','${d.name}')" style="background:#ef4444;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer" title="حذف الصديق">حذف 🗑️</button>
                     </div>
                 </div>`;
             });
@@ -1908,7 +1908,7 @@
             snap.forEach(m=>{
                 let msg=m.val(),isMe=msg.sender===currentUserKey;
                 let bg=isMe?"background:#10b981;color:#fff":"background:#fff;color:#0f172a";
-                h+=`<div style="text-align:${isMe?'left':'right'};margin-bottom:5px"><span style="${bg};padding:5px 9px;border-radius:6px;display:inline-block;max-width:85%;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</span></div>`;
+                h+=`<div style="text-align:${isMe?'left':'right'};margin-bottom:6px"><span style="${bg};padding:6px 10px;border-radius:8px;display:inline-block;max-width:85%;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</span></div>`;
             });
             a.innerHTML=h;a.scrollTop=a.scrollHeight;
         });
@@ -1943,14 +1943,12 @@
     }
     function closeWithdrawModal(){ document.getElementById('withdrawModal').style.display='none'; }
     
-    // الخصم التلقائي المباشر من رصيد المستخدم عند طلب سحب الأرباح
     function submitWithdrawal(){
         let acc=document.getElementById('withdrawAccount').value.trim(),amt=parseFloat(document.getElementById('withdrawAmount').value);
         if(!acc||isNaN(amt))return showNeonPopup('⚠️ أدخل رقم الحساب والمبلغ بشكل صحيح!');
         if(amt<30000)return showNeonPopup('⚠️ الحد الأدنى للسحب هو 30,000 نقطة!');
         if((userData.points||0)<amt)return showNeonPopup(`❌ نقاطك الحالية (${(userData.points||0).toLocaleString()} نقطة) غير كافية لهذا المبلغ!`);
         
-        // الخصم الفوري من النقاط
         let newPoints = (userData.points || 0) - amt;
         rtdb.ref(`users/${currentUserKey}`).update({ points: newPoints }).then(()=>{
             userData.points = newPoints;
@@ -2045,13 +2043,13 @@
             let h = '';
             snap.forEach(item=>{
                 let d = item.val();
-                h += `<div style="background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;margin-bottom:6px">
+                h += `<div style="background:rgba(255,255,255,0.04);padding:10px;border-radius:10px;margin-bottom:8px">
                     <b>المستخدم:</b> ${d.userName} (${d.userId})<br>
                     <b>المحافظة:</b> ${d.province||''}<br>
                     <b>رسوم الخصم:</b> ${Number(d.feePaid||6000000).toLocaleString()} نقطة<br>
-                    <div style="display:flex;gap:4px;margin-top:6px;">
-                        <button onclick="adminApproveAgent('${d.userKey}','${d.telegram}','${d.whatsapp}','${d.province||''}','${d.agentAvatar||''}','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">موافقة ✔️</button>
-                        <button onclick="adminRejectAgent('${d.userKey}', ${d.feePaid||6000000}, '${item.key}')" style="background:#ef4444;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">رفض وإعادة النقاط ✖</button>
+                    <div style="display:flex;gap:6px;margin-top:8px;">
+                        <button onclick="adminApproveAgent('${d.userKey}','${d.telegram}','${d.whatsapp}','${d.province||''}','${d.agentAvatar||''}','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:10px;flex:1;">موافقة ✔️</button>
+                        <button onclick="adminRejectAgent('${d.userKey}', ${d.feePaid||6000000}, '${item.key}')" style="background:#ef4444;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:10px;flex:1;">رفض وإعادة النقاط ✖</button>
                     </div>
                 </div>`;
             });
@@ -2144,11 +2142,11 @@
             let h="";
             snap.forEach(item=>{
                 let d = item.val();
-                h+=`<div style="background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;margin-bottom:6px">
+                h+=`<div style="background:rgba(255,255,255,0.04);padding:10px;border-radius:10px;margin-bottom:8px">
                     🪪 <b>آيدي المستخدم (ID):</b> <span style="color:#38bdf8">${d.userId}</span><br>
                     👑 <b>نوع العداد المطلوب:</b> <span style="color:#fde047">${d.details}</span><br>
                     🔑 <b>كود عملية التحويل (Hash):</b> <span style="color:#34d399;word-break:break-all">${d.hash || '---'}</span>
-                    <button onclick="adminDeleteRef('manual_counter_orders','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;display:block;margin-top:6px;font-size:10px;">موافقة وإتمام الطلب ✔️</button>
+                    <button onclick="adminDeleteRef('manual_counter_orders','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;display:block;margin-top:8px;font-size:10px;">موافقة وإتمام الطلب ✔️</button>
                 </div>`;
             });
             lst.innerHTML = h;
@@ -2156,7 +2154,6 @@
     }
     function closeAdminCounterOrders(){ document.getElementById('adminCounterOrdersModal').style.display='none'; }
 
-    // تحميل طلبات السحب مع زري الموافقة والرفض وإعادة النقاط
     function loadAdminData(){
         if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return;
         rtdb.ref('admin_withdrawals').limitToLast(20).once('value',snap=>{
@@ -2165,14 +2162,14 @@
             let h='';
             snap.forEach(item=>{
                 let d=item.val();
-                h+=`<div style="background:rgba(255,255,255,0.04);padding:8px;border-radius:6px;margin-bottom:5px;border:1px solid rgba(192,132,252,0.2)">
+                h+=`<div style="background:rgba(255,255,255,0.05);padding:10px;border-radius:8px;margin-bottom:6px;border:1px solid rgba(192,132,252,0.25)">
                     🪪 <b>آيدي المستخدم (ID):</b> <span style="color:#38bdf8">${d.userId}</span><br>
                     💰 <b>عدد النقاط المخصومة:</b> <span style="color:#34d399">${Number(d.amount).toLocaleString()} نقطة</span><br>
                     💳 <b>وسيلة السحب:</b> <span style="color:#c084fc">${d.method}</span><br>
                     📱 <b>الحساب/المحفظة:</b> <b style="color:#fde047">${d.account}</b>
-                    <div style="display:flex;gap:4px;margin-top:6px;">
-                        <button onclick="adminApproveWithdrawal('${item.key}', '${d.userKey}', '${d.userName||'مستخدم'}', ${d.amount})" style="background:#10b981;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">موافقة وإتمام السحب ✔️</button>
-                        <button onclick="adminRejectWithdrawal('${item.key}', '${d.userKey}', ${d.amount})" style="background:#ef4444;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">رفض وإعادة النقاط ✖</button>
+                    <div style="display:flex;gap:6px;margin-top:8px;">
+                        <button onclick="adminApproveWithdrawal('${item.key}', '${d.userKey}', '${d.userName||'مستخدم'}', ${d.amount})" style="background:#10b981;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:10px;flex:1;">موافقة وإتمام السحب ✔️</button>
+                        <button onclick="adminRejectWithdrawal('${item.key}', '${d.userKey}', ${d.amount})" style="background:#ef4444;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:10px;flex:1;">رفض وإعادة النقاط ✖</button>
                     </div>
                 </div>`;
             });
@@ -2180,7 +2177,6 @@
         });
     }
 
-    // زر موافقة الإدارة على السحب (تثبيت الخصم وحذف الطلب)
     function adminApproveWithdrawal(reqKey, userKey, userName, amount){
         rtdb.ref(`notifications/${userKey}`).push({
             text: `🎉 تم الموافقة على طلب سحب الأرباح بقيمة (${Number(amount).toLocaleString()} نقطة) وتم إرسال الأموال لحسابك بنجاح!`,
@@ -2192,7 +2188,6 @@
         });
     }
 
-    // زر رفض الإدارة للسحب (إعادة النقاط المخصومة تلقائياً وحذف الطلب)
     function adminRejectWithdrawal(reqKey, userKey, amount){
         if(!confirm(`⚠️ هل أنت متأكد من رفض الطلب وإعادة (${Number(amount).toLocaleString()} نقطة) إلى حساب المستخدم؟`)) return;
         rtdb.ref(`users/${userKey}`).once('value', uSnap=>{
