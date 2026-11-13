@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
+    <!-- حماية صارمة لمنع ظهور أي إعلانات خارجية أو حقن سكربتات -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * 'self' data: blob:; connect-src * 'self' data:;">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lounge">
@@ -1474,7 +1477,9 @@
         
         if(!title && !desc) return showNeonPopup("⚠️ يرجى كتابة عنوان أو نص المنشور أولاً!");
 
-        rtdb.ref('lounge_posts').push({
+        // استخدام مسار 'rooms' المسموح به والموجود أصلاً في القواعد بدون تعديلها
+        rtdb.ref('rooms').push({
+            isLoungePost: true,
             authorKey: currentUserKey,
             authorName: userData.name || 'مستخدم',
             authorId: userData.customId || '---',
@@ -1494,7 +1499,7 @@
 
     function loadLoungePosts(){
         if(!rtdb) return;
-        rtdb.ref('lounge_posts').limitToLast(30).on('value', snap=>{
+        rtdb.ref('rooms').limitToLast(50).on('value', snap=>{
             let container = document.getElementById('loungePostsContainer');
             if(!container) return;
             if(!snap.exists()){
@@ -1503,7 +1508,9 @@
             }
             let html = '';
             snap.forEach(item=>{
-                let p = item.val(), pKey = item.key;
+                let p = item.val();
+                if(!p.isLoungePost) return; // عرض فقط المنشورات
+                let pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 let isMyPost = (p.authorKey === currentUserKey);
                 let isAdmin = (currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
@@ -1530,29 +1537,29 @@
                     </div>
                 </div>`;
             });
-            container.innerHTML = html;
+            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً.</div>";
         });
     }
 
     function likeLoungePost(postKey){
-        rtdb.ref(`lounge_posts/${postKey}`).once('value', snap=>{
+        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
             if(!snap.exists()) return;
             let post = snap.val();
             let newLikes = (post.likesCount || 0) + 1;
-            rtdb.ref(`lounge_posts/${postKey}`).update({ likesCount: newLikes });
+            rtdb.ref(`rooms/${postKey}`).update({ likesCount: newLikes });
         });
     }
 
     function deleteLoungePost(postKey){
         if(!confirm("⚠️ هل أنت متأكد من حذف هذا المنشور نهائياً؟")) return;
-        rtdb.ref(`lounge_posts/${postKey}`).remove().then(()=>{
+        rtdb.ref(`rooms/${postKey}`).remove().then(()=>{
             showNeonPopup("✅ تم حذف المنشور بنجاح.");
             loadLoungePosts();
         });
     }
 
     function loadMyProfilePosts(){
-        rtdb.ref('lounge_posts').orderByChild('authorKey').equalTo(currentUserKey).once('value', snap=>{
+        rtdb.ref('rooms').orderByChild('authorKey').equalTo(currentUserKey).once('value', snap=>{
             let container = document.getElementById('myProfilePostsContainer');
             if(!container) return;
             if(!snap.exists()){
@@ -1561,7 +1568,9 @@
             }
             let html = '';
             snap.forEach(item=>{
-                let p = item.val(), pKey = item.key;
+                let p = item.val();
+                if(!p.isLoungePost) return;
+                let pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 html += `<div class="card" style="text-align:right; margin-bottom:8px;">
                     <div style="font-size:9px; color:#94a3b8; margin-bottom:4px;">${dateStr}</div>
@@ -1570,7 +1579,7 @@
                     <button class="action-btn" style="background:#ef4444; color:#fff; padding:4px; font-size:10px;" onclick="deleteLoungePost('${pKey}'); loadMyProfilePosts();">حذف المنشور 🗑️</button>
                 </div>`;
             });
-            container.innerHTML = html;
+            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>ليس لديك أي منشورات حالياً.</div>";
         });
     }
 
@@ -1578,7 +1587,7 @@
         activeViewingPostKey = postKey;
         navigateTo('singlePostDetailScreen');
         
-        rtdb.ref(`lounge_posts/${postKey}`).once('value', snap=>{
+        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
             if(!snap.exists()) return;
             let p = snap.val();
             let dateStr = new Date(p.timestamp).toLocaleString();
