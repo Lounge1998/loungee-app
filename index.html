@@ -10,13 +10,6 @@
     
     <title>تطبيق Lounge الرسمي</title>
 
-    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-WZ3RF79X"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    </script>
-
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -233,8 +226,8 @@
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">🎮</div>
                     <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب لاونج الواقعية</span>
-                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + السلة + الذاكرة الصعبة (16 خانة) + حجرة ورقة مقص (اربح 10 نقاط)</div>
+                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب لاونج</span>
+                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + لعبة الذاكرة (اربح 10 نقاط)</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f0abfc;">‹</div>
@@ -268,7 +261,7 @@
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">🚀</div>
                     <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">كسب وأربح</span>
+                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">كبس وأربح</span>
                         <div style="font-size:9px; color:#c084fc; margin-top:1px;">( 100 ) نقطة + 100 جوهرة 💎</div>
                         <div style="font-size:8px; color:#34d399; font-weight:bold; margin-top:2px;" id="clickLiveCounterDisplay">📈 العداد الحالي: 278 / 500,000</div>
                     </div>
@@ -291,8 +284,8 @@
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">📸</div>
                     <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات لاونج (لحظتي)</span>
-                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك لحظاتك بالصور فقط (مع تفاعل وتعليقات)</div>
+                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات لاونج</span>
+                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (مع تفاعل وتعليقات)</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f472b6;">‹</div>
@@ -308,10 +301,10 @@
         </div>
     </div>
 
-    <!-- ✨ شاشة ألعاب لاونج الواقعية المطابقة للصور بدقة -->
+    <!-- ✨ شاشة ألعاب لاونج -->
     <div id="loungeGamesScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب لاونج الواقعية (اربح 10 نقاط)</h3>
+            <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب لاونج (اربح 10 نقاط)</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         
@@ -324,46 +317,30 @@
                 <div style="font-size:12px; color:#38bdf8; font-weight:bold;">ابدأ ❯</div>
             </div>
 
-            <div class="grid-btn-item" onclick="openBasketballGameModal()">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="icon-circle">🏀</div>
-                    <span>لعبة كرة السلة (الواقعية مطابقة الصورة)</span>
-                </div>
-                <div style="font-size:12px; color:#f59e0b; font-weight:bold;">العب ❯</div>
-            </div>
-
             <div class="grid-btn-item" onclick="openMemoryGameModal()">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div class="icon-circle">🧩</div>
-                    <span>لعبة الذاكرة (16 خانة صعبة)</span>
+                    <span>لعبة الذاكرة</span>
                 </div>
                 <div style="font-size:12px; color:#10b981; font-weight:bold;">العب ❯</div>
-            </div>
-
-            <div class="grid-btn-item" onclick="openRpsGameModal()">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="icon-circle">✌️</div>
-                    <span>حجرة ورقة مقص (الواقعية مطابقة الصورة)</span>
-                </div>
-                <div style="font-size:12px; color:#ec4899; font-weight:bold;">العب ❯</div>
             </div>
         </div>
     </div>
 
     <div id="loungePostsScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#f472b6;font-size:15px">📸 منشورات لاونج (لحظتي)</h3>
+            <h3 style="margin:0;color:#f472b6;font-size:15px">📸 منشورات لاونج</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
 
         <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:10px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ شارك لحظتك الجديدة (عنوان + وصف + صورة حصراً)</h4>
+            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور جديد (كتابة أو مع صورة اختيارية)</h4>
             <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
-            <textarea id="newPostText" class="input-box" placeholder="اكتب وصفاً لصورتك..." style="height:50px;resize:none;margin-bottom:6px;"></textarea>
+            <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:6px;"></textarea>
             <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
                 <input type="file" id="newPostImageFile" accept="image/*" class="input-box" style="margin:0;padding:6px;font-size:10px;">
             </div>
-            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر اللحظة الآن 🚀</button>
+            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر المنشور الآن 🚀</button>
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -520,7 +497,7 @@
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         <div class="card" style="text-align:right;background:rgba(30,41,59,0.7);border:1px solid rgba(192,132,252,0.4)">
-            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:center;">👆 ملوك التكبيس الأسبوعي (يتصفّر كل جمعة 6:00 ص)</div>
+            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:center;">👆 ملوك الكبس الأسبوعي (يتصفّر كل جمعة 6:00 ص)</div>
             <div id="leaderboardClickingList" style="font-size:11px;color:#cbd5e1">جاري التحميل...</div>
         </div>
     </div>
@@ -1316,7 +1293,7 @@
     }
 
     function handleUserClickAndWin(){
-        if(globalAppSettings.dailyCounterLocked && currentEmail !== 'msaftwtn@gmail.com') return showNeonPopup('⚠️ عذراً، نظام التكبيس متوقف حالياً من الإدارة.');
+        if(globalAppSettings.dailyCounterLocked && currentEmail !== 'msaftwtn@gmail.com') return showNeonPopup('⚠️ عذراً، نظام الكبس متوقف حالياً من الإدارة.');
         let btn = document.getElementById('clickAndWinMainBtn');
         if(btn){ btn.classList.remove('click-active-anim'); void btn.offsetWidth; btn.classList.add('click-active-anim'); }
         userData.userClicksCount = (userData.userClicksCount || 0) + 1;
@@ -1328,7 +1305,7 @@
             userData.gems = (userData.gems || 0) + 100;
             saveToDB().then(()=>{
                 updateUI();
-                showNeonPopup("🎉 أسطورة! أكملت 500,000 تكبيسة وحصلت على 100 نقطة 🪙 و 100 جوهرة 💎 بنجاح!");
+                showNeonPopup("🎉 أسطورة! أكملت 500,000 كبسة وحصلت على 100 نقطة 🪙 و 100 جوهرة 💎 بنجاح!");
             });
         } else {
             if(clickDebounceTimer) clearTimeout(clickDebounceTimer);
@@ -1407,65 +1384,9 @@
         if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
     }
 
-    // ✨ ألعاب لاونج الواقعية 100% ومطابقة للصور تماماً مع منح 10 نقاط عند الفوز
-    function openBasketballGameModal(){
-        document.getElementById('gameModalTitle').innerText = "🏀 لعبة كرة السلة (الواقعية)";
-        let body = document.getElementById('gameModalBodyArea');
-        let score = 0, highScore = localStorage.getItem('lounge_basket_highscore') || 48, timeLeft = 30, gameActive = true;
-        
-        body.innerHTML = `
-        <div style="display:flex; justify-content:space-around; width:100%; background:rgba(20,10,38,0.9); padding:8px; border-radius:12px; border:1px solid rgba(245,158,11,0.3); margin-bottom:8px; font-size:11px;">
-            <div>الوقت: <b id="bbTime" style="color:#f59e0b">30</b></div>
-            <div>النقاط: <b id="bbScore" style="color:#34d399">0</b></div>
-            <div>أعلى نتيجة: <b style="color:#c084fc">${highScore}</b></div>
-        </div>
-        <div style="width:100%; height:200px; background:radial-gradient(circle at center, #1e1b4b 0%, #030207 100%); border-radius:14px; position:relative; overflow:hidden; border:1.5px solid rgba(245,158,11,0.5); display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px; box-shadow:inset 0 0 20px rgba(0,0,0,0.8);">
-            <!-- السلة المضاءة بنين -->
-            <div style="width:70px; height:35px; border:3px solid #f59e0b; border-top:none; border-radius:0 0 12px 12px; box-shadow:0 0 15px #f59e0b; position:relative; display:flex; align-items:flex-end; justify-content:center;">
-                <div style="width:40px; height:25px; border-left:1px dashed rgba(255,255,255,0.6); border-right:1px dashed rgba(255,255,255,0.6); border-bottom:1px dashed rgba(255,255,255,0.6);"></div>
-            </div>
-            <div id="bbFeedback" style="font-size:11px; color:#38bdf8; font-weight:bold;">اسحب بإصبعك لرمي الكرة 🏀</div>
-            <!-- الكرة ويد اللاعب الحقيقية بالأسفل -->
-            <div style="display:flex; flex-direction:column; align-items:center; cursor:pointer;" onclick="shootBasketballReal()">
-                <div id="bbBall" style="width:45px; height:45px; background:radial-gradient(circle, #f97316 20%, #c2410c 100%); border-radius:50%; box-shadow:0 0 15px #f97316; display:flex; align-items:center; justify-content:center; font-size:20px; transition:all 0.3s ease;">🏀</div>
-                <div style="font-size:9px; color:#cbd5e1; margin-top:3px; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; border:1px solid rgba(245,158,11,0.4);">اسحب لترميز الكرة</div>
-            </div>
-        </div>`;
-        document.getElementById('gameModal').style.display = 'flex';
-
-        window.shootBasketballReal = function(){
-            if(!gameActive) return;
-            score++;
-            document.getElementById('bbScore').innerText = score;
-            let ball = document.getElementById('bbBall');
-            ball.style.transform = "translateY(-110px) scale(0.6)";
-            document.getElementById('bbFeedback').innerText = "✨ هدف رائع!";
-            setTimeout(()=>{
-                ball.style.transform = "translateY(0) scale(1)";
-                document.getElementById('bbFeedback').innerText = "اسحب بإصبعك لرمي الكرة 🏀";
-            }, 300);
-        };
-
-        let tInterval = setInterval(()=>{
-            timeLeft--;
-            let tElem = document.getElementById('bbTime');
-            if(tElem) tElem.innerText = timeLeft;
-            if(timeLeft <= 0){
-                clearInterval(tInterval);
-                gameActive = false;
-                if(score > highScore){
-                    localStorage.setItem('lounge_basket_highscore', score);
-                }
-                // منح 10 نقاط للمستخدم بدقة عند انتهاء اللعبة وتحقيق السلة
-                userData.points = (userData.points || 0) + 10;
-                updateUI();
-                showNeonPopup(`🏀 انتهى الوقت! سجلت (${score} هدفاً). تم منحك 10 نقاط كهدية فوز 🪙!`);
-            }
-        }, 1000);
-    }
-
+    // ✨ لعبة الذاكرة المحدثة (اسمها "لعبة الذاكرة" فقط مع منح 10 نقاط عند الفوز)
     function openMemoryGameModal(){
-        document.getElementById('gameModalTitle').innerText = "🧩 لعبة الذاكرة (16 خانة صعبة)";
+        document.getElementById('gameModalTitle').innerText = "🧩 لعبة الذاكرة";
         let body = document.getElementById('gameModalBodyArea');
         let emojis = ['⭐', '💎', '🚀', '🐱', '🔥', '👑', '🏆', '🎮', '⭐', '💎', '🚀', '🐱', '🔥', '👑', '🏆', '🎮'].sort(()=>Math.random()-0.5);
         let flipped = [], matchedPairs = 0, attempts = 0;
@@ -1496,7 +1417,7 @@
                     if(matchedPairs === 8){
                         userData.points = (userData.points || 0) + 10;
                         updateUI();
-                        showNeonPopup(`🧩 مبروك أسطورة! أتممت الـ 16 خانة الصعبة خلال (${attempts} محاولة) وتم منحك 10 نقاط بنجاح 🎉!`);
+                        showNeonPopup(`🧩 مبروك أسطورة! أتممت لعبة الذاكرة خلال (${attempts} محاولة) وتم منحك 10 نقاط بنجاح 🎉!`);
                     }
                 } else {
                     setTimeout(()=>{
@@ -1505,68 +1426,6 @@
                         flipped = [];
                     }, 500);
                 }
-            }
-        };
-    }
-
-    function openRpsGameModal(){
-        document.getElementById('gameModalTitle').innerText = "✌️ حجرة ورقة مقص (التحدي الواقعي)";
-        let body = document.getElementById('gameModalBodyArea');
-        body.innerHTML = `
-        <div style="display:flex; justify-content:space-around; width:100%; background:rgba(20,10,38,0.9); padding:8px; border-radius:12px; border:1px solid rgba(236,72,153,0.3); margin-bottom:10px; font-size:11px;">
-            <div>أنت: <b id="rpsMyScore" style="color:#38bdf8">0</b></div>
-            <div>الجولة: <b id="rpsRound" style="color:#f472b6">1</b></div>
-            <div>المنافس: <b id="rpsCompScore" style="color:#ef4444">0</b></div>
-        </div>
-        <div style="width:100%; background:radial-gradient(circle at center, #1e1b4b 0%, #030207 100%); border-radius:14px; padding:15px; border:1.5px solid rgba(236,72,153,0.5); text-align:center;">
-            <div id='rpsResult' style='font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:10px;'>اختر حركتك (أنت ضد المنافس الحقيقي):</div>
-            <div style='display:flex; justify-content:center; gap:8px; margin-bottom:10px;'>
-                <button class='action-btn btn-purple' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("rock")'>✊ حجرة</button>
-                <button class='action-btn btn-blue' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("paper")'>🖐️ ورقة</button>
-                <button class='action-btn btn-gold' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("scissors")'>✌️ مقص</button>
-            </div>
-            <div id="rpsHandsView" style="font-size:22px; color:#cbd5e1; margin-top:6px;">🤜 VS 🤛</div>
-        </div>`;
-        document.getElementById('gameModal').style.display = 'flex';
-
-        let myScore = 0, compScore = 0, round = 1;
-        window.playRpsReal = function(userChoice){
-            if(round > 3) return;
-            let choices = ['rock', 'paper', 'scissors'];
-            let compChoice = choices[Math.floor(Math.random() * 3)];
-            let icons = { rock: '✊', paper: '🖐️', scissors: '✌️' };
-            
-            document.getElementById('rpsHandsView').innerHTML = `${icons[userChoice]} <b style="color:#f472b6">VS</b> ${icons[compChoice]}`;
-            
-            let roundMsg = "";
-            if(userChoice === compChoice){
-                roundMsg = `<b style='color:#eab308;'>تعادل في الجولة ${round}! 🤝</b>`;
-            } else if((userChoice==='rock'&&compChoice==='scissors') || (userChoice==='paper'&&compChoice==='rock') || (userChoice==='scissors'&&compChoice==='paper')){
-                roundMsg = `<b style='color:#22c55e;'>فزت بالجولة ${round}! 🎉</b>`;
-                myScore++;
-            } else {
-                roundMsg = `<b style='color:#ef4444;'>خسرت الجولة ${round}! ❌</b>`;
-                compScore++;
-            }
-            
-            document.getElementById('rpsMyScore').innerText = myScore;
-            document.getElementById('rpsCompScore').innerText = compScore;
-            document.getElementById('rpsResult').innerHTML = roundMsg;
-            
-            round++;
-            document.getElementById('rpsRound').innerText = Math.min(round, 3);
-            
-            if(round > 3){
-                setTimeout(()=>{
-                    if(myScore >= compScore){
-                        userData.points = (userData.points || 0) + 10;
-                        updateUI();
-                        showNeonPopup(`🏆 مبروك فزت بالتحدي النهائي! تم منحك 10 نقاط 🪙 بنجاح!`);
-                    } else {
-                        showNeonPopup(`❌ انتهى التحدي لصالح المنافس. حاول مرة أخرى!`);
-                    }
-                    closeGameModal();
-                }, 900);
             }
         };
     }
@@ -1592,11 +1451,10 @@
         let title = document.getElementById('newPostTitle').value.trim();
         let desc = document.getElementById('newPostText').value.trim();
         let fileInput = document.getElementById('newPostImageFile').files[0];
-        if(!title || !fileInput) return showNeonPopup("⚠️ يرجى إدخال عنوان المنشور وإرفاق صورة حصراً (القسم مخصص للصور فقط)!");
+        
+        if(!title && !desc && !fileInput) return showNeonPopup("⚠️ يرجى كتابة عنوان أو وصف أو إرفاق صورة للنشر!");
 
-        let reader = new FileReader();
-        reader.onload = (e)=>{
-            let imgBase64 = e.target.result;
+        let postAction = (imgBase64)=>{
             rtdb.ref('lounge_posts').push({
                 authorKey: currentUserKey,
                 authorName: userData.name || 'مستخدم',
@@ -1604,18 +1462,25 @@
                 authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
                 title: title,
                 text: desc,
-                image: imgBase64,
+                image: imgBase64 || '',
                 likesCount: 0,
                 timestamp: Date.now()
             }).then(()=>{
                 document.getElementById('newPostTitle').value = '';
                 document.getElementById('newPostText').value = '';
                 document.getElementById('newPostImageFile').value = '';
-                showNeonPopup("✅ تم نشر لحظتك بنجاح!");
+                showNeonPopup("✅ تم نشر المنشور بنجاح!");
                 loadLoungePosts();
             });
         };
-        reader.readAsDataURL(fileInput);
+
+        if(fileInput){
+            let reader = new FileReader();
+            reader.onload = (e)=> postAction(e.target.result);
+            reader.readAsDataURL(fileInput);
+        } else {
+            postAction('');
+        }
     }
 
     function loadLoungePosts(){
@@ -1624,7 +1489,7 @@
             let container = document.getElementById('loungePostsContainer');
             if(!container) return;
             if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً. كن أول من ينشر لحظته!</div>";
+                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً. كن أول من ينشر!</div>";
                 return;
             }
             let html = '';
@@ -1634,9 +1499,10 @@
                 let isMyPost = (p.authorKey === currentUserKey);
                 let isAdmin = (currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
                 
-                // ✨ حصراً الإدارة هي المتحكم الوحيد الذي يمكنه حذف أي منشور (أو صاحب المنشور)
                 let deleteBtn = (isMyPost || isAdmin) ? 
                     `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
+
+                let imageHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
 
                 html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -1651,7 +1517,7 @@
                     </div>
                     ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
-                    <img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">
+                    ${imageHtml}
                     <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
                         <button class="action-btn" style="width:auto; background:rgba(168,85,247,0.2); border:1px solid #c084fc; color:#fff; padding:4px 10px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ اعجاب (${p.likesCount || 0})</button>
                         <button class="action-btn" style="width:auto; background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#fff; padding:4px 10px; font-size:10px;" onclick="openSinglePostDetail('${pKey}')">💬 التعليقات</button>
@@ -1691,11 +1557,12 @@
             snap.forEach(item=>{
                 let p = item.val(), pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
+                let imageHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-bottom:6px;" alt="صورة">` : '';
                 html += `<div class="card" style="text-align:right; margin-bottom:8px;">
                     <div style="font-size:9px; color:#94a3b8; margin-bottom:4px;">${dateStr}</div>
                     ${p.title ? `<div style="font-size:11px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
-                    <img src="${p.image}" style="width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-bottom:6px;" alt="صورة">
+                    ${imageHtml}
                     <button class="action-btn" style="background:#ef4444; color:#fff; padding:4px; font-size:10px;" onclick="deleteLoungePost('${pKey}'); loadMyProfilePosts();">حذف المنشور 🗑️</button>
                 </div>`;
             });
@@ -1711,6 +1578,7 @@
             if(!snap.exists()) return;
             let p = snap.val();
             let dateStr = new Date(p.timestamp).toLocaleString();
+            let imageHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;" alt="صورة">` : '';
             document.getElementById('singlePostCardContainer').innerHTML = `<div class="card" style="text-align:right; background:rgba(20,10,40,0.85);">
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
                     <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="صورة">
@@ -1718,7 +1586,7 @@
                 </div>
                 ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                 ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
-                <img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;" alt="صورة">
+                ${imageHtml}
             </div>`;
         });
 
@@ -2267,13 +2135,13 @@
                     users.push({ key:u.key, name:d.name||'مستخدم', customId:d.customId||'---', avatar:d.avatar||'', clicking:d.userClicksCount||0 });
                 }
             });
-            renderLeaderboardList('leaderboardClickingList',[...users].sort((a,b)=>b.clicking-a.clicking),'clicking','تكبيسة');
+            renderLeaderboardList('leaderboardClickingList',[...users].sort((a,b)=>b.clicking-a.clicking),'clicking','كبسة');
         });
     }
 
     function renderLeaderboardList(id,list,key,unit){
         let c=document.getElementById(id);if(!c)return;
-        if(list.length===0){c.innerHTML="<div style='text-align:center;padding:15px;color:#94a3b8'>لا توجد تكبيسات مسجلة.</div>";return;}
+        if(list.length===0){c.innerHTML="<div style='text-align:center;padding:15px;color:#94a3b8'>لا توجد كبسات مسجلة.</div>";return;}
         let html='';list.forEach((it,i)=>{
             let r=i+1,cr=r===1?'👑 ':(r===2?'🥈 ':(r===3?'🥉 ':''));
             html+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:8px;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)"><div style="display:flex;align-items:center;gap:8px"><span style="font-weight:900;font-size:12px;color:#c084fc;width:22px;text-align:center">#${r}</span><img src="${it.avatar||'https://via.placeholder.com/38'}" style="width:38px;height:38px;border-radius:50%;object-fit:cover" alt="صورة"><div><b style="color:#fff;font-size:12px">${cr}${it.name}</b><div style="font-size:10px;color:#94a3b8">ID: ${it.customId}</div></div></div><div style="text-align:left"><span style="color:#34d399;font-weight:bold;font-size:12px">${it[key].toLocaleString()}</span><div style="font-size:9px;color:#94a3b8">${unit}</div></div></div>`;
