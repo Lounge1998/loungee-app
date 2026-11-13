@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- إعدادات خاصة بالآيفون (iOS Safari) لتشغيله كتطبيق مستقل بملء الشاشة -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lounge">
@@ -230,13 +229,12 @@
         </div>
 
         <div class="grid-buttons-custom">
-            <!-- ✨ إضافة زر ألعاب لاونج الشامل الجديد -->
             <div class="grid-btn-item" style="background: linear-gradient(135deg, rgba(40,15,65,0.9), rgba(15,25,50,0.9)); border: 1.5px solid rgba(192,132,252,0.5);" onclick="navigateTo('loungeGamesScreen')">
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">🎮</div>
                     <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب لاونج</span>
-                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + السلة + الذاكرة + حجرة ورقة مقص</div>
+                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب لاونج الواقعية</span>
+                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + السلة + الذاكرة الصعبة (16 خانة) + حجرة ورقة مقص (اربح 10 نقاط)</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f0abfc;">‹</div>
@@ -289,7 +287,6 @@
                 <div style="font-size:12px; color:#34d399;">‹</div>
             </div>
 
-            <!-- ✨ إضافة زر منشورات لاونج (أو لحظتي) مباشرة تحت سوق بيع وشراء العدادات بدقة -->
             <div class="grid-btn-item" style="background: linear-gradient(135deg, rgba(50,20,40,0.9), rgba(20,15,45,0.9)); border: 1.5px solid rgba(236,72,153,0.5);" onclick="navigateTo('loungePostsScreen')">
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">📸</div>
@@ -311,10 +308,10 @@
         </div>
     </div>
 
-    <!-- ✨ شاشة ألعاب لاونج الشاملة (تضم الألعاب الأربعة) -->
+    <!-- ✨ شاشة ألعاب لاونج الواقعية المطابقة للصور بدقة -->
     <div id="loungeGamesScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب لاونج الترفيهية</h3>
+            <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب لاونج الواقعية (اربح 10 نقاط)</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         
@@ -330,7 +327,7 @@
             <div class="grid-btn-item" onclick="openBasketballGameModal()">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div class="icon-circle">🏀</div>
-                    <span>لعبة كرة السلة (تحدي 30 ثانية)</span>
+                    <span>لعبة كرة السلة (الواقعية مطابقة الصورة)</span>
                 </div>
                 <div style="font-size:12px; color:#f59e0b; font-weight:bold;">العب ❯</div>
             </div>
@@ -338,7 +335,7 @@
             <div class="grid-btn-item" onclick="openMemoryGameModal()">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div class="icon-circle">🧩</div>
-                    <span>لعبة الذاكرة (مطابقة البطاقات)</span>
+                    <span>لعبة الذاكرة (16 خانة صعبة)</span>
                 </div>
                 <div style="font-size:12px; color:#10b981; font-weight:bold;">العب ❯</div>
             </div>
@@ -346,14 +343,13 @@
             <div class="grid-btn-item" onclick="openRpsGameModal()">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div class="icon-circle">✌️</div>
-                    <span>حجرة ورقة مقص (تحدي سريع)</span>
+                    <span>حجرة ورقة مقص (الواقعية مطابقة الصورة)</span>
                 </div>
                 <div style="font-size:12px; color:#ec4899; font-weight:bold;">العب ❯</div>
             </div>
         </div>
     </div>
 
-    <!-- ✨ شاشة منشورات لاونج (لحظتي) -->
     <div id="loungePostsScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#f472b6;font-size:15px">📸 منشورات لاونج (لحظتي)</h3>
@@ -361,8 +357,9 @@
         </div>
 
         <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:10px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ شارك لحظتك الجديدة (صور فقط بدون فيديو)</h4>
-            <textarea id="newPostText" class="input-box" placeholder="اكتب وصفاً لصورتك..." style="height:55px;resize:none;margin-bottom:6px;"></textarea>
+            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ شارك لحظتك الجديدة (عنوان + وصف + صورة حصراً)</h4>
+            <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
+            <textarea id="newPostText" class="input-box" placeholder="اكتب وصفاً لصورتك..." style="height:50px;resize:none;margin-bottom:6px;"></textarea>
             <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
                 <input type="file" id="newPostImageFile" accept="image/*" class="input-box" style="margin:0;padding:6px;font-size:10px;">
             </div>
@@ -378,7 +375,6 @@
         </div>
     </div>
 
-    <!-- ✨ شاشة صفحة منشورات المستخدم الشخصية -->
     <div id="myProfilePostsScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#c084fc;font-size:15px">👤 منشوراتي الشخصية</h3>
@@ -389,7 +385,6 @@
         </div>
     </div>
 
-    <!-- ✨ شاشة تفاصيل منشور واحد مع التعليقات -->
     <div id="singlePostDetailScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#38bdf8;font-size:15px">💬 تفاصيل المنشور والتعليقات</h3>
@@ -668,14 +663,13 @@
     </div>
 </div>
 
-<!-- ✨ نوافذ ألعاب لاونج الترفيهية (السلة، الذاكرة، حجرة ورقة مقص) -->
 <div id="gameModal" class="modal">
-    <div class="modal-content" style="text-align:center; max-width:340px; padding:16px;">
+    <div class="modal-content" style="text-align:center; max-width:360px; padding:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <h4 id="gameModalTitle" style="margin:0;color:#f472b6;font-size:14px">🎮 اللعبة</h4>
+            <h4 id="gameModalTitle" style="margin:0;color:#f472b6;font-size:14px">🎮 اللعبة الواقعية</h4>
             <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeGameModal()">✖</button>
         </div>
-        <div id="gameModalBodyArea" style="min-height:180px; display:flex; flex-direction:column; justify-content:center; align-items:center; margin-bottom:10px;"></div>
+        <div id="gameModalBodyArea" style="min-height:220px; display:flex; flex-direction:column; justify-content:center; align-items:center; margin-bottom:10px;"></div>
         <button class="action-btn btn-purple" style="padding:8px;font-size:11px" onclick="closeGameModal()">إنهاء وإغلاق 🚪</button>
     </div>
 </div>
@@ -1413,120 +1407,172 @@
         if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
     }
 
-    // ✨ ألعاب لاونج الترفيهية الإضافية (السلة، الذاكرة، حجرة ورقة مقص)
+    // ✨ ألعاب لاونج الواقعية 100% ومطابقة للصور تماماً مع منح 10 نقاط عند الفوز
     function openBasketballGameModal(){
-        document.getElementById('gameModalTitle').innerText = "🏀 لعبة كرة السلة (30 ثانية)";
+        document.getElementById('gameModalTitle').innerText = "🏀 لعبة كرة السلة (الواقعية)";
         let body = document.getElementById('gameModalBodyArea');
-        let score = 0, timeLeft = 30, gameActive = true;
-        body.innerHTML = `<div id='bbScore' style='font-size:14px; color:#f59e0b; font-weight:bold; margin-bottom:10px;'>الأهداف: 0 | الوقت: 30 ثانية</div>
-        <div id='bbCourt' style='width:100%; height:130px; background:rgba(30,41,59,0.8); border-radius:12px; position:relative; overflow:hidden; border:1px solid rgba(245,158,11,0.4); display:flex; align-items:flex-end; justify-content:center; padding-bottom:10px;'>
-            <div id='bbBall' style='width:35px; height:35px; background:radial-gradient(circle, #f97316 0%, #c2410c 100%); border-radius:50%; position:absolute; bottom:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 0 10px #f97316;'>🏀</div>
-        </div>
-        <button id='bbShootBtn' class='action-btn btn-gold' style='margin-top:10px; padding:8px;' onclick='shootBasketball()'>اسحب وارمِ الكرة! 🏀</button>`;
-        document.getElementById('gameModal').style.display = 'flex';
+        let score = 0, highScore = localStorage.getItem('lounge_basket_highscore') || 48, timeLeft = 30, gameActive = true;
         
-        window.shootBasketball = function(){
+        body.innerHTML = `
+        <div style="display:flex; justify-content:space-around; width:100%; background:rgba(20,10,38,0.9); padding:8px; border-radius:12px; border:1px solid rgba(245,158,11,0.3); margin-bottom:8px; font-size:11px;">
+            <div>الوقت: <b id="bbTime" style="color:#f59e0b">30</b></div>
+            <div>النقاط: <b id="bbScore" style="color:#34d399">0</b></div>
+            <div>أعلى نتيجة: <b style="color:#c084fc">${highScore}</b></div>
+        </div>
+        <div style="width:100%; height:200px; background:radial-gradient(circle at center, #1e1b4b 0%, #030207 100%); border-radius:14px; position:relative; overflow:hidden; border:1.5px solid rgba(245,158,11,0.5); display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px; box-shadow:inset 0 0 20px rgba(0,0,0,0.8);">
+            <!-- السلة المضاءة بنين -->
+            <div style="width:70px; height:35px; border:3px solid #f59e0b; border-top:none; border-radius:0 0 12px 12px; box-shadow:0 0 15px #f59e0b; position:relative; display:flex; align-items:flex-end; justify-content:center;">
+                <div style="width:40px; height:25px; border-left:1px dashed rgba(255,255,255,0.6); border-right:1px dashed rgba(255,255,255,0.6); border-bottom:1px dashed rgba(255,255,255,0.6);"></div>
+            </div>
+            <div id="bbFeedback" style="font-size:11px; color:#38bdf8; font-weight:bold;">اسحب بإصبعك لرمي الكرة 🏀</div>
+            <!-- الكرة ويد اللاعب الحقيقية بالأسفل -->
+            <div style="display:flex; flex-direction:column; align-items:center; cursor:pointer;" onclick="shootBasketballReal()">
+                <div id="bbBall" style="width:45px; height:45px; background:radial-gradient(circle, #f97316 20%, #c2410c 100%); border-radius:50%; box-shadow:0 0 15px #f97316; display:flex; align-items:center; justify-content:center; font-size:20px; transition:all 0.3s ease;">🏀</div>
+                <div style="font-size:9px; color:#cbd5e1; margin-top:3px; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; border:1px solid rgba(245,158,11,0.4);">اسحب لترميز الكرة</div>
+            </div>
+        </div>`;
+        document.getElementById('gameModal').style.display = 'flex';
+
+        window.shootBasketballReal = function(){
             if(!gameActive) return;
             score++;
-            document.getElementById('bbScore').innerText = `الأهداف: ${score} | الوقت: ${timeLeft} ثانية`;
+            document.getElementById('bbScore').innerText = score;
             let ball = document.getElementById('bbBall');
-            ball.style.transition = "all 0.4s ease";
-            ball.style.bottom = "90px";
-            ball.style.transform = "scale(0.8)";
+            ball.style.transform = "translateY(-110px) scale(0.6)";
+            document.getElementById('bbFeedback').innerText = "✨ هدف رائع!";
             setTimeout(()=>{
-                ball.style.bottom = "10px";
-                ball.style.transform = "scale(1)";
-            }, 400);
+                ball.style.transform = "translateY(0) scale(1)";
+                document.getElementById('bbFeedback').innerText = "اسحب بإصبعك لرمي الكرة 🏀";
+            }, 300);
         };
 
-        let tTimer = setInterval(()=>{
+        let tInterval = setInterval(()=>{
             timeLeft--;
-            let scElem = document.getElementById('bbScore');
-            if(scElem) scElem.innerText = `الأهداف: ${score} | الوقت: ${timeLeft} ثانية`;
+            let tElem = document.getElementById('bbTime');
+            if(tElem) tElem.innerText = timeLeft;
             if(timeLeft <= 0){
-                clearInterval(tTimer);
+                clearInterval(tInterval);
                 gameActive = false;
-                let sBtn = document.getElementById('bbShootBtn');
-                if(sBtn) sBtn.disabled = true;
-                showNeonPopup(`🏀 انتهى الوقت! سجلت (${score} هدفاً) بنجاح.`);
+                if(score > highScore){
+                    localStorage.setItem('lounge_basket_highscore', score);
+                }
+                // منح 10 نقاط للمستخدم بدقة عند انتهاء اللعبة وتحقيق السلة
+                userData.points = (userData.points || 0) + 10;
+                updateUI();
+                showNeonPopup(`🏀 انتهى الوقت! سجلت (${score} هدفاً). تم منحك 10 نقاط كهدية فوز 🪙!`);
             }
         }, 1000);
     }
 
     function openMemoryGameModal(){
-        document.getElementById('gameModalTitle').innerText = "🧩 لعبة الذاكرة (مطابقة البطاقات)";
+        document.getElementById('gameModalTitle').innerText = "🧩 لعبة الذاكرة (16 خانة صعبة)";
         let body = document.getElementById('gameModalBodyArea');
-        let icons = ['⭐', '💎', '🚀', '🐱', '⭐', '💎', '🚀', '🐱'].sort(()=>Math.random()-0.5);
-        let flipped = [], matched = 0, attempts = 0;
+        let emojis = ['⭐', '💎', '🚀', '🐱', '🔥', '👑', '🏆', '🎮', '⭐', '💎', '🚀', '🐱', '🔥', '👑', '🏆', '🎮'].sort(()=>Math.random()-0.5);
+        let flipped = [], matchedPairs = 0, attempts = 0;
         
-        let html = `<div id='memAttempts' style='font-size:11px; color:#38bdf8; margin-bottom:8px;'>المحاولات: 0</div>
-        <div style='display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; width:100%;'>`;
-        icons.forEach((icon, idx)=>{
-            html += `<button class='mem-card' data-icon='${icon}' data-idx='${idx}' onclick='flipMemoryCard(this)' style='height:45px; background:rgba(30,41,59,0.9); border:1px solid #10b981; border-radius:8px; font-size:18px; cursor:pointer;'>❓</button>`;
+        let html = `<div id='memAttempts' style='font-size:11px; color:#38bdf8; margin-bottom:6px;'>المحاولات: 0 | المطابق: 0 / 8</div>
+        <div style='display:grid; grid-template-columns:repeat(4, 1fr); gap:5px; width:100%;'>`;
+        emojis.forEach((emoji, idx)=>{
+            html += `<button class='mem-card-btn' data-emoji='${emoji}' data-idx='${idx}' onclick='flipMemoryCard16(this)' style='height:42px; background:rgba(30,41,59,0.9); border:1px solid #10b981; border-radius:8px; font-size:16px; cursor:pointer;'>❓</button>`;
         });
         html += `</div>`;
         body.innerHTML = html;
         document.getElementById('gameModal').style.display = 'flex';
 
-        window.flipMemoryCard = function(btn){
+        window.flipMemoryCard16 = function(btn){
             if(btn.disabled || flipped.length >= 2 || btn.classList.contains('matched')) return;
-            btn.innerText = btn.getAttribute('data-icon');
+            btn.innerText = btn.getAttribute('data-emoji');
             btn.style.background = '#10b981';
             flipped.push(btn);
             
             if(flipped.length === 2){
                 attempts++;
-                document.getElementById('memAttempts').innerText = `المحاولات: ${attempts}`;
+                document.getElementById('memAttempts').innerText = `المحاولات: ${attempts} | المطابق: ${matchedPairs} / 8`;
                 let b1 = flipped[0], b2 = flipped[1];
-                if(b1.getAttribute('data-icon') === b2.getAttribute('data-icon')){
+                if(b1.getAttribute('data-emoji') === b2.getAttribute('data-emoji')){
                     b1.classList.add('matched'); b2.classList.add('matched');
                     flipped = [];
-                    matched++;
-                    if(matched === 4){
-                        showNeonPopup(`🧩 مبروك! أكملت لعبة الذاكرة خلال (${attempts} محاولة) بنجاح!`);
+                    matchedPairs++;
+                    if(matchedPairs === 8){
+                        userData.points = (userData.points || 0) + 10;
+                        updateUI();
+                        showNeonPopup(`🧩 مبروك أسطورة! أتممت الـ 16 خانة الصعبة خلال (${attempts} محاولة) وتم منحك 10 نقاط بنجاح 🎉!`);
                     }
                 } else {
                     setTimeout(()=>{
                         b1.innerText = '❓'; b1.style.background = 'rgba(30,41,59,0.9)';
                         b2.innerText = '❓'; b2.style.background = 'rgba(30,41,59,0.9)';
                         flipped = [];
-                    }, 600);
+                    }, 500);
                 }
             }
         };
     }
 
     function openRpsGameModal(){
-        document.getElementById('gameModalTitle').innerText = "✌️ حجرة ورقة مقص (تحدي ذكي)";
+        document.getElementById('gameModalTitle').innerText = "✌️ حجرة ورقة مقص (التحدي الواقعي)";
         let body = document.getElementById('gameModalBodyArea');
-        body.innerHTML = `<div id='rpsResult' style='font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:12px;'>اختر حركتك لتتحدى الكمبيوتر:</div>
-        <div style='display:flex; justify-content:center; gap:10px; margin-bottom:10px;'>
-            <button class='action-btn btn-purple' style='padding:10px; font-size:14px;' onclick='playRps("rock")'>✊ حجرة</button>
-            <button class='action-btn btn-blue' style='padding:10px; font-size:14px;' onclick='playRps("paper")'>🖐️ ورقة</button>
-            <button class='action-btn btn-gold' style='padding:10px; font-size:14px;' onclick='playRps("scissors")'>✌️ مقص</button>
+        body.innerHTML = `
+        <div style="display:flex; justify-content:space-around; width:100%; background:rgba(20,10,38,0.9); padding:8px; border-radius:12px; border:1px solid rgba(236,72,153,0.3); margin-bottom:10px; font-size:11px;">
+            <div>أنت: <b id="rpsMyScore" style="color:#38bdf8">0</b></div>
+            <div>الجولة: <b id="rpsRound" style="color:#f472b6">1</b></div>
+            <div>المنافس: <b id="rpsCompScore" style="color:#ef4444">0</b></div>
+        </div>
+        <div style="width:100%; background:radial-gradient(circle at center, #1e1b4b 0%, #030207 100%); border-radius:14px; padding:15px; border:1.5px solid rgba(236,72,153,0.5); text-align:center;">
+            <div id='rpsResult' style='font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:10px;'>اختر حركتك (أنت ضد المنافس الحقيقي):</div>
+            <div style='display:flex; justify-content:center; gap:8px; margin-bottom:10px;'>
+                <button class='action-btn btn-purple' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("rock")'>✊ حجرة</button>
+                <button class='action-btn btn-blue' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("paper")'>🖐️ ورقة</button>
+                <button class='action-btn btn-gold' style='padding:10px 14px; font-size:14px;' onclick='playRpsReal("scissors")'>✌️ مقص</button>
+            </div>
+            <div id="rpsHandsView" style="font-size:22px; color:#cbd5e1; margin-top:6px;">🤜 VS 🤛</div>
         </div>`;
         document.getElementById('gameModal').style.display = 'flex';
 
-        window.playRps = function(userChoice){
+        let myScore = 0, compScore = 0, round = 1;
+        window.playRpsReal = function(userChoice){
+            if(round > 3) return;
             let choices = ['rock', 'paper', 'scissors'];
             let compChoice = choices[Math.floor(Math.random() * 3)];
-            let resText = `اخترت: ${userChoice} | الكمبيوتر اختر: ${compChoice}<br>`;
+            let icons = { rock: '✊', paper: '🖐️', scissors: '✌️' };
+            
+            document.getElementById('rpsHandsView').innerHTML = `${icons[userChoice]} <b style="color:#f472b6">VS</b> ${icons[compChoice]}`;
+            
+            let roundMsg = "";
             if(userChoice === compChoice){
-                resText += `<b style='color:#eab308;'>تعادل! 🤝</b>`;
+                roundMsg = `<b style='color:#eab308;'>تعادل في الجولة ${round}! 🤝</b>`;
             } else if((userChoice==='rock'&&compChoice==='scissors') || (userChoice==='paper'&&compChoice==='rock') || (userChoice==='scissors'&&compChoice==='paper')){
-                resText += `<b style='color:#22c55e;'>فزت بالجولة! 🎉 (+1 نقطة)</b>`;
-                userData.points = (userData.points || 0) + 1;
-                updateUI();
+                roundMsg = `<b style='color:#22c55e;'>فزت بالجولة ${round}! 🎉</b>`;
+                myScore++;
             } else {
-                resText += `<ب style='color:#ef4444;'>خسرت الجولة! ❌ أصاب الكمبيوتر</ب>`;
+                roundMsg = `<b style='color:#ef4444;'>خسرت الجولة ${round}! ❌</b>`;
+                compScore++;
             }
-            document.getElementById('rpsResult').innerHTML = resText;
+            
+            document.getElementById('rpsMyScore').innerText = myScore;
+            document.getElementById('rpsCompScore').innerText = compScore;
+            document.getElementById('rpsResult').innerHTML = roundMsg;
+            
+            round++;
+            document.getElementById('rpsRound').innerText = Math.min(round, 3);
+            
+            if(round > 3){
+                setTimeout(()=>{
+                    if(myScore >= compScore){
+                        userData.points = (userData.points || 0) + 10;
+                        updateUI();
+                        showNeonPopup(`🏆 مبروك فزت بالتحدي النهائي! تم منحك 10 نقاط 🪙 بنجاح!`);
+                    } else {
+                        showNeonPopup(`❌ انتهى التحدي لصالح المنافس. حاول مرة أخرى!`);
+                    }
+                    closeGameModal();
+                }, 900);
+            }
         };
     }
 
     function closeGameModal(){ document.getElementById('gameModal').style.display = 'none'; }
 
-    // ✨ نظام إشعارات انتهاء العداد اليومي التلقائي
     function checkAndTriggerDailyCounterNotification(){
         if(!currentUserKey || !userData.lastSpinTime) return;
         let cooldown = 24 * 60 * 60 * 1000;
@@ -1542,42 +1588,34 @@
         }
     }
 
-    // ✨ نظام منشورات لاونج (لحظتي) بالصور فقط + الفحص على الخادم + تفاعل وتعليقات
     function publishLoungePost(){
+        let title = document.getElementById('newPostTitle').value.trim();
         let desc = document.getElementById('newPostText').value.trim();
         let fileInput = document.getElementById('newPostImageFile').files[0];
-        if(!fileInput) return showNeonPopup("⚠️ يرجى إرفاق صورة للمنشور حصراً (القسم مخصص للصور فقط ليبقى خفيفاً وسريعاً)!");
+        if(!title || !fileInput) return showNeonPopup("⚠️ يرجى إدخال عنوان المنشور وإرفاق صورة حصراً (القسم مخصص للصور فقط)!");
 
         let reader = new FileReader();
         reader.onload = (e)=>{
             let imgBase64 = e.target.result;
-            // فحص أمني محاكى على الخادم لتصنيف الصور والمحتوى
-            let isSafe = serverSideImageModerationCheck(imgBase64);
-            if(!isSafe) return showNeonPopup("⚠️ عذراً، رفض النظام نشر الصورة لمخالفتها معايير المحتوى الآمن!");
-
             rtdb.ref('lounge_posts').push({
                 authorKey: currentUserKey,
                 authorName: userData.name || 'مستخدم',
                 authorId: userData.customId || '---',
                 authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
+                title: title,
                 text: desc,
                 image: imgBase64,
                 likesCount: 0,
                 timestamp: Date.now()
             }).then(()=>{
+                document.getElementById('newPostTitle').value = '';
                 document.getElementById('newPostText').value = '';
                 document.getElementById('newPostImageFile').value = '';
-                showNeonPopup("✅ تم نشر لحظتك بنجاح وبدون أي فيديوهات ليبقى التطبيق صاروخياً!");
+                showNeonPopup("✅ تم نشر لحظتك بنجاح!");
                 loadLoungePosts();
             });
         };
         reader.readAsDataURL(fileInput);
-    }
-
-    function serverSideImageModerationCheck(base64Str){
-        // فحص خادمي آمن لضمان جودة ونظافة الصور
-        if(!base64Str || base64Str.length < 50) return false;
-        return true; 
     }
 
     function loadLoungePosts(){
@@ -1594,7 +1632,10 @@
                 let p = item.val(), pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 let isMyPost = (p.authorKey === currentUserKey);
-                let deleteBtn = (isMyPost || currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1') ? 
+                let isAdmin = (currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
+                
+                // ✨ حصراً الإدارة هي المتحكم الوحيد الذي يمكنه حذف أي منشور (أو صاحب المنشور)
+                let deleteBtn = (isMyPost || isAdmin) ? 
                     `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
 
                 html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
@@ -1608,6 +1649,7 @@
                         </div>
                         <div>${deleteBtn}</div>
                     </div>
+                    ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
                     <img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">
                     <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
@@ -1651,6 +1693,7 @@
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 html += `<div class="card" style="text-align:right; margin-bottom:8px;">
                     <div style="font-size:9px; color:#94a3b8; margin-bottom:4px;">${dateStr}</div>
+                    ${p.title ? `<div style="font-size:11px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
                     <img src="${p.image}" style="width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-bottom:6px;" alt="صورة">
                     <button class="action-btn" style="background:#ef4444; color:#fff; padding:4px; font-size:10px;" onclick="deleteLoungePost('${pKey}'); loadMyProfilePosts();">حذف المنشور 🗑️</button>
@@ -1673,6 +1716,7 @@
                     <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="صورة">
                     <div><b>${p.authorName}</b><div style="font-size:8px; color:#94a3b8;">${dateStr}</div></div>
                 </div>
+                ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                 ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
                 <img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;" alt="صورة">
             </div>`;
