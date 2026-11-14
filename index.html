@@ -134,7 +134,37 @@
         .neon-popup-btn { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border: none; border-radius: 12px; padding: 8px 28px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 0 12px rgba(147,51,234,0.8); }
 
         .system-notification-item { background: linear-gradient(135deg, rgba(30,20,55,0.9), rgba(15,23,42,0.95)); border: 1.2px solid rgba(192,132,252,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: flex-start; gap: 8px; }
-    </style>
+    
+/* Lounge voice-room refresh: styles are scoped to the room screens only. */
+#singleRoomScreen .lr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+#singleRoomScreen .lr-exit{background:#3b1020;border:1px solid #fb7185;color:#fff;border-radius:12px;padding:8px 11px;font-weight:800}
+#singleRoomScreen .lr-stage{background:radial-gradient(circle at 50% 30%,#183b61 0%,#10152e 48%,#080817 100%);border:1px solid rgba(56,189,248,.35);border-radius:18px;padding:12px 8px;margin-bottom:10px;box-shadow:inset 0 0 28px rgba(56,189,248,.08),0 10px 25px #0008}
+#singleRoomScreen .lr-stage-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#bae6fd;margin-bottom:12px}
+#singleRoomScreen .lr-mics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 6px;direction:rtl}
+#singleRoomScreen .lr-seat{min-width:0;text-align:center;position:relative}
+#singleRoomScreen .lr-seat:nth-child(4){grid-column:1}
+#singleRoomScreen .lr-seat:nth-child(5){grid-column:3}
+#singleRoomScreen .lr-mic-btn{width:66px;height:66px;margin:auto;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;border:2px dashed #38bdf8;background:radial-gradient(circle,#153c58,#0b172c);color:#bae6fd;font-size:25px;box-shadow:0 0 16px #0ea5e955}
+#singleRoomScreen .lr-mic-btn.occupied{border-style:solid;border-color:#a78bfa;background:radial-gradient(circle,#43206a,#17112d)}
+#singleRoomScreen .lr-mic-btn.locked{border-color:#fb7185;background:radial-gradient(circle,#571d36,#21101e);color:#fecdd3}
+#singleRoomScreen .lr-mic-btn.speaking:after{content:"";position:absolute;inset:-7px;border:2px solid #22d3ee;border-radius:50%;animation:lrPulse 1.15s infinite}
+#singleRoomScreen .lr-mic-avatar{width:100%;height:100%;border-radius:50%;object-fit:cover}
+#singleRoomScreen .lr-seat-name{font-size:10px;color:#fff;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#singleRoomScreen .lr-seat-state{font-size:9px;color:#7dd3fc;margin-top:2px}
+#singleRoomScreen .lr-seat-tools{display:flex;justify-content:center;gap:3px;margin-top:4px;flex-wrap:wrap}
+#singleRoomScreen .lr-seat-tools button{font-size:9px;padding:3px 5px;border-radius:7px;border:1px solid #64748b;background:#1e293b;color:#fff}
+#singleRoomScreen .lr-panels{display:grid;grid-template-columns:1fr 100px;gap:7px;margin-bottom:9px}
+#singleRoomScreen .lr-chat{height:170px;overflow:auto;background:#080b18b8;border:1px solid #334155;border-radius:12px;padding:8px;font-size:11px}
+#singleRoomScreen .lr-users{height:170px;overflow:auto;background:#10172a;border:1px solid #334155;border-radius:12px;padding:7px;font-size:10px}
+#singleRoomScreen .lr-controls{display:flex;gap:6px;margin-bottom:9px}
+#singleRoomScreen .lr-controls button{flex:1;padding:9px 5px;border-radius:10px;border:1px solid #38bdf8;background:#0c263c;color:#e0f2fe;font-size:11px;font-weight:bold}
+#singleRoomScreen .lr-gifts{background:#10172a;border:1px solid #a855f755;border-radius:13px;padding:8px;margin-bottom:9px}
+#singleRoomScreen .lr-gift-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+#singleRoomScreen .lr-gift-grid button{background:#21152e;border:1px solid #a855f766;border-radius:9px;color:#fff;padding:7px 2px;font-size:10px}
+#singleRoomScreen .lr-gift-grid small{display:block;color:#f9a8d4;margin-top:3px}
+@keyframes lrPulse{0%{transform:scale(.96);opacity:.9}100%{transform:scale(1.16);opacity:0}}
+
+</style>
 </head>
 <body>
 <div class="container">
@@ -411,43 +441,54 @@
     </div>
 
     <div id="singleRoomScreen" class="screen-page">
-        <div class="top-nav">
-            <div style="display:flex;align-items:center;gap:8px">
-                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
-                <div>
-                    <h3 id="currentRoomTitleDisplay" style="margin:0;color:#f472b6;font-size:13px">اسم الغرفة</h3>
-                    <span id="currentRoomIdDisplay" style="font-size:9px;color:#94a3b8">ID: ---</span>
+        <div class="lr-top">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:42px;height:42px;border-radius:13px;object-fit:cover;border:1px solid #38bdf8" alt="صورة الغرفة">
+                <div style="min-width:0">
+                    <h3 id="currentRoomTitleDisplay" style="margin:0;color:#f472b6;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">اسم الغرفة</h3>
+                    <span id="currentRoomIdDisplay" style="font-size:10px;color:#94a3b8">ID: ---</span>
                 </div>
             </div>
-            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج من الغرفة</button>
+            <button class="lr-exit" onclick="leaveCurrentRoom()">✕ خروج</button>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
-            <div id="roomMessagesArea" style="height:230px;overflow-y:auto;background:rgba(0,0,0,0.4);padding:8px;border-radius:10px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
-            <div style="width:90px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px;overflow-y:auto;max-height:230px">
-                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:4px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
-                <div id="roomUsersListContainer" style="font-size:10px;color:#cbd5e1"></div>
+        <div class="lr-stage">
+            <div class="lr-stage-head"><b>🎙️ منصة المايكات</b><span>5 مقاعد صوتية</span></div>
+            <div id="roomMicSeats" class="lr-mics"></div>
+            <div id="roomMicStatus" style="font-size:10px;color:#bae6fd;text-align:center;margin-top:13px">اضغط على مقعد فارغ لطلب المايك</div>
+        </div>
+
+        <div class="lr-controls">
+            <button id="roomMicToggleBtn" onclick="toggleMyRoomMic()">🎙️ تشغيل الصوت المباشر</button>
+            <button onclick="leaveMyRoomMic()">مغادرة المايك</button>
+        </div>
+
+        <div class="lr-panels">
+            <div id="roomMessagesArea" class="lr-chat">أهلاً بك في الغرفة!</div>
+            <div class="lr-users">
+                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:5px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
+                <div id="roomUsersListContainer" style="color:#cbd5e1"></div>
             </div>
         </div>
 
-        <div style="background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 صندوق الهدايا السريع:</span>
-                <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px">
-                    <option value="all">الجميع (الشات العام)</option>
+        <div class="lr-gifts">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:7px">
+                <b style="font-size:11px;color:#f0abfc">🎁 الهدايا</b>
+                <select id="giftTargetSelect" class="select-box" style="width:145px;margin:0;padding:5px;font-size:10px">
+                    <option value="all">الجميع (بدون مستلم محدد)</option>
                 </select>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
+            <div class="lr-gift-grid">
+                <button onclick="sendRoomGift('🇮🇶 علم العراق',100)">🇮🇶 علم العراق<small>100 نقطة</small></button>
+                <button onclick="sendRoomGift('🌹 وردة',25)">🌹 وردة<small>25 نقطة</small></button>
+                <button onclick="sendRoomGift('🐱 قطة',30)">🐱 قطة<small>30 نقطة</small></button>
+                <button onclick="sendRoomGift('🩷 قلب وردي',30)">🩷 قلب وردي<small>30 نقطة</small></button>
+                <button onclick="sendRoomGift('👑 قصر الملكة',5000)">👑 قصر الملكة<small>5000 نقطة</small></button>
+                <button onclick="sendRoomGift('💞 طائرات الحب',3000)">💞 طائرات الحب<small>3000 نقطة</small></button>
             </div>
         </div>
 
-        <div style="display:flex;gap:4px;align-items:center">
+        <div style="display:flex;gap:5px;align-items:center">
             <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
             <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
         </div>
@@ -919,13 +960,21 @@
         safeCopyTextToClipboard(text, "📋 تم نسخ النص بنجاح!");
     }
 
+    let activeRoomMeta = null;
+    let roomListenersAttached = false;
+
+    function roomEscape(value){
+        return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+    function isActualRoom(data){
+        return !!(data && data.creatorKey && data.roomName && data.roomId != null);
+    }
     function openCreateRoomModal(){
+        if(!rtdb || !currentUserKey) return showNeonPopup("يرجى تسجيل الدخول أولاً.");
         rtdb.ref('rooms').once('value', snap=>{
             let hasRoom = false;
-            snap.forEach(item=>{
-                if(item.val().creatorKey === currentUserKey) hasRoom = true;
-            });
-            if(hasRoom) return showNeonPopup("⚠️ عذراً، لا يمكنك إنشاء أكثر من غرفة دردشة واحدة! لديك غرفة مسجلة مسبقاً.");
+            snap.forEach(item=>{ if(isActualRoom(item.val()) && item.val().creatorKey === currentUserKey) hasRoom = true; });
+            if(hasRoom) return showNeonPopup("⚠️ يمكنك إنشاء غرفة واحدة فقط، ولديك غرفة بالفعل.");
             document.getElementById('createRoomModal').style.display='flex';
         });
     }
@@ -934,250 +983,258 @@
     function confirmCreateRoom(){
         let roomName = document.getElementById('newRoomNameInput').value.trim();
         let coverFile = document.getElementById('newRoomCoverInput').files[0];
-        if(!roomName) return showNeonPopup("⚠️ يرجى إدخال اسم الغرفة!");
-
+        if(!roomName) return showNeonPopup("يرجى إدخال اسم الغرفة.");
+        if(roomName.length > 32) return showNeonPopup("اسم الغرفة يجب ألا يتجاوز 32 حرفاً.");
+        if(coverFile && coverFile.size > 700000) return showNeonPopup("حجم صورة الغلاف كبير؛ اختر صورة أقل من 700 كيلوبايت.");
         rtdb.ref('rooms').once('value', snap=>{
             let hasRoom = false;
-            snap.forEach(item=>{
-                if(item.val().creatorKey === currentUserKey) hasRoom = true;
-            });
-            if(hasRoom){
-                closeCreateRoomModal();
-                return showNeonPopup("⚠️ عذراً، لديك غرفة مسجلة مسبقاً بالفعل!");
-            }
-
-            let createAction = (coverBase64)=>{
-                // ✨ توحيد آيدي الغرفة مع الآيدي الأساسي لحساب المستخدم كما طلبت
-                let roomId = userData.customId || '1';
+            snap.forEach(item=>{ if(isActualRoom(item.val()) && item.val().creatorKey === currentUserKey) hasRoom = true; });
+            if(hasRoom){ closeCreateRoomModal(); return showNeonPopup("لديك غرفة مسجلة مسبقاً."); }
+            const createAction = cover => {
+                const roomId = userData.customId || '1';
                 rtdb.ref('rooms').push({
-                    roomId: roomId,
-                    roomName: roomName,
-                    creatorKey: currentUserKey,
-                    creatorName: userData.name || 'مستخدم',
-                    creatorCustomId: userData.customId || '---',
-                    cover: coverBase64 || 'https://via.placeholder.com/85',
-                    timestamp: Date.now()
+                    roomId, roomName, creatorKey:currentUserKey,
+                    creatorName:userData.name || 'مستخدم',
+                    creatorCustomId:userData.customId || '---',
+                    cover:cover || 'https://via.placeholder.com/85',
+                    timestamp:Date.now(), roomVersion:2
                 }).then(()=>{
                     closeCreateRoomModal();
-                    document.getElementById('newRoomNameInput').value = '';
-                    showNeonPopup("✅ تم إنشاء الغرفة بنجاح وبنفس الآيدي الأساسي للحساب!");
+                    document.getElementById('newRoomNameInput').value='';
+                    document.getElementById('newRoomCoverInput').value='';
+                    showNeonPopup("تم إنشاء الغرفة بنجاح.");
                     loadRoomsList();
-                });
+                }).catch(()=>showNeonPopup("تعذر إنشاء الغرفة، تحقق من اتصالك."));
             };
-
-            if(coverFile){
-                let reader = new FileReader();
-                reader.onload = (e)=> createAction(e.target.result);
-                reader.readAsDataURL(coverFile);
-            } else {
-                createAction('');
-            }
+            if(coverFile){ const reader=new FileReader(); reader.onload=e=>createAction(e.target.result); reader.readAsDataURL(coverFile); }
+            else createAction('');
         });
     }
 
+    function roomCardHtml(rKey,r){
+        const admin = currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1';
+        const del = admin ? `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:10px;margin-top:4px" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف إداري 🗑️</button>` : '';
+        return `<div style="background:rgba(30,41,59,.85);border:1px solid rgba(56,189,248,.25);border-radius:13px;padding:10px;display:flex;justify-content:space-between;align-items:center;text-align:right;gap:8px">
+            <div style="display:flex;align-items:center;gap:9px;min-width:0">
+                <img src="${roomEscape(r.cover || 'https://via.placeholder.com/85')}" style="width:48px;height:48px;border-radius:12px;object-fit:cover;border:2px solid #38bdf8" alt="غرفة">
+                <div style="min-width:0"><div style="font-size:13px;color:#f472b6;font-weight:bold">${roomEscape(r.roomName)}</div>
+                <div style="font-size:10px;color:#38bdf8;margin-top:3px">ID: ${roomEscape(r.roomId)} · ${roomEscape(r.creatorName || 'مستخدم')}</div>${del}</div>
+            </div>
+            <button class="action-btn btn-purple" style="padding:7px 12px;font-size:11px;white-space:nowrap" onclick="joinRoom('${rKey}')">دخول 🚪</button>
+        </div>`;
+    }
     function loadRoomsList(){
         if(!rtdb) return;
-        rtdb.ref('rooms').on('value', snap=>{
-            let container = document.getElementById('roomsListContainer');
-            let createSection = document.getElementById('createRoomSectionCard');
-            if(!container) return;
-
-            let userHasRoom = false;
-            let html = '';
-            
-            snap.forEach(item=>{
-                let r = item.val();
-                let rKey = item.key;
-                if(r.creatorKey === currentUserKey) userHasRoom = true;
-
-                let deleteAdminBtn = '';
-                if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
-                    deleteAdminBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:10px;margin-top:4px;" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف الغرفة (إدارة) 🗑️</button>`;
-                }
-
-                html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right; margin-bottom:6px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
-                        <div>
-                            <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
-                            <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
-                            ${deleteAdminBtn}
-                        </div>
-                    </div>
-                    <div>
-                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
-                    </div>
-                </div>`;
-            });
-
-            if(createSection){
-                createSection.style.display = userHasRoom ? 'none' : 'block';
-            }
-
-            if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد غرف دردشة حالياً.</div>";
-            } else {
-                container.innerHTML = html;
-            }
-        });
+        rtdb.ref('rooms').off('value', roomListValueHandler);
+        rtdb.ref('rooms').on('value', roomListValueHandler);
     }
-
+    function roomListValueHandler(snap){
+        const container=document.getElementById('roomsListContainer');
+        const createSection=document.getElementById('createRoomSectionCard');
+        if(!container) return;
+        let html='', userHasRoom=false, count=0;
+        snap.forEach(item=>{
+            const r=item.val();
+            if(!isActualRoom(r)) return; // root "rooms" is also used by the Lounge posts feed
+            count++;
+            if(r.creatorKey===currentUserKey) userHasRoom=true;
+            html += roomCardHtml(item.key,r);
+        });
+        if(createSection) createSection.style.display=userHasRoom?'none':'block';
+        container.innerHTML=count?html:"<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px'>لا توجد غرف صوتية حالياً.</div>";
+    }
     function adminDeleteRoomByAdmin(roomKey){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
-        if(!confirm("⚠️ هل أنت متأكد من حذف هذه الغرفة نهائياً؟")) return;
-        rtdb.ref(`rooms/${roomKey}`).remove().then(()=>{
-            showNeonPopup("✅ تم حذف الغرفة من قبل الإدارة بنجاح.");
-            loadRoomsList();
+        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('غير مسموح.');
+        if(!confirm("هل أنت متأكد من حذف هذه الغرفة نهائياً؟")) return;
+        rtdb.ref(`rooms/${roomKey}`).once('value').then(s=>{
+            if(!isActualRoom(s.val())) return showNeonPopup("العنصر المحدد ليس غرفة؛ لم يتم حذفه.");
+            return rtdb.ref(`rooms/${roomKey}`).remove().then(()=>showNeonPopup("تم حذف الغرفة إدارياً."));
         });
     }
-
     function searchRoomById(){
-        let searchId = document.getElementById('searchRoomIdInput').value.trim();
+        const searchId=document.getElementById('searchRoomIdInput').value.trim();
         if(!searchId) return loadRoomsList();
-        rtdb.ref('rooms').once('value', snap=>{
-            let container = document.getElementById('roomsListContainer');
-            if(!container) return;
-            let found = false;
-            let html = '';
-            snap.forEach(item=>{
-                let r = item.val();
-                let rKey = item.key;
-                if(String(r.roomId) === String(searchId)){
-                    found = true;
-                    html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
-                            <div>
-                                <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
-                                <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 ID الغرفة: ${r.roomId} | المنشئ: ${r.creatorName} (ID: ${r.creatorCustomId || '---'})</div>
-                            </div>
-                        </div>
-                        <div>
-                            <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
-                        </div>
-                    </div>`;
-                }
-            });
-            container.innerHTML = found ? html : "<div style='text-align:center;color:#ef4444;padding:20px;font-size:11px;'>لم يتم العثور على غرفة بهذا الـ ID.</div>";
+        rtdb.ref('rooms').once('value',snap=>{
+            const container=document.getElementById('roomsListContainer'); let html='',found=false;
+            snap.forEach(item=>{ const r=item.val(); if(isActualRoom(r) && String(r.roomId)===searchId){found=true;html+=roomCardHtml(item.key,r);} });
+            container.innerHTML=found?html:"<div style='text-align:center;color:#ef4444;padding:20px;font-size:11px'>لم يتم العثور على غرفة بهذا الرقم.</div>";
         });
     }
 
-    function joinRoom(rKey, roomId, roomName, cover){
-        activeRoomKey = rKey;
-        document.getElementById('currentRoomTitleDisplay').innerText = roomName;
-        document.getElementById('currentRoomIdDisplay').innerText = `ID: ${roomId}`;
-        document.getElementById('currentRoomCoverImg').src = cover;
-        navigateTo('singleRoomScreen');
-
-        let userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
-        userPresenceRef.set({
-            name: userData.name || 'مستخدم',
-            customId: userData.customId || '---'
-        });
-        userPresenceRef.onDisconnect().remove();
-
-        rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
-            let area = document.getElementById('roomMessagesArea');
-            if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "أهلاً بك في الغرفة! ابدأ المحادثة أو أرسل الهدايا."; return; }
-            let h = '';
-            snap.forEach(m=>{
-                let msg = m.val();
-                h += `<div style="margin-bottom:6px;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</div>`;
+    function joinRoom(rKey){
+        if(!rtdb || !currentUserKey) return;
+        if(activeRoomKey && activeRoomKey!==rKey) leaveCurrentRoom(true);
+        rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).once('value', kickSnap=>{
+            const kick=kickSnap.val();
+            if(kick && Number(kick.until||0)>Date.now()) return showNeonPopup("تم إخراجك من هذه الغرفة مؤقتاً. يمكنك العودة بعد انتهاء مدة الحظر.");
+            if(kick) rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).remove();
+            rtdb.ref(`rooms/${rKey}`).once('value', roomSnap=>{
+                const room=roomSnap.val();
+                if(!isActualRoom(room)) return showNeonPopup("هذه الغرفة لم تعد متاحة.");
+                activeRoomKey=rKey; activeRoomMeta=room;
+                document.getElementById('currentRoomTitleDisplay').innerText=room.roomName;
+                document.getElementById('currentRoomIdDisplay').innerText=`ID: ${room.roomId}`;
+                document.getElementById('currentRoomCoverImg').src=room.cover || 'https://via.placeholder.com/85';
+                navigateTo('singleRoomScreen');
+                const presence=rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
+                presence.set({name:userData.name||'مستخدم',customId:userData.customId||'---',avatar:userData.avatar||'',joinedAt:Date.now(),mic:0});
+                presence.onDisconnect().remove();
+                rtdb.ref(`room_messages/${rKey}`).off();
+                rtdb.ref(`room_users/${rKey}`).off();
+                rtdb.ref(`room_mics/${rKey}`).off();
+                rtdb.ref(`room_messages/${rKey}`).limitToLast(100).on('value',renderRoomMessages);
+                rtdb.ref(`room_users/${rKey}`).on('value',renderRoomUsers);
+                rtdb.ref(`room_mics/${rKey}`).on('value',renderRoomMics);
+                rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).on('value',ks=>{const kd=ks.val();if(kd && Number(kd.until||0)>Date.now()){showNeonPopup('تم إخراجك من الغرفة لمدة 24 ساعة.');leaveCurrentRoom(true);}});
+                roomListenersAttached=true;
+                renderRoomMics(null);
             });
-            area.innerHTML = h;
-            area.scrollTop = area.scrollHeight;
-        });
-
-        rtdb.ref(`room_users/${rKey}`).on('value', snap=>{
-            let uList = document.getElementById('roomUsersListContainer');
-            let targetSelect = document.getElementById('giftTargetSelect');
-            let uCountSpan = document.getElementById('roomUsersCount');
-            if(!uList || !targetSelect) return;
-            let count = 0, uHtml = '', selectHtml = '<option value="all">الجميع (الشات العام)</option>';
-            snap.forEach(u=>{
-                let dat = u.val();
-                let uKey = u.key;
-                count++;
-                uHtml += `<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
-                if(uKey !== currentUserKey) selectHtml += `<option value="${uKey}">${dat.name}</option>`;
-            });
-            uList.innerHTML = uHtml;
-            uCountSpan.innerText = count;
-            targetSelect.innerHTML = selectHtml;
         });
     }
-
-    function leaveCurrentRoom(){
+    function renderRoomMessages(snap){
+        const area=document.getElementById('roomMessagesArea'); if(!area || !activeRoomKey) return;
+        if(!snap || !snap.exists()){area.innerHTML="أهلاً بك في الغرفة!";return;}
+        let html='';
+        snap.forEach(m=>{
+            const msg=m.val()||{};
+            html+=`<div style="display:flex;gap:6px;margin-bottom:8px;align-items:flex-start">
+                <img src="${roomEscape(msg.senderAvatar||'https://via.placeholder.com/28')}" style="width:25px;height:25px;border-radius:50%;object-fit:cover" alt="">
+                <div style="min-width:0"><b style="color:#c4b5fd">${roomEscape(msg.senderName||'مستخدم')}</b><div style="color:#e2e8f0;word-break:break-word">${roomEscape(msg.text||'')}</div></div>
+            </div>`;
+        });
+        area.innerHTML=html; area.scrollTop=area.scrollHeight;
+    }
+    function renderRoomUsers(snap){
+        if(!activeRoomKey) return;
+        const uList=document.getElementById('roomUsersListContainer'), target=document.getElementById('giftTargetSelect'), countEl=document.getElementById('roomUsersCount');
+        if(!uList||!target) return;
+        let count=0,html='',opts='<option value="all">الجميع</option>';
+        if(snap) snap.forEach(u=>{
+            const d=u.val()||{}, k=u.key; count++;
+            html+=`<div style="padding:4px 0;border-bottom:1px solid #ffffff12">🟢 ${roomEscape(d.name||'مستخدم')}</div>`;
+            if(k!==currentUserKey) opts+=`<option value="${k}">${roomEscape(d.name||'مستخدم')}</option>`;
+        });
+        uList.innerHTML=html||'لا يوجد متواجدون'; countEl.innerText=count; target.innerHTML=opts;
+    }
+    function renderRoomMics(snap){
+        if(!activeRoomKey) return;
+        const seats=document.getElementById('roomMicSeats'); if(!seats) return;
+        let micData={}; if(snap) snap.forEach(x=>{micData[x.key]=x.val()||{};});
+        seats.innerHTML='';
+        for(let i=1;i<=5;i++){
+            const m=micData[i]||{}, occupied=!!m.userKey, locked=!!m.locked;
+            const isOwner=activeRoomMeta && activeRoomMeta.creatorKey===currentUserKey;
+            const speaking=!!m.speaking;
+            const wrap=document.createElement('div'); wrap.className='lr-seat';
+            const btn=document.createElement('button'); btn.className='lr-mic-btn'+(occupied?' occupied':'')+(locked?' locked':'')+(speaking?' speaking':'');
+            btn.title=locked?'المايك مقفول':occupied?(m.userName||'مشغول'):'مايك متاح';
+            if(occupied && m.userAvatar){const img=document.createElement('img');img.className='lr-mic-avatar';img.src=m.userAvatar;btn.appendChild(img);}
+            else btn.textContent=locked?'🔒':occupied?'🎙️':'＋';
+            btn.onclick=()=>requestRoomMic(i);
+            const name=document.createElement('div');name.className='lr-seat-name';name.textContent=occupied?(m.userName||'مستخدم'):`مايك ${i}`;
+            const state=document.createElement('div');state.className='lr-seat-state';state.textContent=locked?'مقفل':speaking?'يتحدث الآن':occupied?'على المايك':'متاح';
+            wrap.append(btn,name,state);
+            if(isOwner){
+                const tools=document.createElement('div');tools.className='lr-seat-tools';
+                const lock=document.createElement('button');lock.textContent=locked?'فتح':'قفل';lock.onclick=()=>setRoomMicLock(i,!locked);tools.appendChild(lock);
+                if(occupied && m.userKey!==currentUserKey){const kick=document.createElement('button');kick.textContent='إخراج 24س';kick.onclick=()=>kickRoomUser(m.userKey,m.userName||'المستخدم');tools.appendChild(kick);}
+                wrap.appendChild(tools);
+            }
+            seats.appendChild(wrap);
+        }
+        const mySeat=Object.keys(micData).find(k=>micData[k].userKey===currentUserKey);
+        const toggle=document.getElementById('roomMicToggleBtn');
+        if(toggle) toggle.textContent=mySeat?'🎙️ تشغيل الصوت المباشر':'🎙️ احجز مقعداً أولاً';
+        const status=document.getElementById('roomMicStatus');
+        if(status) status.textContent=mySeat?`أنت حاجز المايك رقم ${mySeat} · بث الصوت لم يُفعّل بعد`:'اختر مقعداً متاحاً لطلب المايك';
+    }
+    function requestRoomMic(seatNo){
+        if(!activeRoomKey) return;
+        const ref=rtdb.ref(`room_mics/${activeRoomKey}/${seatNo}`);
+        ref.transaction(current=>{
+            current=current||{};
+            if(current.locked || (current.userKey && current.userKey!==currentUserKey)) return;
+            if(current.userKey===currentUserKey) return current;
+            current.userKey=currentUserKey;current.userName=userData.name||'مستخدم';current.userAvatar=userData.avatar||'';current.speaking=false;current.joinedAt=Date.now();
+            return current;
+        },(err,committed,snap)=>{
+            if(err || !committed) return showNeonPopup("هذا المايك مشغول أو مقفول.");
+            rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}/mic`).set(Number(seatNo));
+            ref.onDisconnect().update({userKey:null,userName:null,userAvatar:null,speaking:false});
+            showNeonPopup("تم حجز مقعد المايك. بث الصوت المباشر يحتاج ربط خادم صوت آمن قبل أن يسمع الآخرون صوتك.");
+        });
+    }
+    function setRoomMicLock(seatNo,locked){
+        if(!activeRoomKey || !activeRoomMeta || activeRoomMeta.creatorKey!==currentUserKey) return;
+        rtdb.ref(`room_mics/${activeRoomKey}/${seatNo}/locked`).set(!!locked);
+    }
+    function leaveMyRoomMic(){
+        if(!activeRoomKey) return;
+        rtdb.ref(`room_mics/${activeRoomKey}`).once('value',snap=>{
+            snap.forEach(x=>{if(x.val() && x.val().userKey===currentUserKey) rtdb.ref(`room_mics/${activeRoomKey}/${x.key}`).update({userKey:null,userName:null,userAvatar:null,speaking:false});});
+            rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}/mic`).set(0);
+        });
+    }
+    function toggleMyRoomMic(){
+        if(!activeRoomKey) return;
+        rtdb.ref(`room_mics/${activeRoomKey}`).once('value',snap=>{
+            let mine=null; snap.forEach(x=>{if(x.val() && x.val().userKey===currentUserKey) mine=x.key;});
+            if(!mine) return showNeonPopup("احجز مقعداً أولاً قبل تشغيل المايك.");
+            showNeonPopup("مقعدك محجوز، لكن بث الصوت الحي بين أعضاء الغرفة غير مفعّل بعد. يحتاج خادم بث صوتي (SFU) ورمز دخول آمن.");
+        });
+    }
+    function kickRoomUser(userKey,userName){
+        if(!activeRoomKey || !activeRoomMeta || activeRoomMeta.creatorKey!==currentUserKey) return;
+        if(!confirm(`إخراج ${userName} من الغرفة لمدة 24 ساعة؟`)) return;
+        const until=Date.now()+24*60*60*1000;
+        rtdb.ref(`room_kicks/${activeRoomKey}/${userKey}`).set({until,by:currentUserKey});
+        rtdb.ref(`room_users/${activeRoomKey}/${userKey}`).remove();
+        rtdb.ref(`room_mics/${activeRoomKey}`).once('value',snap=>{
+            snap.forEach(x=>{if(x.val() && x.val().userKey===userKey) rtdb.ref(`room_mics/${activeRoomKey}/${x.key}`).update({userKey:null,userName:null,userAvatar:null,speaking:false});});
+        });
+    }
+    function leaveCurrentRoom(skipConfirm){
+        if(activeRoomKey && !skipConfirm && !confirm("تريد مغادرة الغرفة؟")) return;
         if(activeRoomKey && currentUserKey){
+            leaveMyRoomMic();
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
             rtdb.ref(`room_messages/${activeRoomKey}`).off();
             rtdb.ref(`room_users/${activeRoomKey}`).off();
+            rtdb.ref(`room_mics/${activeRoomKey}`).off();
+            rtdb.ref(`room_kicks/${activeRoomKey}/${currentUserKey}`).off();
         }
-        activeRoomKey = null;
+        activeRoomKey=null;activeRoomMeta=null;roomListenersAttached=false;
         navigateTo('roomsScreen');
     }
-
     function sendRoomChatMessage(){
-        let txt = document.getElementById('roomChatInputMsg').value.trim();
+        const input=document.getElementById('roomChatInputMsg'),txt=input.value.trim();
         if(!txt || !activeRoomKey) return;
         rtdb.ref(`room_messages/${activeRoomKey}`).push({
-            senderKey: currentUserKey,
-            senderName: userData.name || 'مستخدم',
-            text: txt,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('roomChatInputMsg').value = '';
-        });
+            senderKey:currentUserKey,senderName:userData.name||'مستخدم',
+            senderAvatar:userData.avatar||'',text:txt,timestamp:Date.now()
+        }).then(()=>input.value='');
     }
-
-    function sendRoomGift(giftName, giftPrice){
+    function sendRoomGift(giftName,giftPrice){
         if(!activeRoomKey) return;
-        let targetVal = document.getElementById('giftTargetSelect').value;
-        let myPts = userData.points || 0;
-        if(myPts < giftPrice) return showNeonPopup(`❌ نقاطك غير كافية لإرسال هذه الهدية! رصيدك (${myPts.toLocaleString()}) بينما السعر (${giftPrice.toLocaleString()}).`);
-
-        rtdb.ref(`room_users/${activeRoomKey}`).once('value', snap=>{
-            let isAlone = true;
-            snap.forEach(u=>{ if(u.key !== currentUserKey) isAlone = false; });
-            if(targetVal !== 'all' && isAlone) return showNeonPopup("⚠️ تنبيه أمان: ليس معك أحد داخل الغرفة لإرسال الهدية إليه!");
-            if(targetVal === 'all' && isAlone) return showNeonPopup("⚠️ تنبيه أمان: أنت وحدك في الغرفة! لا يمكنك إرسال الهدية لنفسك.");
-
-            let newSenderPts = myPts - giftPrice;
-            userData.points = newSenderPts;
-            rtdb.ref(`users/${currentUserKey}`).update({ points: newSenderPts }).then(()=>{
-                updateUI();
-                if(targetVal === 'all'){
-                    rtdb.ref(`room_messages/${activeRoomKey}`).push({
-                        senderKey: 'SYSTEM',
-                        senderName: '🎁 نظام الهدايا',
-                        text: `أرسل (${userData.name}) هدية (${giftName}) للجميع في الشات العام! ✨`,
-                        timestamp: Date.now()
+        const targetVal=document.getElementById('giftTargetSelect').value;
+        const myPts=Number(userData.points||0);
+        if(myPts<giftPrice) return showNeonPopup(`نقاطك غير كافية. رصيدك ${myPts.toLocaleString()} والسعر ${giftPrice.toLocaleString()}.`);
+        if(targetVal==='all') return showNeonPopup("اختر مستلماً محدداً حتى تُرسل الهدية ويُضاف نصف قيمتها إلى رصيده.");
+        rtdb.ref(`room_users/${activeRoomKey}/${targetVal}`).once('value',uSnap=>{
+            if(!uSnap.exists()) return showNeonPopup("المستلم غادر الغرفة.");
+            const recipientShare=Math.floor(giftPrice/2), senderNew=myPts-giftPrice;
+            rtdb.ref(`users/${currentUserKey}`).update({points:senderNew}).then(()=>{
+                userData.points=senderNew;updateUI();
+                rtdb.ref(`users/${targetVal}`).once('value',rSnap=>{
+                    if(!rSnap.exists()) return showNeonPopup("تعذر العثور على حساب المستلم.");
+                    const rData=rSnap.val()||{}, recipientNew=Number(rData.points||0)+recipientShare;
+                    rtdb.ref(`users/${targetVal}`).update({points:recipientNew}).then(()=>{
+                        rtdb.ref(`notifications/${targetVal}`).push({text:`🎁 استلمت (${giftName}) من (${userData.name}) وأضيفت ${recipientShare} نقطة إلى رصيدك.`,timestamp:Date.now()});
+                        rtdb.ref(`room_messages/${activeRoomKey}`).push({senderKey:'SYSTEM',senderName:'🎁 نظام الهدايا',senderAvatar:'',text:`أرسل ${userData.name||'مستخدم'} ${giftName} إلى ${rData.name||'صديق'} 🎉`,timestamp:Date.now()});
+                        showNeonPopup(`تم إرسال الهدية؛ المستلم حصل على ${recipientShare} نقطة.`);
                     });
-                    showNeonPopup(`✅ تم إرسال هدية (${giftName}) للجميع بنجاح!`);
-                } else {
-                    let recipientShare = Math.floor(giftPrice / 2);
-                    rtdb.ref(`users/${targetVal}`).once('value', rSnap=>{
-                        if(rSnap.exists()){
-                            let rData = rSnap.val();
-                            let recipientNewPts = Number(rData.points || 0) + recipientShare;
-                            rtdb.ref(`users/${targetVal}`).update({ points: recipientNewPts }).then(()=>{
-                                rtdb.ref(`notifications/${targetVal}`).push({
-                                    text: `🎁 مبروك! استلمت هدية (${giftName}) من (${userData.name}) وأضيفت (${recipientShare} نقطة) لرصيدك!`,
-                                    timestamp: Date.now()
-                                });
-                                rtdb.ref(`room_messages/${activeRoomKey}`).push({
-                                    senderKey: 'SYSTEM',
-                                    senderName: '🎁 نظام الهدايا',
-                                    text: `أرسل (${userData.name}) هدية (${giftName}) إلى (${rData.name || 'صديق'}) بنجاح! 💎`,
-                                    timestamp: Date.now()
-                                });
-                                showNeonPopup(`✅ تم إرسال الهدية بنجاح! (تم إضافة ${recipientShare} نقطة للمستلم).`);
-                            });
-                        }
-                    });
-                }
-            });
+                });
+            }).catch(()=>showNeonPopup("تعذر إتمام إرسال الهدية."));
         });
     }
 
