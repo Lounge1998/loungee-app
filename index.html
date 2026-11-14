@@ -1393,6 +1393,7 @@
         if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
     }
 
+    // ✨ لعبة الذاكرة المحدثة (50 نقطة مع نظام 24 ساعة يمنع تكرارها إلا في اليوم التالي)
     function openMemoryGameModal(){
         let now = new Date().getTime();
         let cooldown = 24 * 60 * 60 * 1000;
@@ -1476,6 +1477,7 @@
         
         if(!title && !desc) return showNeonPopup("⚠️ يرجى كتابة عنوان أو نص المنشور أولاً!");
 
+        // استخدام مسار 'rooms' المسموح به والموجود أصلاً في القواعد بدون تعديلها
         rtdb.ref('rooms').push({
             isLoungePost: true,
             authorKey: currentUserKey,
@@ -1507,7 +1509,7 @@
             let html = '';
             snap.forEach(item=>{
                 let p = item.val();
-                if(!p.isLoungePost) return;
+                if(!p.isLoungePost) return; // عرض فقط المنشورات
                 let pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 let isMyPost = (p.authorKey === currentUserKey);
