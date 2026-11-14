@@ -15,6 +15,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
         *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
@@ -1061,36 +1062,106 @@
         });
     }
 
-    function joinRoom(rKey){
-        if(!rtdb || !currentUserKey) return;
-        if(activeRoomKey && activeRoomKey!==rKey) leaveCurrentRoom(true);
-        rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).once('value', kickSnap=>{
-            const kick=kickSnap.val();
-            if(kick && Number(kick.until||0)>Date.now()) return showNeonPopup("تم إخراجك من هذه الغرفة مؤقتاً. يمكنك العودة بعد انتهاء مدة الحظر.");
-            if(kick) rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).remove();
-            rtdb.ref(`rooms/${rKey}`).once('value', roomSnap=>{
-                const room=roomSnap.val();
-                if(!isActualRoom(room)) return showNeonPopup("هذه الغرفة لم تعد متاحة.");
-                activeRoomKey=rKey; activeRoomMeta=room;
-                document.getElementById('currentRoomTitleDisplay').innerText=room.roomName;
-                document.getElementById('currentRoomIdDisplay').innerText=`ID: ${room.roomId}`;
-                document.getElementById('currentRoomCoverImg').src=room.cover || 'https://via.placeholder.com/85';
-                navigateTo('singleRoomScreen');
-                const presence=rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
-                presence.set({name:userData.name||'مستخدم',customId:userData.customId||'---',avatar:userData.avatar||'',joinedAt:Date.now(),mic:0});
+    async function joinRoom(rKey){
+        if(!rtdb || !currentUserKey) return showNeonPopup("يرجى تسجيل الدخول أولاً.");
+        try{
+            if(activeRoomKey && activeRoomKey!==rKey) leaveCurrentRoom(true);
+            const roomSnap = await rtdb.ref(`rooms/${rKey}`).once('value');
+            const room = roomSnap.val();
+            if(!isActualRoom(room)) return showNeonPopup("الغرفة غير موجودة أو بياناتها قديمة. حدّث قائمة الغرف.");
+            // دخول الواجهة أولاً حتى يستطيع المستخدم معاينة التصميم حتى لو كانت قواعد الحضور تحتاج ضبطاً.
+            activeRoomKey = rKey;
+            activeRoomMeta = room;
+            document.getElementById('currentRoomTitleDisplay').innerText = room.roomName || 'غرفة صوتية';
+            document.getElementById('currentRoomIdDisplay').innerText = `ID: ${room.roomId || '---'}`;
+            document.getElementById('currentRoomCoverImg').src = room.cover || 'https://via.placeholder.com/85';
+            navigateTo('singleRoomScreen');
+
+            try{
+                const kickSnap = await rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).once('value');
+                const kick = kickSnap.val();
+                if(kick && Number(kick.until||0)>Date.now()){
+                    activeRoomKey=null; activeRoomMeta=null; navigateTo('roomsScreen');
+                    return showNeonPopup("تم إخراجك من هذه الغرفة مؤقتاً. يمكنك العودة بعد انتهاء مدة الحظر.");
+                }
+                if(kick) await rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).remove();
+            }catch(kickError){
+                console.warn('Room kick check unavailable:', kickError);
+            }
+
+            const presence = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
+            try{
+                await presence.set({name:userData.name||'مستخدم',customId:userData.customId||'---',avatar:userData.avatar||'',joinedAt:Date.now(),mic:0});
                 presence.onDisconnect().remove();
-                rtdb.ref(`room_messages/${rKey}`).off();
-                rtdb.ref(`room_users/${rKey}`).off();
-                rtdb.ref(`room_mics/${rKey}`).off();
-                rtdb.ref(`room_messages/${rKey}`).limitToLast(100).on('value',renderRoomMessages);
-                rtdb.ref(`room_users/${rKey}`).on('value',renderRoomUsers);
-                rtdb.ref(`room_mics/${rKey}`).on('value',renderRoomMics);
-                rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).on('value',ks=>{const kd=ks.val();if(kd && Number(kd.until||0)>Date.now()){showNeonPopup('تم إخراجك من الغرفة لمدة 24 ساعة.');leaveCurrentRoom(true);}});
-                roomListenersAttached=true;
-                renderRoomMics(null);
+            }catch(presenceError){
+                console.error('Room presence write failed:', presenceError);
+                showNeonPopup("ظهرت الغرفة، لكن قاعدة Firebase رفضت تسجيل حضورك. افحص صلاحيات room_users في قواعد Realtime Database.");
+            }
+
+            rtdb.ref(`room_messages/${rKey}`).off();
+            rtdb.ref(`room_users/${rKey}`).off();
+            rtdb.ref(`room_mics/${rKey}`).off();
+            rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).off();
+            rtdb.ref(`room_messages/${rKey}`).limitToLast(100).on('value',renderRoomMessages,
+                err=>console.warn('Room messages listener:',err));
+            rtdb.ref(`room_users/${rKey}`).on('value',renderRoomUsers,
+                err=>console.warn('Room users listener:',err));
+            rtdb.ref(`room_mics/${rKey}`).on('value',renderRoomMics,
+                err=>console.warn('Room mics listener:',err));
+            rtdb.ref(`room_kicks/${rKey}/${currentUserKey}`).on('value',ks=>{
+                const kd=ks.val();
+                if(kd && Number(kd.until||0)>Date.now()){
+                    showNeonPopup('تم إخراجك من الغرفة لمدة 24 ساعة.');
+                    leaveCurrentRoom(true);
+                }
             });
-        });
+            roomListenersAttached=true;
+            renderRoomMics(null);
+        }catch(err){
+            console.error('joinRoom failed:',err);
+            showNeonPopup("تعذر فتح الغرفة: " + (err && err.message ? err.message : "تحقق من اتصال Firebase وصلاحيات القراءة."));
+        }
     }
+
+    let loungeLiveKitRoom = null;
+    const LOUNGE_AUDIO_API = "https://YOUR-VOICE-SERVER.example.com";
+
+    async function connectRoomAudio(){
+        if(!activeRoomKey) return showNeonPopup("ادخل الغرفة أولاً.");
+        if(typeof LivekitClient === 'undefined') return showNeonPopup("مكتبة الصوت لم تُحمّل بعد. أضف إعداد LiveKit بعد نشر خادم الصوت.");
+        if(!auth || !auth.currentUser) return showNeonPopup("يرجى تسجيل الدخول مجدداً.");
+        const btn=document.getElementById('roomAudioConnectBtn');
+        try{
+            btn.disabled=true; btn.textContent='جاري الاتصال...';
+            const idToken=await auth.currentUser.getIdToken();
+            const response=await fetch(`${LOUNGE_AUDIO_API}/token`,{
+                method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${idToken}`},
+                body:JSON.stringify({roomName:`lounge-${activeRoomKey}`})
+            });
+            if(!response.ok) throw new Error(`خادم الصوت ردّ بالحالة ${response.status}`);
+            const data=await response.json();
+            loungeLiveKitRoom=new LivekitClient.Room({adaptiveStream:true,dynacast:true});
+            loungeLiveKitRoom.on(LivekitClient.RoomEvent.TrackSubscribed,(track,publication,participant)=>{
+                if(track.kind==='audio'){
+                    const audio=track.attach(); audio.autoplay=true; audio.playsInline=true;
+                    document.body.appendChild(audio);
+                }
+            });
+            loungeLiveKitRoom.on(LivekitClient.RoomEvent.Disconnected,()=>{btn.textContent='🔊 اتصال الصوت';btn.disabled=false;});
+            await loungeLiveKitRoom.connect(data.url,data.token);
+            await loungeLiveKitRoom.localParticipant.setMicrophoneEnabled(true);
+            btn.textContent='🟢 الصوت متصل';
+            showNeonPopup("اتصلت بخادم الصوت. اسمح للمتصفح باستخدام المايكروفون.");
+        }catch(err){
+            console.error('LiveKit connection error:',err);
+            btn.disabled=false;btn.textContent='🔊 اتصال الصوت';
+            showNeonPopup("تعذر الاتصال الصوتي: "+(err.message||'خطأ غير معروف'));
+        }
+    }
+    async function disconnectRoomAudio(){
+        try{if(loungeLiveKitRoom){await loungeLiveKitRoom.disconnect();loungeLiveKitRoom=null;}}catch(e){}
+    }
+
     function renderRoomMessages(snap){
         const area=document.getElementById('roomMessagesArea'); if(!area || !activeRoomKey) return;
         if(!snap || !snap.exists()){area.innerHTML="أهلاً بك في الغرفة!";return;}
@@ -1194,6 +1265,7 @@
         });
     }
     function leaveCurrentRoom(skipConfirm){
+        disconnectRoomAudio();
         if(activeRoomKey && !skipConfirm && !confirm("تريد مغادرة الغرفة؟")) return;
         if(activeRoomKey && currentUserKey){
             leaveMyRoomMic();
