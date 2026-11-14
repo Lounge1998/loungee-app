@@ -118,6 +118,17 @@
         .wheel-box{width:140px;height:140px;border-radius:50%;border:5px solid #c084fc;margin:8px auto;position:relative;overflow:hidden;-webkit-transition:-webkit-transform 5s cubic-bezier(0.1,0.9,0.1,1);transition:transform 5s cubic-bezier(0.1,0.9,0.1,1);background:conic-gradient(#ef4444 0deg 60deg,#3b82f6 60deg 120deg,#10b981 120deg 180deg,#9333ea 180deg 240deg,#8b5cf6 240deg 300deg,#ec4899 300deg 360deg);box-shadow:0 0 18px rgba(192,132,252,0.7)}
         .wheel-pointer{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:15px solid #fff;margin:0 auto;margin-bottom:-6px;z-index:10;position:relative;filter:drop-shadow(0 0 4px #fff)}
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:1000;padding:15px}
+        /* Lounge requested screens only */
+        #singleRoomScreen.active{position:fixed;inset:0;z-index:900;background:#05020d url('') center/cover;padding:12px 10px calc(12px + env(safe-area-inset-bottom));margin:0;width:100%;height:100dvh;min-height:0;overflow:hidden;display:flex;}
+        #singleRoomScreen .room-chat-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;}
+        #singleRoomScreen .room-bottom-bar{flex-shrink:0;}
+        #chatModal{padding:0;align-items:stretch;}
+        #chatModal .modal-content{width:100%;max-width:none;height:100dvh;max-height:100dvh;border-radius:0;padding:14px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden;}
+        #chatMessagesArea{flex:1!important;height:auto!important;min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+        .lounge-post-image{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:12px;margin:8px 0;border:1px solid rgba(192,132,252,.35);}
+        .friend-avatar-wrap{position:relative;display:inline-flex;}
+        .friend-remove-x{position:absolute;top:-5px;left:-5px;width:20px;height:20px;border-radius:50%;border:1px solid #f0abfc;background:#4c0519;color:#fff;font-weight:bold;line-height:16px;padding:0;}
+        @media (max-height:520px){#singleRoomScreen.active{padding-top:5px;padding-bottom:5px;}}
         .modal-content{background:linear-gradient(135deg, #130926, #070411);border:1.5px solid rgba(192,132,252,0.5);border-radius:20px;width:100%;max-width:380px;padding:16px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.9), 0 0 25px rgba(168,85,247,0.3)}
         
         .admin-badge{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;padding:6px 14px;border-radius:12px;font-size:11px;font-weight:bold;border:1px solid #f87171;cursor:pointer;display:none;margin-bottom:8px;box-shadow:0 0 15px rgba(239,68,68,0.7)}
@@ -288,7 +299,7 @@
                     <div class="icon-circle" style="font-size:20px;">📸</div>
                     <div style="text-align:right; flex:1;">
                         <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات لاونج</span>
-                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (نشر سريع بدون صور)</div>
+                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك وصورك</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f472b6;">‹</div>
@@ -340,6 +351,8 @@
             <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور كتابي سريع</h4>
             <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
             <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:8px;"></textarea>
+            <input type="file" id="newPostImageInput" accept="image/*" class="input-box" style="margin-bottom:6px" onchange="previewLoungePostImage(event)">
+            <img id="newPostImagePreview" style="display:none;max-width:100%;max-height:180px;object-fit:contain;border-radius:10px;margin:0 auto 8px" alt="معاينة صورة المنشور">
             <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر المنشور الآن 🚀</button>
         </div>
 
@@ -359,22 +372,6 @@
         </div>
         <div id="myProfilePostsContainer" style="display:flex;flex-direction:column;gap:10px;">
             <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل منشوراتك...</div>
-        </div>
-    </div>
-
-    <div id="singlePostDetailScreen" class="screen-page">
-        <div class="top-nav">
-            <h3 style="margin:0;color:#38bdf8;font-size:15px">💬 تفاصيل المنشور والتعليقات</h3>
-            <button class="nav-btn back" onclick="navigateTo('loungePostsScreen')">⬅️ رجوع</button>
-        </div>
-        <div id="singlePostCardContainer" style="margin-bottom:10px;"></div>
-        <div class="card" style="text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#c084fc;font-size:12px">💬 التعليقات</h4>
-            <div id="postCommentsListArea" style="max-height:180px;overflow-y:auto;margin-bottom:8px;font-size:11px;text-align:right;"></div>
-            <div style="display:flex;gap:4px;">
-                <input type="text" id="postCommentInput" class="input-box" placeholder="اكتب تعليقك..." style="margin:0;flex:1">
-                <button class="action-btn btn-purple" style="width:60px;padding:0;height:38px;" onclick="sendPostComment()">إرسال</button>
-            </div>
         </div>
     </div>
 
@@ -401,7 +398,7 @@
     </div>
 
     <div id="singleRoomScreen" class="screen-page">
-        <div class="top-nav">
+        <div class="top-nav" style="flex-shrink:0;border:1px solid rgba(192,132,252,.65);border-radius:16px;padding:8px;background:rgba(8,2,20,.94);box-shadow:0 0 18px rgba(168,85,247,.35)">
             <div style="display:flex;align-items:center;gap:8px">
                 <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
                 <div>
@@ -409,10 +406,19 @@
                     <span id="currentRoomIdDisplay" style="font-size:9px;color:#94a3b8">ID: ---</span>
                 </div>
             </div>
-            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج من الغرفة</button>
+            <button class="nav-btn back" style="width:38px;height:38px;border-radius:50%;padding:0;font-size:18px;color:#f0abfc;border-color:#c084fc" onclick="showRoomExitChoice()">×</button>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
+        <div id="roomVoiceSeats" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;flex-shrink:0;padding:8px 0">
+            <button class="room-mic-seat" onclick="toggleRoomMic(1)" data-slot="1">🎙️<small>1</small></button>
+            <button class="room-mic-seat" onclick="toggleRoomMic(2)" data-slot="2">🎙️<small>2</small></button>
+            <button class="room-mic-seat" onclick="toggleRoomMic(3)" data-slot="3">🎙️<small>3</small></button>
+            <button class="room-mic-seat" onclick="toggleRoomMic(4)" data-slot="4">🎙️<small>4</small></button>
+            <button class="room-mic-seat" onclick="toggleRoomMic(5)" data-slot="5">🎙️<small>5</small></button>
+        </div>
+        <style>.room-mic-seat{min-width:0;height:76px;border-radius:50%;border:1px solid #a855f7;background:radial-gradient(circle,#251044,#07020f);color:#e9d5ff;box-shadow:0 0 12px rgba(168,85,247,.35);font-size:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.room-mic-seat small{font-size:11px}.room-mic-seat.occupied{border-color:#f0abfc;box-shadow:0 0 18px #a855f7;background:radial-gradient(circle,#5b21b6,#12051f)}.room-mic-seat img{width:31px;height:31px;border-radius:50%;object-fit:cover}</style>
+        <div class="room-chat-scroll" style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;flex-shrink:0">
             <div id="roomMessagesArea" style="height:230px;overflow-y:auto;background:rgba(0,0,0,0.4);padding:8px;border-radius:10px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
             <div style="width:90px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px;overflow-y:auto;max-height:230px">
                 <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:4px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
@@ -420,9 +426,9 @@
             </div>
         </div>
 
-        <div style="background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
+        <div id="roomGiftPanel" style="display:none;background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 صندوق الهدايا السريع:</span>
+                <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 الهدايا:</span>
                 <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px">
                     <option value="all">الجميع (الشات العام)</option>
                 </select>
@@ -437,7 +443,9 @@
             </div>
         </div>
 
-        <div style="display:flex;gap:4px;align-items:center">
+        </div>
+        <div class="room-bottom-bar" style="display:flex;gap:5px;align-items:center;flex-shrink:0;padding-top:6px">
+            <button class="action-btn" style="width:44px;height:42px;padding:0;font-size:21px;background:rgba(168,85,247,.18);border:1px solid #c084fc" onclick="toggleRoomGifts()" aria-label="الهدايا">🎁</button>
             <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
             <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
         </div>
@@ -832,6 +840,7 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
+    let roomLocalStream=null, roomVoicePeers={}, roomVoiceSeatsListener=null, roomVoiceSignalsListener=null;
     let activeViewingPostKey = null;
 
     const fullQuestionsPool = [
@@ -1061,9 +1070,11 @@
         let userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
         userPresenceRef.set({
             name: userData.name || 'مستخدم',
-            customId: userData.customId || '---'
+            customId: userData.customId || '---',
+            avatar: userData.avatar || 'https://via.placeholder.com/40'
         });
         userPresenceRef.onDisconnect().remove();
+        refreshRoomVoiceSeats();
 
         rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
@@ -1097,11 +1108,80 @@
         });
     }
 
+
+    async function toggleRoomMic(slot){
+        if(!activeRoomKey)return;
+        const seatRef=rtdb.ref(`room_voice_seats/${activeRoomKey}/${slot}`);
+        const snap=await seatRef.once('value');
+        if(snap.exists()&&snap.val().userKey===currentUserKey){
+            await seatRef.remove();
+            if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}
+            closeRoomVoicePeers();return;
+        }
+        if(snap.exists())return showNeonPopup('هذا المايك مستخدم حالياً.');
+        try{
+            if(!roomLocalStream)roomLocalStream=await navigator.mediaDevices.getUserMedia({audio:true});
+            await seatRef.set({userKey:currentUserKey,name:userData.name||'مستخدم',avatar:userData.avatar||'https://via.placeholder.com/40',slot});
+            seatRef.onDisconnect().remove();
+            refreshRoomVoiceSeats();
+        }catch(e){showNeonPopup('تعذر تشغيل المايك. تحقق من إذن الميكروفون واتصال آمن HTTPS.');}
+    }
+    function closeRoomVoicePeers(){
+        Object.values(roomVoicePeers).forEach(pc=>{try{pc.close();}catch(e){}});roomVoicePeers={};
+        document.querySelectorAll('.room-remote-audio').forEach(a=>a.remove());
+    }
+    async function ensureRoomVoicePeer(otherKey){
+        if(roomVoicePeers[otherKey]||!roomLocalStream)return;
+        const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});roomVoicePeers[otherKey]=pc;
+        roomLocalStream.getTracks().forEach(track=>pc.addTrack(track,roomLocalStream));
+        pc.onicecandidate=e=>{if(e.candidate)rtdb.ref(`room_voice_signals/${activeRoomKey}/${otherKey}/${currentUserKey}`).push({type:'candidate',candidate:e.candidate.toJSON()});};
+        pc.ontrack=e=>{let a=document.getElementById('room-audio-'+otherKey);if(!a){a=document.createElement('audio');a.id='room-audio-'+otherKey;a.className='room-remote-audio';a.autoplay=true;a.playsInline=true;document.body.appendChild(a);}a.srcObject=e.streams[0];a.play().catch(()=>{});};
+        if(String(currentUserKey)<String(otherKey)){const offer=await pc.createOffer();await pc.setLocalDescription(offer);await rtdb.ref(`room_voice_signals/${activeRoomKey}/${otherKey}/${currentUserKey}`).push({type:'offer',sdp:offer.sdp});}
+    }
+    function refreshRoomVoiceSeats(){
+        if(!activeRoomKey)return;
+        rtdb.ref(`room_voice_seats/${activeRoomKey}`).on('value',async snap=>{
+            const slots={};snap.forEach(x=>slots[x.key]=x.val());
+            document.querySelectorAll('.room-mic-seat').forEach(btn=>{const d=slots[btn.dataset.slot];btn.classList.toggle('occupied',!!d);btn.innerHTML=d?`<img src="${d.avatar||'https://via.placeholder.com/40'}"><small>${d.name||'مستخدم'}</small>`:`🎙️<small>${btn.dataset.slot}</small>`;});
+            for(const d of Object.values(slots)){if(d.userKey!==currentUserKey&&roomLocalStream)await ensureRoomVoicePeer(d.userKey);}
+        });
+        if(roomVoiceSignalsListener)roomVoiceSignalsListener.off();
+        roomVoiceSignalsListener=rtdb.ref(`room_voice_signals/${activeRoomKey}/${currentUserKey}`);
+        roomVoiceSignalsListener.on('child_added',async fromSnap=>{
+            const from=fromSnap.key;const pc=roomVoicePeers[from];
+            fromSnap.ref.on('child_added',async msgSnap=>{
+                const msg=msgSnap.val();if(!msg)return;
+                try{
+                    let peer=roomVoicePeers[from];
+                    if(msg.type==='offer'){
+                        if(!roomLocalStream)return;
+                        if(!peer){peer=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});roomVoicePeers[from]=peer;roomLocalStream.getTracks().forEach(t=>peer.addTrack(t,roomLocalStream));
+                            peer.onicecandidate=e=>{if(e.candidate)rtdb.ref(`room_voice_signals/${activeRoomKey}/${from}/${currentUserKey}`).push({type:'candidate',candidate:e.candidate.toJSON()});};
+                            peer.ontrack=e=>{let a=document.getElementById('room-audio-'+from);if(!a){a=document.createElement('audio');a.id='room-audio-'+from;a.autoplay=true;a.className='room-remote-audio';document.body.appendChild(a);}a.srcObject=e.streams[0];a.play().catch(()=>{});};}
+                        await peer.setRemoteDescription({type:'offer',sdp:msg.sdp});const answer=await peer.createAnswer();await peer.setLocalDescription(answer);await rtdb.ref(`room_voice_signals/${activeRoomKey}/${from}/${currentUserKey}`).push({type:'answer',sdp:answer.sdp});
+                    }else if(msg.type==='answer'&&peer){await peer.setRemoteDescription({type:'answer',sdp:msg.sdp});}
+                    else if(msg.type==='candidate'&&peer){await peer.addIceCandidate(new RTCIceCandidate(msg.candidate));}
+                }catch(e){console.warn('Room voice signaling:',e);}
+            });
+        });
+    }
+    function showRoomExitChoice(){
+        if(confirm('خروج')) leaveCurrentRoom();
+    }
+    function toggleRoomGifts(){
+        const panel=document.getElementById('roomGiftPanel');
+        if(panel)panel.style.display=panel.style.display==='none'?'block':'none';
+    }
     function leaveCurrentRoom(){
         if(activeRoomKey && currentUserKey){
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
             rtdb.ref(`room_messages/${activeRoomKey}`).off();
             rtdb.ref(`room_users/${activeRoomKey}`).off();
+            rtdb.ref(`room_voice_seats/${activeRoomKey}`).off();
+            rtdb.ref(`room_voice_signals/${activeRoomKey}/${currentUserKey}`).off();
+            rtdb.ref(`room_voice_seats/${activeRoomKey}`).child(String(1)).off();
+            if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}
+            closeRoomVoicePeers();
         }
         activeRoomKey = null;
         navigateTo('roomsScreen');
@@ -1471,91 +1551,84 @@
         }
     }
 
-    function publishLoungePost(){
-        let title = document.getElementById('newPostTitle').value.trim();
-        let desc = document.getElementById('newPostText').value.trim();
-        
-        if(!title && !desc) return showNeonPopup("⚠️ يرجى كتابة عنوان أو نص المنشور أولاً!");
+    let loungePostImageData = '';
+    function previewLoungePostImage(e){
+        const file=e.target.files && e.target.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')){e.target.value='';return showNeonPopup('يرجى اختيار صورة فقط.');}
+        if(file.size>8*1024*1024){e.target.value='';return showNeonPopup('حجم الصورة يجب ألا يتجاوز 8 ميغابايت.');}
+        const reader=new FileReader();
+        reader.onload=ev=>{
+            const img=new Image();
+            img.onload=()=>{
+                const scale=Math.min(1,1280/Math.max(img.width,img.height));
+                const canvas=document.createElement('canvas');
+                canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+                canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+                loungePostImageData=canvas.toDataURL('image/jpeg',0.72);
+                const preview=document.getElementById('newPostImagePreview');preview.src=loungePostImageData;preview.style.display='block';
+            };
+            img.onerror=()=>showNeonPopup('تعذر قراءة الصورة.');img.src=ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
-        // استخدام مسار 'rooms' المسموح به والموجود أصلاً في القواعد بدون تعديلها
-        rtdb.ref('rooms').push({
-            isLoungePost: true,
-            authorKey: currentUserKey,
-            authorName: userData.name || 'مستخدم',
-            authorId: userData.customId || '---',
-            authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
-            title: title,
-            text: desc,
-            image: '',
-            likesCount: 0,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('newPostTitle').value = '';
-            document.getElementById('newPostText').value = '';
-            showNeonPopup("✅ تم نشر المنشور بنجاح وبدون تعليق!");
-            loadLoungePosts();
-        });
+    function publishLoungePost(){
+        const title=document.getElementById('newPostTitle').value.trim();
+        const desc=document.getElementById('newPostText').value.trim();
+        if(!title&&!desc&&!loungePostImageData)return showNeonPopup('يرجى إضافة عنوان أو نص أو صورة للمنشور.');
+        if(!currentUserKey||!rtdb)return showNeonPopup('تعذر الاتصال بالحساب. حاول مجدداً.');
+        const btn=document.querySelector('#loungePostsScreen button[onclick="publishLoungePost()"]');
+        if(btn)btn.disabled=true;
+        rtdb.ref('rooms').push({isLoungePost:true,authorKey:currentUserKey,authorName:userData.name||'مستخدم',authorId:userData.customId||'---',authorAvatar:userData.avatar||'https://via.placeholder.com/40',title,text:desc,image:loungePostImageData||'',likesCount:0,timestamp:Date.now()})
+        .then(()=>{
+            document.getElementById('newPostTitle').value='';document.getElementById('newPostText').value='';
+            document.getElementById('newPostImageInput').value='';document.getElementById('newPostImagePreview').style.display='none';
+            loungePostImageData='';showNeonPopup('تم نشر المنشور بنجاح.');loadLoungePosts();
+        }).catch(err=>showNeonPopup('تعذر نشر المنشور: '+(err.message||'تحقق من اتصالك وقواعد Firebase.')))
+        .finally(()=>{if(btn)btn.disabled=false;});
     }
 
     function loadLoungePosts(){
-        if(!rtdb) return;
-        rtdb.ref('rooms').limitToLast(50).on('value', snap=>{
-            let container = document.getElementById('loungePostsContainer');
-            if(!container) return;
-            if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً. كن أول من ينشر!</div>";
-                return;
-            }
-            let html = '';
+        if(!rtdb)return;
+        rtdb.ref('rooms').limitToLast(50).on('value',snap=>{
+            const container=document.getElementById('loungePostsContainer');if(!container)return;
+            let html='';
             snap.forEach(item=>{
-                let p = item.val();
-                if(!p.isLoungePost) return; // عرض فقط المنشورات
-                let pKey = item.key;
-                let dateStr = new Date(p.timestamp).toLocaleString();
-                let isMyPost = (p.authorKey === currentUserKey);
-                let isAdmin = (currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
-                
-                let deleteBtn = (isMyPost || isAdmin) ? 
-                    `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
-
-                html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #c084fc;" alt="صورة">
-                            <div>
-                                <b style="color:#fff; font-size:12px;">${p.authorName}</b>
-                                <div style="font-size:8px; color:#94a3b8;">ID: ${p.authorId} | ${dateStr}</div>
-                            </div>
-                        </div>
-                        <div>${deleteBtn}</div>
-                    </div>
-                    ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
-                    ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
-                        <button class="action-btn" style="width:auto; background:rgba(168,85,247,0.2); border:1px solid #c084fc; color:#fff; padding:4px 10px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ اعجاب (${p.likesCount || 0})</button>
-                        <button class="action-btn" style="width:auto; background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#fff; padding:4px 10px; font-size:10px;" onclick="openSinglePostDetail('${pKey}')">💬 التعليقات</button>
-                    </div>
+                const p=item.val();if(!p.isLoungePost)return;
+                const key=item.key,dateStr=new Date(p.timestamp||Date.now()).toLocaleString();
+                const isMine=p.authorKey===currentUserKey,isAdmin=currentEmail==='msaftwtn@gmail.com'||userData.customId==='1';
+                const deleteBtn=(isMine||isAdmin)?`<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px" onclick="deleteLoungePost('${key}')">حذف 🗑️</button>`:'';
+                html+=`<div class="card" style="text-align:right;margin-bottom:8px;background:rgba(20,10,40,.85)">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;align-items:center;gap:6px"><img src="${p.authorAvatar||'https://via.placeholder.com/40'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #c084fc"><div><b style="color:#fff;font-size:12px">${p.authorName||'مستخدم'}</b><div style="font-size:8px;color:#94a3b8">ID: ${p.authorId||'---'} | ${dateStr}</div></div></div>${deleteBtn}</div>
+                    ${p.title?`<div style="font-size:12px;color:#f472b6;font-weight:bold;margin-bottom:4px">📌 ${p.title}</div>`:''}
+                    ${p.text?`<div style="font-size:11px;color:#f8fafc;margin-bottom:6px;white-space:pre-wrap;word-break:break-word">${p.text}</div>`:''}
+                    ${p.image?`<img class="lounge-post-image" src="${p.image}" alt="صورة المنشور">`:''}
+                    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:6px"><button class="action-btn" style="width:auto;background:rgba(168,85,247,.2);border:1px solid #c084fc;color:#fff;padding:4px 10px;font-size:10px" onclick="likeLoungePost('${key}')">❤️ إعجاب (${p.likesCount||0})</button></div>
                 </div>`;
             });
-            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً.</div>";
+            container.innerHTML=html||"<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px'>لا توجد منشورات حالياً.</div>";
         });
     }
 
     function likeLoungePost(postKey){
-        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
-            if(!snap.exists()) return;
-            let post = snap.val();
-            let newLikes = (post.likesCount || 0) + 1;
-            rtdb.ref(`rooms/${postKey}`).update({ likesCount: newLikes });
+        if(!currentUserKey)return;
+        const postRef=rtdb.ref(`rooms/${postKey}`);
+        postRef.transaction(post=>{
+            if(!post||!post.isLoungePost)return post;
+            post.likes=post.likes||{};
+            if(post.likes[currentUserKey])return;
+            post.likes[currentUserKey]=true;post.likesCount=Object.keys(post.likes).length;
+            return post;
         });
     }
 
     function deleteLoungePost(postKey){
-        if(!confirm("⚠️ هل أنت متأكد من حذف هذا المنشور نهائياً؟")) return;
-        rtdb.ref(`rooms/${postKey}`).remove().then(()=>{
-            showNeonPopup("✅ تم حذف المنشور بنجاح.");
-            loadLoungePosts();
-        });
+        if(!confirm('هل تريد حذف هذا المنشور؟'))return;
+        rtdb.ref(`rooms/${postKey}`).once('value').then(snap=>{
+            const p=snap.val();if(!p||(!((p.authorKey===currentUserKey)||(currentEmail==='msaftwtn@gmail.com'||userData.customId==='1'))))throw new Error('غير مسموح بحذف هذا المنشور.');
+            return rtdb.ref(`rooms/${postKey}`).remove();
+        }).then(()=>showNeonPopup('تم حذف المنشور بنجاح.')).catch(e=>showNeonPopup(e.message||'تعذر حذف المنشور.'));
     }
 
     function loadMyProfilePosts(){
@@ -1576,6 +1649,7 @@
                     <div style="font-size:9px; color:#94a3b8; margin-bottom:4px;">${dateStr}</div>
                     ${p.title ? `<div style="font-size:11px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
+                    ${p.image ? `<img class="lounge-post-image" src="${p.image}" alt="صورة المنشور">` : ''}
                     <button class="action-btn" style="background:#ef4444; color:#fff; padding:4px; font-size:10px;" onclick="deleteLoungePost('${pKey}'); loadMyProfilePosts();">حذف المنشور 🗑️</button>
                 </div>`;
             });
@@ -1583,49 +1657,11 @@
         });
     }
 
-    function openSinglePostDetail(postKey){
-        activeViewingPostKey = postKey;
-        navigateTo('singlePostDetailScreen');
-        
-        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
-            if(!snap.exists()) return;
-            let p = snap.val();
-            let dateStr = new Date(p.timestamp).toLocaleString();
-            document.getElementById('singlePostCardContainer').innerHTML = `<div class="card" style="text-align:right; background:rgba(20,10,40,0.85);">
-                <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-                    <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="صورة">
-                    <div><b>${p.authorName}</b><div style="font-size:8px; color:#94a3b8;">${dateStr}</div></div>
-                </div>
-                ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
-                ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
-            </div>`;
+    document.addEventListener('DOMContentLoaded',()=>{
+        ['roomChatInputMsg','chatInputMsg'].forEach(id=>{
+            const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();id==='roomChatInputMsg'?sendRoomChatMessage():sendChatMessage();}});
         });
-
-        rtdb.ref(`lounge_post_comments/${postKey}`).on('value', snap=>{
-            let area = document.getElementById('postCommentsListArea');
-            if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "<div style='color:#94a3b8;'>لا توجد تعليقات بعد. كن أول من يعلق!</div>"; return; }
-            let h = '';
-            snap.forEach(c=>{
-                let dat = c.val();
-                h += `<div style="background:rgba(255,255,255,0.03); padding:6px; border-radius:6px; margin-bottom:4px;"><b>${dat.authorName}:</b> ${dat.text}</div>`;
-            });
-            area.innerHTML = h;
-        });
-    }
-
-    function sendPostComment(){
-        let txt = document.getElementById('postCommentInput').value.trim();
-        if(!txt || !activeViewingPostKey) return;
-        rtdb.ref(`lounge_post_comments/${activeViewingPostKey}`).push({
-            authorKey: currentUserKey,
-            authorName: userData.name || 'مستخدم',
-            text: txt,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('postCommentInput').value = '';
-        });
-    }
+    });
 
     window.addEventListener('load',()=>{
         initLoungeTickerAnimation();
@@ -2209,10 +2245,9 @@
             snap.forEach(f=>{
                 let d=f.val(), fk=f.key;
                 h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px">
-                    <span style="cursor:pointer">🟢 <b>${d.name}</b></span>
+                    <span style="cursor:pointer;display:flex;align-items:center;gap:8px"><span class="friend-avatar-wrap"><img src="${d.avatar || 'https://via.placeholder.com/40'}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid #c084fc"><button class="friend-remove-x" onclick="removeFriend('${fk}','${String(d.name||'').replace(/'/g,"\\'")}')" title="حذف الصديق">×</button></span><b>${d.name}</b></span>
                     <div style="display:flex;gap:4px">
                         <button onclick="openChatModal('${fk}','${d.name}')" style="background:#0ea5e9;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">محادثة 💬</button>
-                        <button onclick="removeFriend('${fk}','${d.name}')" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer" title="حذف الصديق">حذف 🗑️</button>
                     </div>
                 </div>`;
             });
@@ -2234,7 +2269,7 @@
     }
 
     function removeFriend(friendKey, friendName){
-        if(!confirm(`⚠️ هل أنت متأكد من حذف الصديق (${friendName}) وإنهاء الصداقة نهائياً؟`)) return;
+        if(!confirm('حذف الصديق؟\nنعم: حذف الصديق\nلا: إلغاء')) return;
         rtdb.ref(`friends/${currentUserKey}/${friendKey}`).remove().then(()=>{
             rtdb.ref(`friends/${friendKey}/${currentUserKey}`).remove().then(()=>{
                 loadFriendSystem();
