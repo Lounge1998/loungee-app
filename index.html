@@ -230,7 +230,7 @@
                     <div class="icon-circle" style="font-size:20px;">🎮</div>
                     <div style="text-align:right; flex:1;">
                         <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب لاونج</span>
-                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + لعبة الذاكرة (50 نقطة يومياً)</div>
+                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + الذاكرة + خارج الترتيب (50 نقطة يومياً)</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f0abfc;">‹</div>
@@ -288,7 +288,7 @@
                     <div class="icon-circle" style="font-size:20px;">📸</div>
                     <div style="text-align:right; flex:1;">
                         <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات لاونج</span>
-                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (نشر سريع بدون صور)</div>
+                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (نشر اختياري مع صورة أو كتابي)</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f472b6;">‹</div>
@@ -327,6 +327,14 @@
                 </div>
                 <div style="font-size:12px; color:#10b981; font-weight:bold;">العب ❯</div>
             </div>
+
+            <div class="grid-btn-item" onclick="openOutOfOrderGameModal()" style="background: linear-gradient(135deg, rgba(60,20,50,0.9), rgba(20,15,45,0.9)); border: 1.5px solid rgba(236,72,153,0.6);">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="icon-circle">🔢</div>
+                    <span>لعبة خارج الترتيب (50 نقطة يومياً)</span>
+                </div>
+                <div style="font-size:12px; color:#f472b6; font-weight:bold;">العب ❯</div>
+            </div>
         </div>
     </div>
 
@@ -337,9 +345,11 @@
         </div>
 
         <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:10px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور كتابي سريع</h4>
+            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور (كتابي أو مع صورة اختيارية)</h4>
             <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
-            <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:8px;"></textarea>
+            <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:6px;"></textarea>
+            <label style="font-size:10px;color:#cbd5e1;display:block;margin-bottom:4px">صورة المنشور (اختياري):</label>
+            <input type="file" id="newPostImageInput" accept="image/*" class="input-box" style="margin-bottom:8px;padding:6px;font-size:10px">
             <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر المنشور الآن 🚀</button>
         </div>
 
@@ -369,7 +379,7 @@
         </div>
         <div id="singlePostCardContainer" style="margin-bottom:10px;"></div>
         <div class="card" style="text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#c084fc;font-size:12px">💬 التعليقات</h4>
+            <h4 style="margin:0 0 6px 0;color:#c084fc;font-size:12px">💬 التعليقات الدالة</h4>
             <div id="postCommentsListArea" style="max-height:180px;overflow-y:auto;margin-bottom:8px;font-size:11px;text-align:right;"></div>
             <div style="display:flex;gap:4px;">
                 <input type="text" id="postCommentInput" class="input-box" placeholder="اكتب تعليقك..." style="margin:0;flex:1">
@@ -385,7 +395,7 @@
         </div>
 
         <div id="createRoomSectionCard" class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:12px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ أنشئ غرفتك الخاصة مجاناً</h4>
+            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ أنشئ غرفتك الخاصة (بنفس الآيدي الأساسي للحساب)</h4>
             <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="openCreateRoomModal()">إنشاء غرفة جديدة مجاناً 🚀</button>
         </div>
 
@@ -497,7 +507,7 @@
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
         </div>
         <div class="card" style="text-align:right;background:rgba(30,41,59,0.7);border:1px solid rgba(192,132,252,0.4)">
-            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:center;">👆 ملوك الكبس الأسبوعي (يتصفّر كل جمعة 6:00 ص)</div>
+            <div style="font-size:12px;color:#c084fc;font-weight:bold;margin-bottom:8px;text-align:center;">👆 ملوك الكبس الأسبوعي (يتصفّر تلقائياً كل جمعة الساعة 6:00 صباحاً)</div>
             <div id="leaderboardClickingList" style="font-size:11px;color:#cbd5e1">جاري التحميل...</div>
         </div>
     </div>
@@ -654,7 +664,7 @@
 <div id="createRoomModal" class="modal">
     <div class="modal-content" style="text-align:right; max-width:320px; padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <h4 style="margin:0;color:#f472b6;font-size:13px">✨ إنشاء غرفة دردشة جديدة</h4>
+            <h4 style="margin:0;color:#f472b6;font-size:13px">✨ إنشاء غرفة دردشة جديدة (نفس الآيدي الأساسي)</h4>
             <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeCreateRoomModal()">✖</button>
         </div>
         <label style="font-size:10px;color:#cbd5e1;">اسم الغرفة:</label>
@@ -826,7 +836,7 @@
 
 <script>
     let currentEmail='',currentUserKey='',rtdb=null,auth=null;
-    let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,customId:'',name:'',avatar:'',bio:'',lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0};
+    let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,customId:'',name:'',avatar:'',bio:'',lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0, lastOutOfOrderTime:0};
     let base64Image='',activeChatFriendKey='',activeChatFriendName='',timerInterval=null;
     let globalAppSettings={withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في تطبيق Lounge الرسمي!'};
     let totalWheelDegrees=0, pendingBuyItem = null;
@@ -937,7 +947,8 @@
             }
 
             let createAction = (coverBase64)=>{
-                let roomId = Math.floor(100000 + Math.random() * 900000).toString();
+                // ✨ توحيد آيدي الغرفة مع الآيدي الأساسي لحساب المستخدم كما طلبت
+                let roomId = userData.customId || '1';
                 rtdb.ref('rooms').push({
                     roomId: roomId,
                     roomName: roomName,
@@ -949,7 +960,7 @@
                 }).then(()=>{
                     closeCreateRoomModal();
                     document.getElementById('newRoomNameInput').value = '';
-                    showNeonPopup("✅ تم إنشاء الغرفة بنجاح!");
+                    showNeonPopup("✅ تم إنشاء الغرفة بنجاح وبنفس الآيدي الأساسي للحساب!");
                     loadRoomsList();
                 });
             };
@@ -1393,7 +1404,7 @@
         if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
     }
 
-    // ✨ لعبة الذاكرة المحدثة (50 نقطة مع نظام 24 ساعة يمنع تكرارها إلا في اليوم التالي)
+    // ✨ لعبة الذاكرة المحدثة (50 نقطة مع نظام 24 ساعة)
     function openMemoryGameModal(){
         let now = new Date().getTime();
         let cooldown = 24 * 60 * 60 * 1000;
@@ -1454,6 +1465,60 @@
         };
     }
 
+    // ✨ إضافة لعبة "خارج الترتيب" الجديدة والمطلوبة بدقة (10 أرقام، تصميم بوابات جميل، مرة واحدة كل 24 ساعة، مكافأة 50 نقطة)
+    function openOutOfOrderGameModal(){
+        let now = new Date().getTime();
+        let cooldown = 24 * 60 * 60 * 1000;
+        let lastTime = userData.lastOutOfOrderTime || 0;
+        let rem = cooldown - (now - lastTime);
+
+        if(lastTime && rem > 0){
+            let h = Math.floor((rem%(1000*60*60*24))/(1000*60*60));
+            let m = Math.floor((rem%(1000*60*60))/(1000*60));
+            return showNeonPopup(`⚠️ لقد لعبت لعبة (خارج الترتيب) اليوم! يرجى الانتظار (${h} ساعة و ${m} دقيقة) لتلعب مجدداً وتستلم الـ 50 نقطة.`);
+        }
+
+        document.getElementById('gameModalTitle').innerText = "🔢 لعبة خارج الترتيب (50 نقطة)";
+        let body = document.getElementById('gameModalBodyArea');
+        
+        // توليد 10 أرقام مرتبة تصاعدياً (1 إلى 10) مع تبديل رقم واحد عشوائياً ليصبح خارج الترتيب
+        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        // وضع رقم خاطئ في مكان غير مرتب (مثلا تبديل رقم 6 برقم عشوائي شاذ مثل 15)
+        let randomWrongVal = 15;
+        let wrongIndex = Math.floor(Math.random() * 8) + 1; // بين الفهرس 1 و 8
+        numbers[wrongIndex] = randomWrongVal;
+
+        let html = `<div style='font-size:11px; color:#f472b6; margin-bottom:8px; text-align:center;'>جد وضغط على الرقم الخارج عن الترتيب بأقصى سرعة! 🚀</div>
+        <div style='display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; width:100%;'>`;
+        
+        numbers.forEach((num, idx)=>{
+            let isWrong = (num === randomWrongVal);
+            html += `<button class='oo-btn' data-wrong='${isWrong}' onclick='checkOutOfOrderClick(this)' style='height:45px; background:linear-gradient(135deg, #7e22ce, #a855f7); border:1.5px solid #c084fc; border-radius:10px; font-size:15px; font-weight:bold; color:#fff; cursor:pointer; box-shadow:0 0 10px rgba(168,85,247,0.4);'>${num}</button>`;
+        });
+        html += `</div>`;
+        body.innerHTML = html;
+        document.getElementById('gameModal').style.display = 'flex';
+
+        window.checkOutOfOrderClick = function(btn){
+            let isWrongNum = btn.getAttribute('data-wrong') === 'true';
+            if(isWrongNum){
+                btn.style.background = '#10b981';
+                btn.style.borderColor = '#34d399';
+                let nowTime = new Date().getTime();
+                userData.lastOutOfOrderTime = nowTime;
+                userData.points = (userData.points || 0) + 50;
+                saveToDB().then(()=>{
+                    updateUI();
+                    showNeonPopup("🎉 أسطورة! لقد وجدت الرقم الخارج عن الترتيب بدقة وتم منحك 50 نقطة بنجاح! 🪙 (تغلق اللعبة لمدة 24 ساعة).");
+                    closeGameModal();
+                });
+            } else {
+                btn.style.background = '#ef4444';
+                showNeonPopup("❌ خطأ! هذا الرقم ضمن الترتيب الصحيح. حاول التركيز واختيار الرقم الشاذ!");
+            }
+        };
+    }
+
     function closeGameModal(){ document.getElementById('gameModal').style.display = 'none'; }
 
     function checkAndTriggerDailyCounterNotification(){
@@ -1474,27 +1539,38 @@
     function publishLoungePost(){
         let title = document.getElementById('newPostTitle').value.trim();
         let desc = document.getElementById('newPostText').value.trim();
+        let imgFile = document.getElementById('newPostImageInput').files[0];
         
-        if(!title && !desc) return showNeonPopup("⚠️ يرجى كتابة عنوان أو نص المنشور أولاً!");
+        if(!title && !desc && !imgFile) return showNeonPopup("⚠️ يرجى كتابة نص المنشور أو إرفاق صورة على الأقل!");
 
-        // استخدام مسار 'rooms' المسموح به والموجود أصلاً في القواعد بدون تعديلها
-        rtdb.ref('rooms').push({
-            isLoungePost: true,
-            authorKey: currentUserKey,
-            authorName: userData.name || 'مستخدم',
-            authorId: userData.customId || '---',
-            authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
-            title: title,
-            text: desc,
-            image: '',
-            likesCount: 0,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('newPostTitle').value = '';
-            document.getElementById('newPostText').value = '';
-            showNeonPopup("✅ تم نشر المنشور بنجاح وبدون تعليق!");
-            loadLoungePosts();
-        });
+        let createPostAction = (imgBase64)=>{
+            rtdb.ref('rooms').push({
+                isLoungePost: true,
+                authorKey: currentUserKey,
+                authorName: userData.name || 'مستخدم',
+                authorId: userData.customId || '---',
+                authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
+                title: title,
+                text: desc,
+                image: imgBase64 || '',
+                likesCount: 0,
+                timestamp: Date.now()
+            }).then(()=>{
+                document.getElementById('newPostTitle').value = '';
+                document.getElementById('newPostText').value = '';
+                document.getElementById('newPostImageInput').value = '';
+                showNeonPopup("✅ تم نشر المنشور بنجاح (مع دعم رفع الصورة أو النشر الكتابي الاختياري)!");
+                loadLoungePosts();
+            });
+        };
+
+        if(imgFile){
+            let reader = new FileReader();
+            reader.onload = (e)=> createPostAction(e.target.result);
+            reader.readAsDataURL(imgFile);
+        } else {
+            createPostAction('');
+        }
     }
 
     function loadLoungePosts(){
@@ -1509,7 +1585,7 @@
             let html = '';
             snap.forEach(item=>{
                 let p = item.val();
-                if(!p.isLoungePost) return; // عرض فقط المنشورات
+                if(!p.isLoungePost) return;
                 let pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 let isMyPost = (p.authorKey === currentUserKey);
@@ -1517,6 +1593,8 @@
                 
                 let deleteBtn = (isMyPost || isAdmin) ? 
                     `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
+
+                let imgHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
 
                 html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -1531,6 +1609,7 @@
                     </div>
                     ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
+                    ${imgHtml}
                     <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
                         <button class="action-btn" style="width:auto; background:rgba(168,85,247,0.2); border:1px solid #c084fc; color:#fff; padding:4px 10px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ اعجاب (${p.likesCount || 0})</button>
                         <button class="action-btn" style="width:auto; background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#fff; padding:4px 10px; font-size:10px;" onclick="openSinglePostDetail('${pKey}')">💬 التعليقات</button>
@@ -1591,6 +1670,7 @@
             if(!snap.exists()) return;
             let p = snap.val();
             let dateStr = new Date(p.timestamp).toLocaleString();
+            let imgHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-top:6px;" alt="صورة">` : '';
             document.getElementById('singlePostCardContainer').innerHTML = `<div class="card" style="text-align:right; background:rgba(20,10,40,0.85);">
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
                     <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="صورة">
@@ -1598,9 +1678,11 @@
                 </div>
                 ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
                 ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
+                ${imgHtml}
             </div>`;
         });
 
+        // ✨ تعزيز وإصلاح دالة التعليقات الدالة لتظهر فوراً وبدون أي تأخير كما طلبت
         rtdb.ref(`lounge_post_comments/${postKey}`).on('value', snap=>{
             let area = document.getElementById('postCommentsListArea');
             if(!area) return;
@@ -1608,9 +1690,10 @@
             let h = '';
             snap.forEach(c=>{
                 let dat = c.val();
-                h += `<div style="background:rgba(255,255,255,0.03); padding:6px; border-radius:6px; margin-bottom:4px;"><b>${dat.authorName}:</b> ${dat.text}</div>`;
+                h += `<div style="background:rgba(255,255,255,0.03); padding:6px; border-radius:6px; margin-bottom:4px;"><b>${dat.authorName || 'مستخدم'}:</b> ${dat.text || ''}</div>`;
             });
             area.innerHTML = h;
+            area.scrollTop = area.scrollHeight;
         });
     }
 
@@ -1627,8 +1710,48 @@
         });
     }
 
+    // ✨ دالة التصفير التلقائي الأسبوعي لأول ثلاث فائزين الساعة 6:00 صباحاً يوم الجمعة
+    function checkWeeklyLeaderboardReset(){
+        let now = new Date();
+        let dayOfWeek = now.getDay(); // الجمعة هو اليوم 5
+        let hour = now.getHours();
+        let minute = now.getMinutes();
+
+        // إذا كان يوم الجمعة والساعة 6:00 صباحاً أو بعدها
+        if(dayOfWeek === 5 && hour >= 6){
+            let lastResetDate = localStorage.getItem('lounge_last_weekly_reset_date');
+            let todayDateStr = now.toDateString();
+
+            if(lastResetDate !== todayDateStr){
+                // جلب لوحة الشرف لتوزيع الجوائز لأول 3 وتصفير النقاط
+                rtdb.ref('users').orderByChild('userClicksCount').limitToLast(3).once('value', snap=>{
+                    let topWinners = [];
+                    snap.forEach(u => {
+                        topWinners.push({ key: u.key, name: u.val().name, clicks: u.val().userClicksCount || 0 });
+                    });
+
+                    // تصفير userClicksCount لجميع المستخدمين في قاعدة البيانات إلى 0
+                    rtdb.ref('users').once('value', allUsersSnap => {
+                        let updates = {};
+                        allUsersSnap.forEach(userItem => {
+                            updates[`users/${userItem.key}/userClicksCount`] = 0;
+                        });
+
+                        rtdb.ref().update(updates).then(() => {
+                            localStorage.setItem('lounge_last_weekly_reset_date', todayDateStr);
+                            console.log("تم تصفير التصنيف الأسبوعي بنجاح عند الساعة 6:00 صباحاً!");
+                        });
+                    });
+                });
+            }
+        }
+    }
+
     window.addEventListener('load',()=>{
         initLoungeTickerAnimation();
+        checkWeeklyLeaderboardReset();
+        setInterval(checkWeeklyLeaderboardReset, 60000); // فحص كل دقيقة
+
         try{
             const firebaseConfig={
                 apiKey: "AIzaSyDTcDrVD2z3PT6WZSUJUtG9GIiIYHIdgSw",
@@ -1737,7 +1860,7 @@
             btn.disabled=false;btn.innerText="تأكيد الحساب ✨";
             currentUserKey = userCredential.user.uid;
             let defaultName=email.split('@')[0],assignedId=(email==='msaftwtn@gmail.com')?'1':Math.floor(100000+Math.random()*900000).toString();
-            const newUser={name:defaultName,email:email,password:pass,customId:assignedId,points:0,gems:0,bio:'',lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0};
+            const newUser={name:defaultName,email:email,password:pass,customId:assignedId,points:0,gems:0,bio:'',lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0,lastOutOfOrderTime:0};
             rtdb.ref('users/'+currentUserKey).set(newUser).then(()=>{
                 currentEmail=email;
                 try{localStorage.setItem('dinarUserKey',currentUserKey);}catch(e){}
