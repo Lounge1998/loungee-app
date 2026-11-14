@@ -128,6 +128,26 @@
         .lounge-post-image{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:12px;margin:8px 0;border:1px solid rgba(192,132,252,.35);}
         .friend-avatar-wrap{position:relative;display:inline-flex;}
         .friend-remove-x{position:absolute;top:-5px;left:-5px;width:20px;height:20px;border-radius:50%;border:1px solid #f0abfc;background:#4c0519;color:#fff;font-weight:bold;line-height:16px;padding:0;}
+
+        /* Lounge voice-room visual layer */
+        #singleRoomScreen.active{background:radial-gradient(ellipse at 50% 34%,rgba(76,29,149,.34),transparent 48%),radial-gradient(ellipse at 50% 100%,rgba(88,28,135,.22),transparent 45%),#03020a!important;border:1px solid rgba(168,85,247,.42);box-shadow:inset 0 0 55px rgba(91,33,182,.16)}
+        #singleRoomScreen .room-topbar{background:linear-gradient(110deg,rgba(16,7,35,.98),rgba(30,9,56,.94),rgba(9,4,20,.98));border:1px solid rgba(192,132,252,.72);box-shadow:0 0 22px rgba(147,51,234,.28),inset 0 0 22px rgba(147,51,234,.12)}
+        #singleRoomScreen #roomVoiceSeats{gap:clamp(5px,2vw,12px)!important;padding:16px 4px 12px!important}
+        #singleRoomScreen .room-mic-seat{height:clamp(66px,18vw,94px);aspect-ratio:1;border-radius:50%;position:relative;overflow:hidden;border:1px solid rgba(192,132,252,.75);background:radial-gradient(circle at 50% 35%,#32105d 0,#130626 56%,#07020f 100%);box-shadow:0 0 12px rgba(168,85,247,.28),inset 0 0 15px rgba(168,85,247,.2);font-size:clamp(20px,6vw,28px);transition:transform .18s,border-color .18s,box-shadow .18s}
+        #singleRoomScreen .room-mic-seat:active{transform:scale(.96)}
+        #singleRoomScreen .room-mic-seat.occupied{border:2px solid #e9b7ff;background:radial-gradient(circle,#7026bb,#1b0733 75%);box-shadow:0 0 9px #d8a5ff,0 0 24px rgba(168,85,247,.72),inset 0 0 18px rgba(216,180,254,.22)}
+        #singleRoomScreen .room-mic-seat.occupied:after{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.22);border-radius:50%;pointer-events:none}
+        #singleRoomScreen .room-mic-seat img{width:clamp(30px,9vw,43px);height:clamp(30px,9vw,43px);border:1.5px solid #f0abfc;box-shadow:0 0 9px rgba(240,171,252,.55)}
+        #singleRoomScreen .room-mic-seat small{max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;text-shadow:0 0 7px #d8b4fe}
+        #singleRoomScreen .room-mic-seat.my-mic{animation:roomMicGlow 1.7s ease-in-out infinite alternate}
+        @keyframes roomMicGlow{from{box-shadow:0 0 9px #c084fc,0 0 16px rgba(168,85,247,.5)}to{box-shadow:0 0 15px #f0abfc,0 0 30px rgba(216,180,254,.8)}}
+        #roomMicStatus{align-self:center;margin:-2px auto 8px;padding:5px 13px;border:1px solid rgba(192,132,252,.38);border-radius:20px;background:rgba(37,12,67,.55);color:#d8b4fe;font-size:10px;box-shadow:0 0 12px rgba(147,51,234,.12)}
+        #singleRoomScreen .room-chat-scroll{background:linear-gradient(180deg,rgba(15,5,31,.68),rgba(5,2,13,.32));border:1px solid rgba(168,85,247,.22);border-radius:18px;padding:10px;box-shadow:inset 0 0 25px rgba(91,33,182,.12)}
+        #singleRoomScreen #roomMessagesArea{height:auto!important;min-height:170px;flex:1;background:rgba(3,1,10,.7)!important;border:1px solid rgba(168,85,247,.25)!important;border-radius:14px!important;box-shadow:inset 0 0 18px rgba(76,29,149,.12)}
+        #singleRoomScreen .room-bottom-bar{padding:8px 7px calc(7px + env(safe-area-inset-bottom))!important;border:1px solid rgba(192,132,252,.55);border-radius:18px;background:linear-gradient(110deg,rgba(21,8,40,.98),rgba(8,3,18,.98));box-shadow:0 0 18px rgba(147,51,234,.22)}
+        #singleRoomScreen .room-bottom-bar .input-box{border:1px solid rgba(192,132,252,.45);background:rgba(5,2,14,.92);border-radius:13px;min-width:0}
+        #singleRoomScreen .room-gift-button{border-radius:13px!important;box-shadow:0 0 12px rgba(168,85,247,.28)}
+
         @media (max-height:520px){#singleRoomScreen.active{padding-top:5px;padding-bottom:5px;}}
         .modal-content{background:linear-gradient(135deg, #130926, #070411);border:1.5px solid rgba(192,132,252,0.5);border-radius:20px;width:100%;max-width:380px;padding:16px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.9), 0 0 25px rgba(168,85,247,0.3)}
         
@@ -398,7 +418,7 @@
     </div>
 
     <div id="singleRoomScreen" class="screen-page">
-        <div class="top-nav" style="flex-shrink:0;border:1px solid rgba(192,132,252,.65);border-radius:16px;padding:8px;background:rgba(8,2,20,.94);box-shadow:0 0 18px rgba(168,85,247,.35)">
+        <div class="top-nav room-topbar" style="flex-shrink:0;border-radius:16px;padding:8px">
             <div style="display:flex;align-items:center;gap:8px">
                 <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
                 <div>
@@ -416,6 +436,7 @@
             <button class="room-mic-seat" onclick="toggleRoomMic(4)" data-slot="4">🎙️<small>4</small></button>
             <button class="room-mic-seat" onclick="toggleRoomMic(5)" data-slot="5">🎙️<small>5</small></button>
         </div>
+        <div id="roomMicStatus">🎙️ اختر مايكاً للصعود والتحدث مع الموجودين</div>
         <style>.room-mic-seat{min-width:0;height:76px;border-radius:50%;border:1px solid #a855f7;background:radial-gradient(circle,#251044,#07020f);color:#e9d5ff;box-shadow:0 0 12px rgba(168,85,247,.35);font-size:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.room-mic-seat small{font-size:11px}.room-mic-seat.occupied{border-color:#f0abfc;box-shadow:0 0 18px #a855f7;background:radial-gradient(circle,#5b21b6,#12051f)}.room-mic-seat img{width:31px;height:31px;border-radius:50%;object-fit:cover}</style>
         <div class="room-chat-scroll" style="display:flex;flex-direction:column;gap:8px">
         <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;flex-shrink:0">
@@ -445,7 +466,7 @@
 
         </div>
         <div class="room-bottom-bar" style="display:flex;gap:5px;align-items:center;flex-shrink:0;padding-top:6px">
-            <button class="action-btn" style="width:44px;height:42px;padding:0;font-size:21px;background:rgba(168,85,247,.18);border:1px solid #c084fc" onclick="toggleRoomGifts()" aria-label="الهدايا">🎁</button>
+            <button class="action-btn" style="width:44px;height:42px;padding:0;font-size:21px;background:rgba(168,85,247,.18);border:1px solid #c084fc" onclick="toggleRoomGifts()" aria-label="الهدايا" class="room-gift-button">🎁</button>
             <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
             <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
         </div>
@@ -840,7 +861,7 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
-    let roomLocalStream=null, roomVoicePeers={}, roomVoiceSeatsListener=null, roomVoiceSignalsListener=null;
+    let roomLocalStream=null, roomVoicePeers={}, roomVoiceSeatsListener=null, roomVoiceSignalsListener=null, roomVoiceUsersListener=null, roomVoiceSignalChildListeners={}, roomVoiceRemoteUsers={}, roomVoiceMicSlot=null;
     let activeViewingPostKey = null;
 
     const fullQuestionsPool = [
@@ -1061,110 +1082,161 @@
     }
 
     function joinRoom(rKey, roomId, roomName, cover){
+        if(activeRoomKey && activeRoomKey!==rKey) leaveCurrentRoom();
         activeRoomKey = rKey;
         document.getElementById('currentRoomTitleDisplay').innerText = roomName;
         document.getElementById('currentRoomIdDisplay').innerText = `ID: ${roomId}`;
-        document.getElementById('currentRoomCoverImg').src = cover;
+        document.getElementById('currentRoomCoverImg').src = cover || 'https://via.placeholder.com/40';
+        const giftPanel=document.getElementById('roomGiftPanel'); if(giftPanel)giftPanel.style.display='none';
         navigateTo('singleRoomScreen');
 
-        let userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
-        userPresenceRef.set({
-            name: userData.name || 'مستخدم',
-            customId: userData.customId || '---',
-            avatar: userData.avatar || 'https://via.placeholder.com/40'
+        const userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
+        userPresenceRef.set({name:userData.name||'مستخدم',customId:userData.customId||'---',avatar:userData.avatar||'https://via.placeholder.com/40'}).then(()=>userPresenceRef.onDisconnect().remove());
+
+        rtdb.ref(`room_messages/${rKey}`).on('value',snap=>{
+            const area=document.getElementById('roomMessagesArea'); if(!area)return;
+            if(!snap.exists()){area.innerHTML='<div style="text-align:center;color:#bda2df;padding:24px">أهلاً بك في Lounge ✨ ابدأ الحديث مع الموجودين</div>';return;}
+            let html=''; snap.forEach(m=>{const msg=m.val()||{};html+=`<div style="margin:7px 0;padding:8px 10px;border-radius:12px;background:rgba(124,58,237,.12);border:1px solid rgba(168,85,247,.14);word-break:break-word"><b style="color:#d8b4fe">${escapeRoomText(msg.senderName||'مستخدم')}:</b> <span style="color:#f5edff">${escapeRoomText(msg.text||'')}</span></div>`;});
+            area.innerHTML=html; area.scrollTop=area.scrollHeight;
         });
-        userPresenceRef.onDisconnect().remove();
+
+        roomVoiceUsersListener=rtdb.ref(`room_users/${rKey}`);
+        roomVoiceUsersListener.on('value',snap=>{
+            const uList=document.getElementById('roomUsersListContainer'), targetSelect=document.getElementById('giftTargetSelect'), countSpan=document.getElementById('roomUsersCount');
+            if(!uList||!targetSelect)return;
+            let count=0,uHtml='',selectHtml='<option value="all">الجميع (الشات العام)</option>'; roomVoiceRemoteUsers={};
+            snap.forEach(u=>{const dat=u.val()||{},key=u.key;count++;if(key!==currentUserKey)roomVoiceRemoteUsers[key]=dat;uHtml+=`<div style="display:flex;align-items:center;gap:5px;padding:5px 2px;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c084fc">●</span><span>${escapeRoomText(dat.name||'مستخدم')}</span></div>`;if(key!==currentUserKey)selectHtml+=`<option value="${key}">${escapeRoomText(dat.name||'مستخدم')}</option>`;});
+            uList.innerHTML=uHtml||'لا يوجد متواجدون'; countSpan.innerText=count; targetSelect.innerHTML=selectHtml;
+            syncRoomVoicePeers();
+        });
         refreshRoomVoiceSeats();
-
-        rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
-            let area = document.getElementById('roomMessagesArea');
-            if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "أهلاً بك في الغرفة! ابدأ المحادثة أو أرسل الهدايا."; return; }
-            let h = '';
-            snap.forEach(m=>{
-                let msg = m.val();
-                h += `<div style="margin-bottom:6px;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</div>`;
-            });
-            area.innerHTML = h;
-            area.scrollTop = area.scrollHeight;
-        });
-
-        rtdb.ref(`room_users/${rKey}`).on('value', snap=>{
-            let uList = document.getElementById('roomUsersListContainer');
-            let targetSelect = document.getElementById('giftTargetSelect');
-            let uCountSpan = document.getElementById('roomUsersCount');
-            if(!uList || !targetSelect) return;
-            let count = 0, uHtml = '', selectHtml = '<option value="all">الجميع (الشات العام)</option>';
-            snap.forEach(u=>{
-                let dat = u.val();
-                let uKey = u.key;
-                count++;
-                uHtml += `<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
-                if(uKey !== currentUserKey) selectHtml += `<option value="${uKey}">${dat.name}</option>`;
-            });
-            uList.innerHTML = uHtml;
-            uCountSpan.innerText = count;
-            targetSelect.innerHTML = selectHtml;
-        });
+        attachRoomVoiceSignals();
     }
 
+    function escapeRoomText(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 
     async function toggleRoomMic(slot){
-        if(!activeRoomKey)return;
+        if(!activeRoomKey||!currentUserKey)return;
         const seatRef=rtdb.ref(`room_voice_seats/${activeRoomKey}/${slot}`);
-        const snap=await seatRef.once('value');
-        if(snap.exists()&&snap.val().userKey===currentUserKey){
-            await seatRef.remove();
-            if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}
-            closeRoomVoicePeers();return;
-        }
-        if(snap.exists())return showNeonPopup('هذا المايك مستخدم حالياً.');
         try{
-            if(!roomLocalStream)roomLocalStream=await navigator.mediaDevices.getUserMedia({audio:true});
-            await seatRef.set({userKey:currentUserKey,name:userData.name||'مستخدم',avatar:userData.avatar||'https://via.placeholder.com/40',slot});
-            seatRef.onDisconnect().remove();
-            refreshRoomVoiceSeats();
-        }catch(e){showNeonPopup('تعذر تشغيل المايك. تحقق من إذن الميكروفون واتصال آمن HTTPS.');}
+            const allSeats=await rtdb.ref(`room_voice_seats/${activeRoomKey}`).once('value');
+            let mySlot=null, occupiedByOther=false;
+            allSeats.forEach(item=>{const seat=item.val()||{};if(seat.userKey===currentUserKey)mySlot=item.key;else if(item.key===String(slot))occupiedByOther=true;});
+            if(mySlot===String(slot)){
+                await seatRef.remove(); roomVoiceMicSlot=null;
+                if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}
+                await updateRoomPeerAudioTracks(); refreshRoomMicStatus(); return;
+            }
+            if(occupiedByOther)return showNeonPopup('هذا المايك مستخدم حالياً، اختر مايكاً فارغاً.');
+            if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia) return showNeonPopup('الميكروفون غير مدعوم هنا. افتح التطبيق عبر HTTPS واسمح باستخدام الميكروفون.');
+            if(!roomLocalStream){roomLocalStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});}
+            if(mySlot!==null)await rtdb.ref(`room_voice_seats/${activeRoomKey}/${mySlot}`).remove();
+            const result=await seatRef.transaction(current=>{if(current&&current.userKey!==currentUserKey)return;return {userKey:currentUserKey,name:userData.name||'مستخدم',avatar:userData.avatar||'https://via.placeholder.com/40',slot:Number(slot),joinedAt:Date.now()};});
+            if(!result.committed){if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}return showNeonPopup('لم نتمكن من حجز المايك، ربما سبَقك مستخدم آخر.');}
+            roomVoiceMicSlot=String(slot); seatRef.onDisconnect().remove();
+            await updateRoomPeerAudioTracks(); refreshRoomVoiceSeats(); refreshRoomMicStatus();
+            document.querySelectorAll('.room-remote-audio').forEach(a=>a.play().catch(()=>{}));
+        }catch(e){console.error('Room microphone error:',e);showNeonPopup(e&&e.name==='NotAllowedError'?'يرجى السماح للتطبيق باستخدام الميكروفون من إعدادات الجهاز.':'تعذر الصعود إلى المايك. تحقق من صلاحيات Firebase والاتصال بالإنترنت.');}
     }
+
+    function refreshRoomMicStatus(){
+        const status=document.getElementById('roomMicStatus'); if(!status)return;
+        const mySeat=document.querySelector('.room-mic-seat.my-mic');
+        status.innerHTML=mySeat?'🟣 أنت صاعد على المايك — يمكنك التحدث الآن':'🎙️ أنت مستمع حالياً — اختر مايكاً فارغاً للتحدث';
+    }
+
     function closeRoomVoicePeers(){
-        Object.values(roomVoicePeers).forEach(pc=>{try{pc.close();}catch(e){}});roomVoicePeers={};
-        document.querySelectorAll('.room-remote-audio').forEach(a=>a.remove());
+        Object.values(roomVoicePeers).forEach(peer=>{try{peer.pc.close();}catch(e){}}); roomVoicePeers={};
+        Object.values(roomVoiceSignalChildListeners).forEach(ref=>{try{ref.off();}catch(e){}});roomVoiceSignalChildListeners={};
+        document.querySelectorAll('.room-remote-audio').forEach(audio=>{try{audio.pause();audio.srcObject=null;}catch(e){}audio.remove();});
     }
-    async function ensureRoomVoicePeer(otherKey){
-        if(roomVoicePeers[otherKey]||!roomLocalStream)return;
-        const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});roomVoicePeers[otherKey]=pc;
-        roomLocalStream.getTracks().forEach(track=>pc.addTrack(track,roomLocalStream));
-        pc.onicecandidate=e=>{if(e.candidate)rtdb.ref(`room_voice_signals/${activeRoomKey}/${otherKey}/${currentUserKey}`).push({type:'candidate',candidate:e.candidate.toJSON()});};
-        pc.ontrack=e=>{let a=document.getElementById('room-audio-'+otherKey);if(!a){a=document.createElement('audio');a.id='room-audio-'+otherKey;a.className='room-remote-audio';a.autoplay=true;a.playsInline=true;document.body.appendChild(a);}a.srcObject=e.streams[0];a.play().catch(()=>{});};
-        if(String(currentUserKey)<String(otherKey)){const offer=await pc.createOffer();await pc.setLocalDescription(offer);await rtdb.ref(`room_voice_signals/${activeRoomKey}/${otherKey}/${currentUserKey}`).push({type:'offer',sdp:offer.sdp});}
+
+    function roomSignalRef(otherKey){return rtdb.ref(`room_voice_signals/${activeRoomKey}/${otherKey}/${currentUserKey}`);}
+
+    async function ensureRoomVoicePeer(otherKey,makeOffer){
+        if(!activeRoomKey||!otherKey||otherKey===currentUserKey)return null;
+        if(roomVoicePeers[otherKey])return roomVoicePeers[otherKey];
+        const pc=new RTCPeerConnection({iceServers:[
+            {urls:'stun:stun.l.google.com:19302'},
+            {urls:'stun:stun1.l.google.com:19302'},
+            {urls:'stun:stun.cloudflare.com:3478'}
+        ]});
+        const audioTransceiver=pc.addTransceiver('audio',{direction:'sendrecv'});
+        roomVoicePeers[otherKey]={pc,sender:audioTransceiver.sender,pendingCandidates:[]};
+        pc.onicecandidate=e=>{if(e.candidate&&activeRoomKey)roomSignalRef(otherKey).push({type:'candidate',candidate:e.candidate.toJSON(),createdAt:Date.now()});};
+        pc.ontrack=e=>{
+            let audio=document.getElementById('room-audio-'+otherKey);
+            if(!audio){audio=document.createElement('audio');audio.id='room-audio-'+otherKey;audio.className='room-remote-audio';audio.autoplay=true;audio.playsInline=true;audio.setAttribute('playsinline','');audio.style.display='none';document.body.appendChild(audio);}
+            audio.srcObject=e.streams&&e.streams[0]?e.streams[0]:new MediaStream([e.track]);audio.play().catch(()=>{});
+        };
+        pc.onconnectionstatechange=()=>{if(['failed','closed'].includes(pc.connectionState)){const audio=document.getElementById('room-audio-'+otherKey);if(audio){audio.pause();audio.remove();}}};
+        if(roomLocalStream)await roomVoicePeers[otherKey].sender.replaceTrack(roomLocalStream.getAudioTracks()[0]||null);
+        if(makeOffer){const offer=await pc.createOffer();await pc.setLocalDescription(offer);roomSignalRef(otherKey).push({type:'offer',sdp:offer.sdp,createdAt:Date.now()});}
+        return roomVoicePeers[otherKey];
     }
-    function refreshRoomVoiceSeats(){
+
+    async function updateRoomPeerAudioTracks(){
+        const track=roomLocalStream?roomLocalStream.getAudioTracks()[0]||null:null;
+        for(const peer of Object.values(roomVoicePeers)){try{await peer.sender.replaceTrack(track);}catch(e){console.warn('replace audio track',e);}}
+    }
+
+    function syncRoomVoicePeers(){
         if(!activeRoomKey)return;
-        rtdb.ref(`room_voice_seats/${activeRoomKey}`).on('value',async snap=>{
-            const slots={};snap.forEach(x=>slots[x.key]=x.val());
-            document.querySelectorAll('.room-mic-seat').forEach(btn=>{const d=slots[btn.dataset.slot];btn.classList.toggle('occupied',!!d);btn.innerHTML=d?`<img src="${d.avatar||'https://via.placeholder.com/40'}"><small>${d.name||'مستخدم'}</small>`:`🎙️<small>${btn.dataset.slot}</small>`;});
-            for(const d of Object.values(slots)){if(d.userKey!==currentUserKey&&roomLocalStream)await ensureRoomVoicePeer(d.userKey);}
+        Object.keys(roomVoiceRemoteUsers).forEach(otherKey=>{
+            if(String(currentUserKey)<String(otherKey))ensureRoomVoicePeer(otherKey,true).catch(e=>console.warn('create room offer',e));
+            else ensureRoomVoicePeer(otherKey,false).catch(e=>console.warn('create room peer',e));
         });
+        Object.keys(roomVoicePeers).forEach(otherKey=>{if(!roomVoiceRemoteUsers[otherKey]){try{roomVoicePeers[otherKey].pc.close();}catch(e){}delete roomVoicePeers[otherKey];const a=document.getElementById('room-audio-'+otherKey);if(a)a.remove();}});
+    }
+
+    function attachRoomVoiceSignals(){
         if(roomVoiceSignalsListener)roomVoiceSignalsListener.off();
         roomVoiceSignalsListener=rtdb.ref(`room_voice_signals/${activeRoomKey}/${currentUserKey}`);
-        roomVoiceSignalsListener.on('child_added',async fromSnap=>{
-            const from=fromSnap.key;const pc=roomVoicePeers[from];
-            fromSnap.ref.on('child_added',async msgSnap=>{
-                const msg=msgSnap.val();if(!msg)return;
+        roomVoiceSignalsListener.on('child_added',fromSnap=>{
+            const from=fromSnap.key;const messagesRef=fromSnap.ref;
+            if(roomVoiceSignalChildListeners[from])roomVoiceSignalChildListeners[from].off();
+            roomVoiceSignalChildListeners[from]=messagesRef;
+            messagesRef.on('child_added',async msgSnap=>{
+                const msg=msgSnap.val();if(!msg||!activeRoomKey)return;
+                if(msg.createdAt&&Date.now()-msg.createdAt>180000)return;
                 try{
                     let peer=roomVoicePeers[from];
                     if(msg.type==='offer'){
-                        if(!roomLocalStream)return;
-                        if(!peer){peer=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});roomVoicePeers[from]=peer;roomLocalStream.getTracks().forEach(t=>peer.addTrack(t,roomLocalStream));
-                            peer.onicecandidate=e=>{if(e.candidate)rtdb.ref(`room_voice_signals/${activeRoomKey}/${from}/${currentUserKey}`).push({type:'candidate',candidate:e.candidate.toJSON()});};
-                            peer.ontrack=e=>{let a=document.getElementById('room-audio-'+from);if(!a){a=document.createElement('audio');a.id='room-audio-'+from;a.autoplay=true;a.className='room-remote-audio';document.body.appendChild(a);}a.srcObject=e.streams[0];a.play().catch(()=>{});};}
-                        await peer.setRemoteDescription({type:'offer',sdp:msg.sdp});const answer=await peer.createAnswer();await peer.setLocalDescription(answer);await rtdb.ref(`room_voice_signals/${activeRoomKey}/${from}/${currentUserKey}`).push({type:'answer',sdp:answer.sdp});
-                    }else if(msg.type==='answer'&&peer){await peer.setRemoteDescription({type:'answer',sdp:msg.sdp});}
-                    else if(msg.type==='candidate'&&peer){await peer.addIceCandidate(new RTCIceCandidate(msg.candidate));}
-                }catch(e){console.warn('Room voice signaling:',e);}
+                        if(!peer)peer=await ensureRoomVoicePeer(from,false);
+                        await peer.pc.setRemoteDescription({type:'offer',sdp:msg.sdp});
+                        const answer=await peer.pc.createAnswer();await peer.pc.setLocalDescription(answer);
+                        roomSignalRef(from).push({type:'answer',sdp:answer.sdp,createdAt:Date.now()});
+                        for(const candidate of peer.pendingCandidates.splice(0))await peer.pc.addIceCandidate(new RTCIceCandidate(candidate));
+                    }else if(msg.type==='answer'&&peer){
+                        if(peer.pc.signalingState==='have-local-offer')await peer.pc.setRemoteDescription({type:'answer',sdp:msg.sdp});
+                        for(const candidate of peer.pendingCandidates.splice(0))await peer.pc.addIceCandidate(new RTCIceCandidate(candidate));
+                    }else if(msg.type==='candidate'){
+                        if(!peer)peer=await ensureRoomVoicePeer(from,false);
+                        if(peer.pc.remoteDescription)await peer.pc.addIceCandidate(new RTCIceCandidate(msg.candidate));
+                        else peer.pendingCandidates.push(msg.candidate);
+                    }
+                }catch(e){console.warn('Room voice signaling error:',e);}
             });
         });
     }
+
+    function refreshRoomVoiceSeats(){
+        if(!activeRoomKey)return;
+        if(roomVoiceSeatsListener)roomVoiceSeatsListener.off();
+        roomVoiceSeatsListener=rtdb.ref(`room_voice_seats/${activeRoomKey}`);
+        roomVoiceSeatsListener.on('value',snap=>{
+            const slots={};snap.forEach(item=>slots[item.key]=item.val());
+            document.querySelectorAll('.room-mic-seat').forEach(btn=>{
+                const data=slots[btn.dataset.slot];const mine=!!(data&&data.userKey===currentUserKey);
+                btn.classList.toggle('occupied',!!data);btn.classList.toggle('my-mic',mine);
+                btn.innerHTML=data?`<img src="${escapeRoomText(data.avatar||'https://via.placeholder.com/40')}" alt=""><small>${escapeRoomText(mine?'أنت':data.name||'مستخدم')}</small>`:`🎙️<small>${btn.dataset.slot}</small>`;
+                btn.setAttribute('aria-label',data?`المايك ${btn.dataset.slot} - ${mine?'أنت':data.name||'مشغول'}`:`المايك ${btn.dataset.slot} - فارغ`);
+            });
+            const mine=Object.entries(slots).find(([slot,data])=>data&&data.userKey===currentUserKey);
+            roomVoiceMicSlot=mine?mine[0]:null;refreshRoomMicStatus();
+        });
+    }
+
     function showRoomExitChoice(){
         if(confirm('خروج')) leaveCurrentRoom();
     }
@@ -1179,9 +1251,12 @@
             rtdb.ref(`room_users/${activeRoomKey}`).off();
             rtdb.ref(`room_voice_seats/${activeRoomKey}`).off();
             rtdb.ref(`room_voice_signals/${activeRoomKey}/${currentUserKey}`).off();
-            rtdb.ref(`room_voice_seats/${activeRoomKey}`).child(String(1)).off();
+            if(roomVoiceUsersListener)roomVoiceUsersListener.off();
+            if(roomVoiceSeatsListener)roomVoiceSeatsListener.off();
+            if(roomVoiceSignalsListener)roomVoiceSignalsListener.off();
+            rtdb.ref(`room_voice_seats/${activeRoomKey}`).once('value').then(snap=>{snap.forEach(item=>{if(item.val()&&item.val().userKey===currentUserKey)item.ref.remove();});});
             if(roomLocalStream){roomLocalStream.getTracks().forEach(t=>t.stop());roomLocalStream=null;}
-            closeRoomVoicePeers();
+            roomVoiceMicSlot=null;closeRoomVoicePeers();
         }
         activeRoomKey = null;
         navigateTo('roomsScreen');
