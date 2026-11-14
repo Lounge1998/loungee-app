@@ -288,7 +288,7 @@
                     <div class="icon-circle" style="font-size:20px;">📸</div>
                     <div style="text-align:right; flex:1;">
                         <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات لاونج</span>
-                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (نشر سريع بدون صور)</div>
+                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك مع الصور بكل حرية</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f472b6;">‹</div>
@@ -330,6 +330,7 @@
         </div>
     </div>
 
+    <!-- 1. منشورات لاونج المحدثة (إرفاق صور وإلغاء التعليقات والإبقاء على اللايك فقط) -->
     <div id="loungePostsScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#f472b6;font-size:15px">📸 منشورات لاونج</h3>
@@ -337,9 +338,14 @@
         </div>
 
         <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:10px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور كتابي سريع</h4>
+            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور جديد</h4>
             <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
             <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:8px;"></textarea>
+            
+            <div style="margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                <input type="file" id="newPostImageInput" accept="image/*" class="input-box" style="margin:0; padding:6px; font-size:10px;">
+            </div>
+
             <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر المنشور الآن 🚀</button>
         </div>
 
@@ -359,22 +365,6 @@
         </div>
         <div id="myProfilePostsContainer" style="display:flex;flex-direction:column;gap:10px;">
             <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل منشوراتك...</div>
-        </div>
-    </div>
-
-    <div id="singlePostDetailScreen" class="screen-page">
-        <div class="top-nav">
-            <h3 style="margin:0;color:#38bdf8;font-size:15px">💬 تفاصيل المنشور والتعليقات</h3>
-            <button class="nav-btn back" onclick="navigateTo('loungePostsScreen')">⬅️ رجوع</button>
-        </div>
-        <div id="singlePostCardContainer" style="margin-bottom:10px;"></div>
-        <div class="card" style="text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#c084fc;font-size:12px">💬 التعليقات</h4>
-            <div id="postCommentsListArea" style="max-height:180px;overflow-y:auto;margin-bottom:8px;font-size:11px;text-align:right;"></div>
-            <div style="display:flex;gap:4px;">
-                <input type="text" id="postCommentInput" class="input-box" placeholder="اكتب تعليقك..." style="margin:0;flex:1">
-                <button class="action-btn btn-purple" style="width:60px;padding:0;height:38px;" onclick="sendPostComment()">إرسال</button>
-            </div>
         </div>
     </div>
 
@@ -400,46 +390,46 @@
         </div>
     </div>
 
-    <div id="singleRoomScreen" class="screen-page">
-        <div class="top-nav">
-            <div style="display:flex;align-items:center;gap:8px">
-                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
-                <div>
-                    <h3 id="currentRoomTitleDisplay" style="margin:0;color:#f472b6;font-size:13px">اسم الغرفة</h3>
-                    <span id="currentRoomIdDisplay" style="font-size:9px;color:#94a3b8">ID: ---</span>
+    <!-- 2, 3, 4, 5. تصميم غرفة الدردشة المحدث بدقة مطابقة للصورة المرجعية، زر الخروج بقائمة خروج واحدة، صندوق الهدايا المباشر، وثبات الغرفة عند فتح الكيبورد -->
+    <div id="singleRoomScreen" class="screen-page" style="position:relative; width:100%; min-height:85vh; background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%); border:1.5px solid rgba(168,85,247,0.4); border-radius:18px; padding:10px; display:flex; flex-direction:column; justify-content:space-between;">
+        
+        <!-- الهيدر العلوي المتطابق للصورة المرجعية -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="position:relative;">
+                <button onclick="openRoomExitMenu()" style="width:36px; height:36px; border-radius:50%; background:rgba(30,20,55,0.85); border:1.5px solid rgba(168,85,247,0.5); color:#c084fc; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 10px rgba(168,85,247,0.4);" title="خروج">⏻</button>
+                <div id="roomExitDropdownMenu" style="display:none; position:absolute; top:42px; right:0; background:#0b0617; border:1px solid #a855f7; border-radius:10px; padding:6px; z-index:100; box-shadow:0 5px 15px rgba(0,0,0,0.8);">
+                    <button onclick="leaveCurrentRoom()" style="background:#ef4444; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:100%;">خروج</button>
                 </div>
             </div>
-            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج من الغرفة</button>
-        </div>
 
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
-            <div id="roomMessagesArea" style="height:230px;overflow-y:auto;background:rgba(0,0,0,0.4);padding:8px;border-radius:10px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
-            <div style="width:90px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px;overflow-y:auto;max-height:230px">
-                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:4px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
-                <div id="roomUsersListContainer" style="font-size:10px;color:#cbd5e1"></div>
+            <div style="text-align:center;">
+                <div style="font-size:14px; font-weight:bold; color:#c084fc; letter-spacing:1px;">LOUNGE</div>
+                <div id="currentRoomIdDisplay" style="font-size:8px; color:#94a3b8;">ID: ---</div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:6px;">
+                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px; height:35px; border-radius:50%; object-fit:cover; border:1px solid #ec4899;" alt="صورة الروم">
+                <span id="currentRoomTitleDisplay" style="font-size:11px; font-weight:bold; color:#f472b6;">اسم الغرفة</span>
             </div>
         </div>
 
-        <div style="background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 صندوق الهدايا السريع:</span>
-                <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px">
+        <!-- منطقة الرسائل والوسط الثابتة تماماً بدون تحرك عند ظهور الكيبورد -->
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; margin-bottom:8px; overflow:hidden;">
+            <div id="roomMessagesArea" style="height:250px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom:8px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#c084fc; padding:0 4px;">
+                <span>المتواجدون: <b id="roomUsersCount">0</b></span>
+                <select id="giftTargetSelect" class="select-box" style="width:120px; margin:0; padding:3px; font-size:10px;">
                     <option value="all">الجميع (الشات العام)</option>
                 </select>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
-            </div>
+            <div id="roomUsersListContainer" style="font-size:9px; color:#cbd5e1; max-height:40px; overflow-y:auto; margin-top:2px;"></div>
         </div>
 
-        <div style="display:flex;gap:4px;align-items:center">
-            <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
-            <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
+        <!-- الجزء السفلي تماماً (صندوق الهدايا وحقل الكتابة المباشر بجانبه بدون تحريك الغرفة) -->
+        <div style="display:flex; align-items:center; gap:8px; background:rgba(15,23,42,0.95); border:1.5px solid rgba(168,85,247,0.4); border-radius:16px; padding:8px 10px;">
+            <button onclick="openDirectGiftsModal()" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0;" title="صندوق الهدايا">🎁</button>
+            <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب شيئاً..." style="margin:0; flex:1; background:rgba(10,5,24,0.9); border:1px solid rgba(192,132,252,0.4); border-radius:12px; padding:8px 12px; font-size:12px; color:#fff;">
+            <button class="action-btn btn-purple" style="width:auto; padding:8px 14px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea); border-radius:10px;" onclick="sendRoomChatMessage()">إرسال</button>
         </div>
     </div>
 
@@ -590,6 +580,7 @@
         </div>
     </div>
 
+    <!-- 6, 7, 8. تصميم المحادثات الخاصة المحدث مطابق للصورة المرجعية تماماً، وعلامة (X) بجانب صورة الصديق لحذفه مع نافذة تأكيد (نعم/لا)، وثبات المحادثة عند الكتابة -->
     <div id="friendsScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#38bdf8;font-size:15px">👥 قائمة الأصدقاء والبحث</h3>
@@ -791,16 +782,51 @@
     </div>
 </div>
 
+<!-- 6, 7, 8. نافذة المحادثة الخاصة المحدثة تماماً ومطابقة للصورة المرجعية الفخمة -->
 <div id="chatModal" class="modal">
-    <div class="modal-content" style="max-width:380px">
-        <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center">
-            <h3 id="chatTitle" style="color:#10b981;margin:0;font-size:13px">الدردشة 👤</h3>
+    <div class="modal-content" style="max-width:380px; background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%); border:1.5px solid rgba(168,85,247,0.5); border-radius:18px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; height:85vh;">
+        <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px; margin-bottom:8px;">
             <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeChatModal()">✖</button>
+            <h3 id="chatTitle" style="color:#c084fc;margin:0;font-size:13px; font-weight:bold;">الدردشة الخاصة</h3>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <span id="chatFriendNameTop" style="font-size:12px; color:#fff; font-weight:bold;">صديق</span>
+                <img id="chatFriendAvatarTop" src="https://via.placeholder.com/35" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid #c084fc;" alt="صورة">
+            </div>
         </div>
-        <div id="chatMessagesArea" style="height:250px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:8px;border-radius:8px;margin:8px 0;font-size:11px"></div>
-        <div style="display:flex;gap:4px;align-items:center">
-            <input type="text" id="chatInputMsg" class="input-box" placeholder="اكتب رسالة..." style="margin:0;flex:1">
-            <button class="action-btn btn-blue" style="width:60px;padding:0;height:38px" onclick="sendChatMessage()">إرسال</button>
+        <div id="chatMessagesArea" style="flex:1; overflow-y:auto; background:rgba(0,0,0,0.4); padding:8px; border-radius:12px; margin-bottom:8px; font-size:11px; border:1px solid rgba(255,255,255,0.06);"></div>
+        <div style="display:flex; gap:6px; align-items:center; background:rgba(15,23,42,0.95); border:1.2px solid rgba(168,85,247,0.4); border-radius:14px; padding:6px 10px;">
+            <input type="text" id="chatInputMsg" class="input-box" placeholder="قل شيئاً..." style="margin:0; flex:1; background:rgba(10,5,24,0.9); border:1px solid rgba(192,132,252,0.4); border-radius:10px; padding:8px 10px; font-size:12px; color:#fff;">
+            <button class="action-btn btn-purple" style="width:auto; padding:8px 14px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea); border-radius:10px;" onclick="sendChatMessage()">إرسال</button>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة تأكيد حذف الصديق (نعم / لا) -->
+<div id="deleteFriendConfirmModal" class="modal">
+    <div class="modal-content" style="text-align:center; max-width:300px; padding:16px;">
+        <h4 style="margin:0 0 8px 0;color:#ef4444;font-size:14px">⚠️ حذف الصديق</h4>
+        <p id="deleteFriendConfirmText" style="font-size:11px;color:#cbd5e1;margin-bottom:14px">هل أنت متأكد من حذف هذا الصديق؟</p>
+        <div style="display:flex;gap:8px;">
+            <button class="action-btn" style="flex:1;padding:8px;font-size:11px;background:#ef4444;color:#fff;" onclick="executeDeleteFriend()">نعم ✔️</button>
+            <button class="action-btn btn-blue" style="flex:1;padding:8px;font-size:11px;" onclick="closeDeleteFriendModal()">لا ❌</button>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة صندوق الهدايا السريع داخل الروم -->
+<div id="roomDirectGiftsModal" class="modal">
+    <div class="modal-content" style="text-align:right; max-width:320px; padding:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <h4 style="margin:0;color:#f472b6;font-size:13px">🎁 صندوق الهدايا السريع</h4>
+            <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeDirectGiftsModal()">✖</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20); closeDirectGiftsModal();">🩷 قلب وردي<br><span style="color:#f472b6">20 نقطة</span></button>
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25); closeDirectGiftsModal();">🌹 وردة<br><span style="color:#f472b6">25 نقطة</span></button>
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30); closeDirectGiftsModal();">🐱 قطة<br><span style="color:#f472b6">30 نقطة</span></button>
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50); closeDirectGiftsModal();">🎸 قيتار<br><span style="color:#f472b6">50 نقطة</span></button>
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100); closeDirectGiftsModal();">🇮🇶 علم العراق<br><span style="color:#f472b6">100 نقطة</span></button>
+            <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:8px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000); closeDirectGiftsModal();">🏰 قصر الملكة<br><span style="color:#f472b6">5000 نقطة</span></button>
         </div>
     </div>
 </div>
@@ -832,7 +858,8 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
-    let activeViewingPostKey = null;
+    let pendingDeleteFriendKey = null;
+    let pendingDeleteFriendName = null;
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -1051,6 +1078,11 @@
         });
     }
 
+    function openRoomExitMenu(){
+        let menu = document.getElementById('roomExitDropdownMenu');
+        if(menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
     function joinRoom(rKey, roomId, roomName, cover){
         activeRoomKey = rKey;
         document.getElementById('currentRoomTitleDisplay').innerText = roomName;
@@ -1088,7 +1120,7 @@
                 let dat = u.val();
                 let uKey = u.key;
                 count++;
-                uHtml += `<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
+                uHtml += `<span style="display:inline-block; margin-left:6px;">🟢 ${dat.name}</span>`;
                 if(uKey !== currentUserKey) selectHtml += `<option value="${uKey}">${dat.name}</option>`;
             });
             uList.innerHTML = uHtml;
@@ -1104,6 +1136,7 @@
             rtdb.ref(`room_users/${activeRoomKey}`).off();
         }
         activeRoomKey = null;
+        document.getElementById('roomExitDropdownMenu').style.display = 'none';
         navigateTo('roomsScreen');
     }
 
@@ -1119,6 +1152,9 @@
             document.getElementById('roomChatInputMsg').value = '';
         });
     }
+
+    function openDirectGiftsModal(){ document.getElementById('roomDirectGiftsModal').style.display = 'flex'; }
+    function closeDirectGiftsModal(){ document.getElementById('roomDirectGiftsModal').style.display = 'none'; }
 
     function sendRoomGift(giftName, giftPrice){
         if(!activeRoomKey) return;
@@ -1393,7 +1429,6 @@
         if (oBox) oBox.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#38bdf8; font-weight:bold; font-size:12px; padding:10px;">${message}</p>`;
     }
 
-    // ✨ لعبة الذاكرة المحدثة (50 نقطة مع نظام 24 ساعة يمنع تكرارها إلا في اليوم التالي)
     function openMemoryGameModal(){
         let now = new Date().getTime();
         let cooldown = 24 * 60 * 60 * 1000;
@@ -1471,30 +1506,42 @@
         }
     }
 
+    // 1. منشورات لاونج (إتاحة نشر الصور، وإلغاء التعليقات والإبقاء على اللايك فقط)
     function publishLoungePost(){
         let title = document.getElementById('newPostTitle').value.trim();
         let desc = document.getElementById('newPostText').value.trim();
+        let imgFile = document.getElementById('newPostImageInput').files[0];
         
-        if(!title && !desc) return showNeonPopup("⚠️ يرجى كتابة عنوان أو نص المنشور أولاً!");
+        if(!title && !desc && !imgFile) return showNeonPopup("⚠️ يرجى كتابة محتوى المنشور أو إرفاق صورة!");
 
-        // استخدام مسار 'rooms' المسموح به والموجود أصلاً في القواعد بدون تعديلها
-        rtdb.ref('rooms').push({
-            isLoungePost: true,
-            authorKey: currentUserKey,
-            authorName: userData.name || 'مستخدم',
-            authorId: userData.customId || '---',
-            authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
-            title: title,
-            text: desc,
-            image: '',
-            likesCount: 0,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('newPostTitle').value = '';
-            document.getElementById('newPostText').value = '';
-            showNeonPopup("✅ تم نشر المنشور بنجاح وبدون تعليق!");
-            loadLoungePosts();
-        });
+        let createPostAction = (imgBase64)=>{
+            rtdb.ref('rooms').push({
+                isLoungePost: true,
+                authorKey: currentUserKey,
+                authorName: userData.name || 'مستخدم',
+                authorId: userData.customId || '---',
+                authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
+                title: title,
+                text: desc,
+                image: imgBase64 || '',
+                likesCount: 0,
+                timestamp: Date.now()
+            }).then(()=>{
+                document.getElementById('newPostTitle').value = '';
+                document.getElementById('newPostText').value = '';
+                document.getElementById('newPostImageInput').value = '';
+                showNeonPopup("✅ تم نشر المنشور بنجاح!");
+                loadLoungePosts();
+            });
+        };
+
+        if(imgFile){
+            let reader = new FileReader();
+            reader.onload = (e)=> createPostAction(e.target.result);
+            reader.readAsDataURL(imgFile);
+        } else {
+            createPostAction('');
+        }
     }
 
     function loadLoungePosts(){
@@ -1509,7 +1556,7 @@
             let html = '';
             snap.forEach(item=>{
                 let p = item.val();
-                if(!p.isLoungePost) return; // عرض فقط المنشورات
+                if(!p.isLoungePost) return;
                 let pKey = item.key;
                 let dateStr = new Date(p.timestamp).toLocaleString();
                 let isMyPost = (p.authorKey === currentUserKey);
@@ -1517,6 +1564,8 @@
                 
                 let deleteBtn = (isMyPost || isAdmin) ? 
                     `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
+
+                let imgHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
 
                 html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -1531,9 +1580,9 @@
                     </div>
                     ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
                     ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
-                        <button class="action-btn" style="width:auto; background:rgba(168,85,247,0.2); border:1px solid #c084fc; color:#fff; padding:4px 10px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ اعجاب (${p.likesCount || 0})</button>
-                        <button class="action-btn" style="width:auto; background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#fff; padding:4px 10px; font-size:10px;" onclick="openSinglePostDetail('${pKey}')">💬 التعليقات</button>
+                    ${imgHtml}
+                    <div style="display:flex; justify-content:flex-start; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
+                        <button class="action-btn" style="width:auto; background:rgba(168,85,247,0.2); border:1px solid #c084fc; color:#fff; padding:4px 12px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ إعجاب (${p.likesCount || 0})</button>
                     </div>
                 </div>`;
             });
@@ -1580,50 +1629,6 @@
                 </div>`;
             });
             container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>ليس لديك أي منشورات حالياً.</div>";
-        });
-    }
-
-    function openSinglePostDetail(postKey){
-        activeViewingPostKey = postKey;
-        navigateTo('singlePostDetailScreen');
-        
-        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
-            if(!snap.exists()) return;
-            let p = snap.val();
-            let dateStr = new Date(p.timestamp).toLocaleString();
-            document.getElementById('singlePostCardContainer').innerHTML = `<div class="card" style="text-align:right; background:rgba(20,10,40,0.85);">
-                <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-                    <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="صورة">
-                    <div><b>${p.authorName}</b><div style="font-size:8px; color:#94a3b8;">${dateStr}</div></div>
-                </div>
-                ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
-                ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
-            </div>`;
-        });
-
-        rtdb.ref(`lounge_post_comments/${postKey}`).on('value', snap=>{
-            let area = document.getElementById('postCommentsListArea');
-            if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "<div style='color:#94a3b8;'>لا توجد تعليقات بعد. كن أول من يعلق!</div>"; return; }
-            let h = '';
-            snap.forEach(c=>{
-                let dat = c.val();
-                h += `<div style="background:rgba(255,255,255,0.03); padding:6px; border-radius:6px; margin-bottom:4px;"><b>${dat.authorName}:</b> ${dat.text}</div>`;
-            });
-            area.innerHTML = h;
-        });
-    }
-
-    function sendPostComment(){
-        let txt = document.getElementById('postCommentInput').value.trim();
-        if(!txt || !activeViewingPostKey) return;
-        rtdb.ref(`lounge_post_comments/${activeViewingPostKey}`).push({
-            authorKey: currentUserKey,
-            authorName: userData.name || 'مستخدم',
-            text: txt,
-            timestamp: Date.now()
-        }).then(()=>{
-            document.getElementById('postCommentInput').value = '';
         });
     }
 
@@ -2195,6 +2200,7 @@
         });
     }
 
+    // 6, 7, 8. تحميل نظام الأصدقاء وقائمة الأصدقاء مع زر وحلقة حذف الصديق (X)
     function loadFriendSystem(){
         if(!currentUserKey||!rtdb)return;
         rtdb.ref(`friend_requests/${currentUserKey}`).once('value',snap=>{
@@ -2208,11 +2214,20 @@
             if(!snap.exists()){c.innerHTML="لا يوجد أصدقاء مضافون";return;}let h='';
             snap.forEach(f=>{
                 let d=f.val(), fk=f.key;
-                h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px">
-                    <span style="cursor:pointer">🟢 <b>${d.name}</b></span>
-                    <div style="display:flex;gap:4px">
-                        <button onclick="openChatModal('${fk}','${d.name}')" style="background:#0ea5e9;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">محادثة 💬</button>
-                        <button onclick="removeFriend('${fk}','${d.name}')" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer" title="حذف الصديق">حذف 🗑️</button>
+                let av = d.avatar || 'https://via.placeholder.com/38';
+                h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:8px;border-radius:10px;margin-bottom:6px">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="position:relative;">
+                            <img src="${av}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid #c084fc;" alt="صديق">
+                            <div onclick="promptDeleteFriend('${fk}','${d.name}')" style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#ef4444;border-radius:50%;color:#fff;font-size:9px;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid #fff;" title="حذف الصديق">✕</div>
+                        </div>
+                        <div>
+                            <b style="color:#fff;font-size:12px;">${d.name}</b>
+                            <div style="font-size:9px;color:#94a3b8;">ID: ${d.customId||'---'}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="openChatModal('${fk}','${d.name}','${av}')" style="background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:bold;">محادثة 💬</button>
                     </div>
                 </div>`;
             });
@@ -2233,12 +2248,28 @@
         rtdb.ref(`friend_requests/${currentUserKey}/${sk}`).remove().then(()=>{ loadFriendSystem(); });
     }
 
-    function removeFriend(friendKey, friendName){
-        if(!confirm(`⚠️ هل أنت متأكد من حذف الصديق (${friendName}) وإنهاء الصداقة نهائياً؟`)) return;
-        rtdb.ref(`friends/${currentUserKey}/${friendKey}`).remove().then(()=>{
-            rtdb.ref(`friends/${friendKey}/${currentUserKey}`).remove().then(()=>{
+    function promptDeleteFriend(friendKey, friendName){
+        pendingDeleteFriendKey = friendKey;
+        pendingDeleteFriendName = friendName;
+        document.getElementById('deleteFriendConfirmText').innerText = `هل أنت متأكد من حذف الصديق (${friendName})؟`;
+        document.getElementById('deleteFriendConfirmModal').style.display = 'flex';
+    }
+
+    function closeDeleteFriendModal(){
+        document.getElementById('deleteFriendConfirmModal').style.display = 'none';
+        pendingDeleteFriendKey = null;
+        pendingDeleteFriendName = null;
+    }
+
+    function executeDeleteFriend(){
+        if(!pendingDeleteFriendKey) return closeDeleteFriendModal();
+        let fk = pendingDeleteFriendKey;
+        let fName = pendingDeleteFriendName;
+        rtdb.ref(`friends/${currentUserKey}/${fk}`).remove().then(()=>{
+            rtdb.ref(`friends/${fk}/${currentUserKey}`).remove().then(()=>{
+                closeDeleteFriendModal();
                 loadFriendSystem();
-                showNeonPopup(`✅ تم حذف الصديق (${friendName}) بنجاح.`);
+                showNeonPopup(`✅ تم حذف الصديق (${fName}) بنجاح.`);
             });
         });
     }
@@ -2246,9 +2277,10 @@
     function clearRequestsList(){rtdb.ref(`friend_requests/${currentUserKey}`).remove().then(()=>{document.getElementById('friendRequestsContainer').innerHTML="لا توجد طلبات صداقة";showNeonPopup('🗑️ تم التنظيف.');});}
     function clearFriendsDisplayList(){let c=document.getElementById('friendsListContainer');if(c)c.innerHTML="لا يوجد أصدقاء معروضون";}
 
-    function openChatModal(fk,fName){
+    function openChatModal(fk,fName,fAv){
         activeChatFriendKey=fk;activeChatFriendName=fName;
-        document.getElementById('chatTitle').innerText=`${fName} 👤`;
+        document.getElementById('chatFriendNameTop').innerText = fName;
+        document.getElementById('chatFriendAvatarTop').src = fAv || 'https://via.placeholder.com/35';
         document.getElementById('chatModal').style.display='flex';
         let chatId=[currentUserKey,fk].sort().join('_');
         rtdb.ref(`chats/${chatId}`).limitToLast(50).on('value',snap=>{
@@ -2256,8 +2288,8 @@
             if(!snap.exists()){a.innerHTML="ابدأ المحادثة...";return;}let h='';
             snap.forEach(m=>{
                 let msg=m.val(),isMe=msg.sender===currentUserKey;
-                let bg=isMe?"background:#10b981;color:#fff":"background:#fff;color:#0f172a";
-                h+=`<div style="text-align:${isMe?'left':'right'};margin-bottom:5px"><span style="${bg};padding:5px 9px;border-radius:6px;display:inline-block;max-width:85%;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</span></div>`;
+                let bg=isMe?"background:#9333ea;color:#fff":"background:rgba(255,255,255,0.08);color:#fff";
+                h+=`<div style="text-align:${isMe?'left':'right'};margin-bottom:6px"><span style="${bg};padding:6px 12px;border-radius:10px;display:inline-block;max-width:85%;word-break:break-word;font-size:11px;"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</span></div>`;
             });
             a.innerHTML=h;a.scrollTop=a.scrollHeight;
         });
@@ -2568,4 +2600,3 @@
 </script>
 </body>
 </html>
-
