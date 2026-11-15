@@ -4,8 +4,9 @@
   "display": "standalone",
   "name": "Lounge",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/loungee-app/",
   "short_name": "Lounge",
   "start_url": "/loungee-app/",
-  "theme_color": "#ffffff"
+  "theme_color": "#ffffff",
+  "description": "Lounge App"
 }
