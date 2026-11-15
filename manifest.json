@@ -1,8 +1,11 @@
 {
-  "name": "تطبيق الشات والصوت",
-  "short_name": "تطبيقي",
-  "start_url": "/loungee-app/",
-  "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000"
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Lounge",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Lounge",
+  "start_url": "/loungee-app/",
+  "theme_color": "#ffffff"
 }
