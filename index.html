@@ -62,11 +62,9 @@
         
         .top-profile-card{background:linear-gradient(135deg, rgba(20, 10, 38, 0.9), rgba(10, 6, 22, 0.95));border:1.5px solid rgba(192,132,252,0.45);border-radius:18px;padding:10px 10px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;box-shadow:0 10px 25px rgba(0,0,0,0.6), inset 0 0 12px rgba(168,85,247,0.15)}
         
-        /* دائرة العداد اليومي المكبرة والمحسنة */
         .coin-center-emblem{width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,#4c1d95 0%,#090514 100%);border:2.5px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 22px rgba(192,132,252,0.8), inset 0 0 10px rgba(255,255,255,0.3);margin:0 auto;cursor:pointer;position:relative;overflow:visible;}
         .spinning-coin{font-size:13px;font-weight:900;color:#c084fc;letter-spacing:1px}
 
-        /* تأثير تناثر الفلوس والأموال */
         @keyframes floatMoneyAnim {
             0% { transform: translateY(0) scale(0.6); opacity: 1; }
             100% { transform: translateY(-75px) scale(1.3); opacity: 0; }
@@ -313,7 +311,6 @@
         </div>
     </div>
 
-    <!-- شاشة ألعاب المنصة -->
     <div id="loungeGamesScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب المنصة</h3>
@@ -403,7 +400,7 @@
         </div>
     </div>
 
-    <!-- شاشة غرفة المحادثة الفردية -->
+    <!-- شاشة غرفة المحادثة الفردية (محدثة مع نظام المايكات الـ 5 المدمج) -->
     <div id="singleRoomScreen" class="screen-page" style="position: relative; padding-bottom: 75px;">
         <div class="top-nav">
             <div style="display:flex;align-items:center;gap:8px">
@@ -421,9 +418,53 @@
             <span id="roomAttendanceDisplay" style="color:#38bdf8; font-weight:bold;">👁️‍🗨️ الحضور: 1</span>
         </div>
 
-        <div id="roomMessagesArea" style="height: calc(100vh - 280px); min-height: 250px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
+        <!-- 🎙️ قسم المايكات الـ 5 المدمج حصرياً -->
+        <div style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(236, 72, 153, 0.4); border-radius: 16px; padding: 10px; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 11px; color: #f472b6; font-weight: bold;">🎙️ منصة المايكات (5 مايكات):</span>
+                <span style="font-size: 9px; color: #38bdf8;" id="micRoomStatusText">انقر على أي مايك للصعود</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center;" id="roomMicsGridContainer">
+                <div onclick="toggleMicSlot(1)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-1">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-1">
+                        <span style="font-size: 14px;">🎙️</span>
+                    </div>
+                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-1">مايك 1</div>
+                </div>
 
-        <!-- صندوق الهدايا المنبثق بالأقسام الجديدة (تفاعلي & حصري بسعر موحد 250 وبدون أسماء) -->
+                <div onclick="toggleMicSlot(2)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-2">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-2">
+                        <span style="font-size: 14px;">🎙️</span>
+                    </div>
+                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-2">مايك 2</div>
+                </div>
+
+                <div onclick="toggleMicSlot(3)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-3">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-3">
+                        <span style="font-size: 14px;">🎙️</span>
+                    </div>
+                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-3">مايك 3</div>
+                </div>
+
+                <div onclick="toggleMicSlot(4)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-4">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-4">
+                        <span style="font-size: 14px;">🎙️</span>
+                    </div>
+                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-4">مايك 4</div>
+                </div>
+
+                <div onclick="toggleMicSlot(5)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-5">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-5">
+                        <span style="font-size: 14px;">🎙️</span>
+                    </div>
+                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-5">مايك 5</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="roomMessagesArea" style="height: calc(100vh - 350px); min-height: 200px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
+
         <div id="giftBoxPopupPanel" style="display:none; position:absolute; bottom:65px; left:10px; right:10px; background:rgba(19,9,38,0.98); border:1.5px solid #ec4899; border-radius:16px; padding:12px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,0.9);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:11px; color:#f472b6; font-weight:bold;">🎁 صندوق الهدايا:</span>
@@ -435,13 +476,11 @@
                 </select>
             </div>
             
-            <!-- أزرار تبديل الأقسام (تفاعلي و حصري) -->
             <div style="display:flex; gap:6px; margin-bottom:8px;">
                 <button class="shop-tab-btn active-gold" id="giftTabInteractive" onclick="switchGiftSection('interactive')">تفاعلي</button>
                 <button class="shop-tab-btn" id="giftTabExclusive" onclick="switchGiftSection('exclusive')">حصري</button>
             </div>
 
-            <!-- قسم التفاعلي -->
             <div id="giftSectionInteractive" class="shop-tier-content active">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
                     <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
@@ -453,7 +492,6 @@
                 </div>
             </div>
 
-            <!-- قسم حصري (حصراً السعر موحد 250 وبدون أسماء داخل الصندوق) -->
             <div id="giftSectionExclusive" class="shop-tier-content">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
                     <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🎁 علبة عطر', 250)">🎁<br><span style="color:#34d399">250 نقطة</span></button>
@@ -885,7 +923,6 @@
     let isCompletedToday = false;
     let clickDebounceTimer = null;
 
-    // دالة حركة تناثر الفلوس والأموال عند الضغط على دائرة العداد اليومي
     function triggerMoneyExplosion(event) {
         let emblem = document.getElementById('mainDailyCircleEmblem');
         if(!emblem) return;
@@ -1137,6 +1174,9 @@
         });
         userPresenceRef.onDisconnect().remove();
 
+        // 🎙️ تفعيل الاستماع لتحديثات المايكات الـ 5 الفورية داخل الغرفة
+        listenToRoomMics(rKey);
+
         rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
             if(!area) return;
@@ -1148,7 +1188,6 @@
                 let senderName = msg.senderName || 'مستخدم';
                 let messageText = msg.text || '';
                 
-                // إذا كانت رسالة هدية، تظهر بشكل كامل وبارز ومرئي بوضوح
                 if(msg.isGiftCard){
                     h += `<div style="margin-bottom:10px; display:flex; flex-direction:column; align-items:center; text-align:center; background:linear-gradient(135deg, rgba(219,39,119,0.25), rgba(147,51,234,0.25)); border:1.5px solid #ec4899; padding:10px; border-radius:14px; box-shadow:0 0 15px rgba(236,72,153,0.4);">
                         <img src="${senderAvatar}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #ec4899; margin-bottom:4px;" alt="صورة">
@@ -1189,12 +1228,114 @@
 
     function leaveCurrentRoom(){
         if(activeRoomKey && currentUserKey){
+            // تنظيف وجود المستخدم من الغرفة ومن المايكات عند المغادرة
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
+            rtdb.ref(`room_mics/${activeRoomKey}`).once('value', snap => {
+                let mics = snap.val() || {};
+                for(let i=1; i<=5; i++){
+                    if(mics[i] && mics[i].userKey === currentUserKey){
+                        rtdb.ref(`room_mics/${activeRoomKey}/${i}`).remove();
+                    }
+                }
+            });
             rtdb.ref(`room_messages/${activeRoomKey}`).off();
             rtdb.ref(`room_users/${activeRoomKey}`).off();
+            rtdb.ref(`room_mics/${activeRoomKey}`).off();
         }
         activeRoomKey = null;
         navigateTo('roomsScreen');
+    }
+
+    // 🎙️ دوال نظام المايكات الـ 5 (صعود، نزول، طرد من المشرف، استماع فوري)
+    function toggleMicSlot(micNumber) {
+        if(!activeRoomKey) return;
+        
+        let roomMicsRef = rtdb.ref(`room_mics/${activeRoomKey}`);
+        roomMicsRef.once('value', snap => {
+            let micsData = snap.val() || {};
+            
+            let currentAssignedMic = null;
+            for(let i = 1; i <= 5; i++) {
+                if(micsData[i] && micsData[i].userKey === currentUserKey) {
+                    currentAssignedMic = i;
+                    break;
+                }
+            }
+            
+            if(currentAssignedMic === micNumber) {
+                rtdb.ref(`room_mics/${activeRoomKey}/${micNumber}`).remove().then(() => {
+                    showNeonPopup("⬇️ نزلت من المايك بنجاح.");
+                });
+                return;
+            }
+            
+            if(micsData[micNumber] && micsData[micNumber].userKey) {
+                let occupantName = micsData[micNumber].userName || 'مستخدم';
+                checkIfUserIsRoomHost(activeRoomKey, isHost => {
+                    if(isHost) {
+                        if(confirm(`⚠️ هذا المايك مشغول بواسطة (${occupantName}). هل تريد إنزاله بصفتك مشرف الغرفة؟`)) {
+                            rtdb.ref(`room_mics/${activeRoomKey}/${micNumber}`).remove().then(() => {
+                                showNeonPopup("✅ تم إخلاء المايك بنجاح.");
+                            });
+                        }
+                    } else {
+                        showNeonPopup(`⚠️ عذراً، هذا المايك مشغول حالياً بواسطة (${occupantName}).`);
+                    }
+                });
+                return;
+            }
+            
+            let updates = {};
+            if(currentAssignedMic) {
+                updates[currentAssignedMic] = null;
+            }
+            
+            updates[micNumber] = {
+                userKey: currentUserKey,
+                userName: userData.name || 'مستخدم',
+                userAvatar: userData.avatar || 'https://via.placeholder.com/35'
+            };
+            
+            roomMicsRef.update(updates).then(() => {
+                showNeonPopup(`🎤 صعدت على المايك رقم (${micNumber}) بنجاح.`);
+            });
+        });
+    }
+
+    function checkIfUserIsRoomHost(rKey, callback) {
+        rtdb.ref(`rooms/${rKey}`).once('value', snap => {
+            if(!snap.exists()) return callback(false);
+            let roomInfo = snap.val();
+            let isHost = (roomInfo.creatorKey === currentUserKey || currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
+            callback(isHost);
+        });
+    }
+
+    function listenToRoomMics(rKey) {
+        rtdb.ref(`room_mics/${rKey}`).on('value', snap => {
+            let micsData = snap.val() || {};
+            
+            for(let i = 1; i <= 5; i++) {
+                let avatarBox = document.getElementById(`micAvatarBox-${i}`);
+                let nameBox = document.getElementById(`micNameBox-${i}`);
+                let slotBox = document.getElementById(`micSlotBox-${i}`);
+                
+                if(!avatarBox || !nameBox || !slotBox) continue;
+                
+                if(micsData[i] && micsData[i].userKey) {
+                    let mUser = micsData[i];
+                    avatarBox.innerHTML = `<img src="${mUser.userAvatar}" style="width:100%; height:100%; object-fit:cover;" alt="صورة المتحدث">`;
+                    nameBox.innerText = mUser.userName;
+                    slotBox.style.border = "1.5px solid #22c55e"; 
+                    slotBox.style.background = "rgba(16, 185, 129, 0.15)";
+                } else {
+                    avatarBox.innerHTML = `<span style="font-size:14px;">🎙️</span>`;
+                    nameBox.innerText = `مايك ${i}`;
+                    slotBox.style.border = "1.2px solid rgba(236, 72, 153, 0.4)";
+                    slotBox.style.background = "rgba(30,20,55,0.8)";
+                }
+            }
+        });
     }
 
     function sendRoomChatMessage(){
