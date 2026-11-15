@@ -62,18 +62,19 @@
         
         .top-profile-card{background:linear-gradient(135deg, rgba(20, 10, 38, 0.9), rgba(10, 6, 22, 0.95));border:1.5px solid rgba(192,132,252,0.45);border-radius:18px;padding:10px 10px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;box-shadow:0 10px 25px rgba(0,0,0,0.6), inset 0 0 12px rgba(168,85,247,0.15)}
         
-        .coin-center-emblem{width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,#4c1d95 0%,#090514 100%);border:2.5px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 22px rgba(192,132,252,0.8), inset 0 0 10px rgba(255,255,255,0.3);margin:0 auto;cursor:pointer;position:relative;overflow:visible;}
-        .spinning-coin{font-size:13px;font-weight:900;color:#c084fc;letter-spacing:1px}
+        /* دائرة العداد اليومي المكبرة والمحسنة مع حركة تناثر الدولارات التلقائية المستمرة */
+        .coin-center-emblem{width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#4c1d95 0%,#090514 100%);border:2.5px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 25px rgba(192,132,252,0.85), inset 0 0 10px rgba(255,255,255,0.3);margin:0 auto;cursor:pointer;position:relative;overflow:visible;}
 
-        @keyframes floatMoneyAnim {
-            0% { transform: translateY(0) scale(0.6); opacity: 1; }
-            100% { transform: translateY(-75px) scale(1.3); opacity: 0; }
+        /* تأثير تناثر الدولارات فقط بشكل تلقائي ومستمر */
+        @keyframes floatDollarAnim {
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.35); opacity: 0; }
         }
-        .floating-money-item {
+        .floating-dollar-item {
             position: absolute;
             font-size: 18px;
             pointer-events: none;
-            animation: floatMoneyAnim 1s ease-out forwards;
+            animation: floatDollarAnim 1.2s ease-out infinite;
             z-index: 99;
         }
 
@@ -202,7 +203,8 @@
                 <div style="font-size:8px;color:#c084fc;margin-top:1px">💎 نقطة يومياً</div>
             </div>
             <div style="text-align:center">
-                <div class="coin-center-emblem" id="mainDailyCircleEmblem" onclick="triggerMoneyExplosion(event)"><div class="spinning-coin" id="loungeTickerWord">PL</div></div>
+                <!-- دائرة العداد اليومي مع تناثر الدولارات التلقائي المستمر وبدون أي كلمات -->
+                <div class="coin-center-emblem" id="mainDailyCircleEmblem"></div>
                 <div class="timer-mini-bar">
                     <span id="timerDisplay" class="timer-time-text">07:10:32</span>
                     <button id="powerActivateBtn" class="power-btn red-pulse" onclick="claimDailyReward()">⚡</button>
@@ -311,6 +313,7 @@
         </div>
     </div>
 
+    <!-- شاشة ألعاب المنصة -->
     <div id="loungeGamesScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#c084fc;font-size:15px">🎮 ألعاب المنصة</h3>
@@ -400,7 +403,7 @@
         </div>
     </div>
 
-    <!-- شاشة غرفة المحادثة الفردية (محدثة مع نظام المايكات الـ 5 المدمج) -->
+    <!-- شاشة غرفة المحادثة الفردية -->
     <div id="singleRoomScreen" class="screen-page" style="position: relative; padding-bottom: 75px;">
         <div class="top-nav">
             <div style="display:flex;align-items:center;gap:8px">
@@ -418,53 +421,9 @@
             <span id="roomAttendanceDisplay" style="color:#38bdf8; font-weight:bold;">👁️‍🗨️ الحضور: 1</span>
         </div>
 
-        <!-- 🎙️ قسم المايكات الـ 5 المدمج حصرياً -->
-        <div style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(236, 72, 153, 0.4); border-radius: 16px; padding: 10px; margin-bottom: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span style="font-size: 11px; color: #f472b6; font-weight: bold;">🎙️ منصة المايكات (5 مايكات):</span>
-                <span style="font-size: 9px; color: #38bdf8;" id="micRoomStatusText">انقر على أي مايك للصعود</span>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center;" id="roomMicsGridContainer">
-                <div onclick="toggleMicSlot(1)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-1">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-1">
-                        <span style="font-size: 14px;">🎙️</span>
-                    </div>
-                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-1">مايك 1</div>
-                </div>
+        <div id="roomMessagesArea" style="height: calc(100vh - 280px); min-height: 250px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
 
-                <div onclick="toggleMicSlot(2)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-2">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-2">
-                        <span style="font-size: 14px;">🎙️</span>
-                    </div>
-                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-2">مايك 2</div>
-                </div>
-
-                <div onclick="toggleMicSlot(3)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-3">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-3">
-                        <span style="font-size: 14px;">🎙️</span>
-                    </div>
-                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-3">مايك 3</div>
-                </div>
-
-                <div onclick="toggleMicSlot(4)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-4">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-4">
-                        <span style="font-size: 14px;">🎙️</span>
-                    </div>
-                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-4">مايك 4</div>
-                </div>
-
-                <div onclick="toggleMicSlot(5)" style="background: rgba(30,20,55,0.8); border: 1.2px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 6px 2px; cursor: pointer; position: relative;" id="micSlotBox-5">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; margin: 0 auto 3px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ec4899; overflow: hidden;" id="micAvatarBox-5">
-                        <span style="font-size: 14px;">🎙️</span>
-                    </div>
-                    <div style="font-size: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="micNameBox-5">مايك 5</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="roomMessagesArea" style="height: calc(100vh - 350px); min-height: 200px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
-
+        <!-- صندوق الهدايا المنبثق بالأقسام (تفاعلي & حصري) وبدون أسماء نهائياً -->
         <div id="giftBoxPopupPanel" style="display:none; position:absolute; bottom:65px; left:10px; right:10px; background:rgba(19,9,38,0.98); border:1.5px solid #ec4899; border-radius:16px; padding:12px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,0.9);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:11px; color:#f472b6; font-weight:bold;">🎁 صندوق الهدايا:</span>
@@ -476,30 +435,33 @@
                 </select>
             </div>
             
+            <!-- أزرار تبديل الأقسام (تفاعلي و حصري) -->
             <div style="display:flex; gap:6px; margin-bottom:8px;">
                 <button class="shop-tab-btn active-gold" id="giftTabInteractive" onclick="switchGiftSection('interactive')">تفاعلي</button>
                 <button class="shop-tab-btn" id="giftTabExclusive" onclick="switchGiftSection('exclusive')">حصري</button>
             </div>
 
+            <!-- قسم تفاعلي (بدون أسماء، السعر فقط تحت الهدية) -->
             <div id="giftSectionInteractive" class="shop-tier-content active">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🩷', 20)">🩷<br><span style="color:#f472b6">20 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🌹', 25)">🌹<br><span style="color:#f472b6">25 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🐱', 30)">🐱<br><span style="color:#f472b6">30 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🎸', 50)">🎸<br><span style="color:#f472b6">50 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🇮🇶', 100)">🇮🇶<br><span style="color:#f472b6">100 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🏰', 5000)">🏰<br><span style="color:#f472b6">5000 نقطة</span></button>
                 </div>
             </div>
 
+            <!-- قسم حصري (بدون أسماء، سعر موحد 250) -->
             <div id="giftSectionExclusive" class="shop-tier-content">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🎁 علبة عطر', 250)">🎁<br><span style="color:#34d399">250 نقطة</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍫 علبة كاكاو', 250)">🍫<br><span style="color:#34d399">250 نقطة</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍕 علبة بيتزا', 250)">🍕<br><span style="color:#34d399">250 نقطة</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍟 كيس شيبس', 250)">🍟<br><span style="color:#34d399">250 نقطة</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('✈️ طيارة', 250)">✈️<br><span style="color:#34d399">250 نقطة</span></button>
-                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🚀 صاروخ', 250)">🚀<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🎁', 250)">🎁<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍫', 250)">🍫<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍕', 250)">🍕<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🍟', 250)">🍟<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('✈️', 250)">✈️<br><span style="color:#34d399">250 نقطة</span></button>
+                    <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🚀', 250)">🚀<br><span style="color:#34d399">250 نقطة</span></button>
                 </div>
             </div>
         </div>
@@ -592,22 +554,22 @@
                 <button class="shop-tab-btn" id="tabLegend" onclick="switchShopTab('legend')">الأسطوري</button>
             </div>
             <div id="shopGoldContent" class="shop-tier-content active">
-                <div class="counter-row"><div><b>عداد 100 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 20.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(100,20000, 'عداد 100 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 200 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 40.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(200,40000, 'عداد 200 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 500 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 100.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(500,100000, 'عداد 500 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 1.000 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 200.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(1000,200000, 'عداد 1.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 100 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 20.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(100,20000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 200 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 40.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(200,40000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 500 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 100.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(500,100000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 1.000 نقطة يومياً</b><br><small style="color:#c084fc">السعر: 200.000 نقطة</small></div><button class="action-btn btn-gold" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(1000,200000)">شراء 🛒</button></div>
             </div>
             <div id="shopDiamondContent" class="shop-tier-content">
-                <div class="counter-row"><div><b>عداد 2.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 400.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(2000,400000, 'عداد 2.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 3.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 600.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(3000,600000, 'عداد 3.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 4.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 800.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(4000,800000, 'عداد 4.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 5.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 1.000.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(5000,1000000, 'عداد 5.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 2.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 400.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(2000,400000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 3.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 600.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(3000,600000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 4.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 800.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(4000,800000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 5.000 نقطة يومياً</b><br><small style="color:#38bdf8">السعر: 1.000.000 نقطة</small></div><button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(5000,1000000)">شراء 🛒</button></div>
             </div>
             <div id="shopLegendContent" class="shop-tier-content">
-                <div class="counter-row"><div><b>عداد 10.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 2.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(10000,2000000, 'عداد 10.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 20.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 4.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(20000,4000000, 'عداد 20.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 30.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 6.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(30000,6000000, 'عداد 30.000 نقطة يومياً')">شراء 🛒</button></div>
-                <div class="counter-row"><div><b>عداد 40.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 8.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(40000,8000000, 'عداد 40.000 نقطة يومياً')">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 10.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 2.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(10000,2000000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 20.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 4.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(20000,4000000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 30.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 6.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(30000,6000000)">شراء 🛒</button></div>
+                <div class="counter-row"><div><b>عداد 40.000 نقطة يومياً</b><br><small style="color:#a855f7">السعر: 8.000.000 نقطة</small></div><button class="action-btn btn-purple" style="width:auto;padding:4px 10px;font-size:10px" onclick="buyCounter(40000,8000000)">شراء 🛒</button></div>
             </div>
         </div>
     </div>
@@ -923,20 +885,20 @@
     let isCompletedToday = false;
     let clickDebounceTimer = null;
 
-    function triggerMoneyExplosion(event) {
+    // تشغيل حركة تناثر الدولارات التلقائية والمستمرة داخل دائرة العداد اليومي
+    function initContinuousDollarRain() {
         let emblem = document.getElementById('mainDailyCircleEmblem');
         if(!emblem) return;
-        let symbols = ['💵', '💰', '💶', '💸', '🪙', '💵'];
-        for(let i=0; i<6; i++){
+        setInterval(() => {
             let span = document.createElement('span');
-            span.className = 'floating-money-item';
-            span.innerText = symbols[Math.floor(Math.random()*symbols.length)];
-            let randomX = (Math.random() - 0.5) * 80;
+            span.className = 'floating-dollar-item';
+            span.innerText = '💵';
+            let randomX = (Math.random() - 0.5) * 85;
             span.style.left = `calc(50% + ${randomX}px)`;
-            span.style.top = `20px`;
+            span.style.top = `15px`;
             emblem.appendChild(span);
-            setTimeout(() => { span.remove(); }, 1000);
-        }
+            setTimeout(() => { span.remove(); }, 1200);
+        }, 350);
     }
 
     function switchGiftSection(sectionName) {
@@ -1174,9 +1136,6 @@
         });
         userPresenceRef.onDisconnect().remove();
 
-        // 🎙️ تفعيل الاستماع لتحديثات المايكات الـ 5 الفورية داخل الغرفة
-        listenToRoomMics(rKey);
-
         rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
             if(!area) return;
@@ -1228,114 +1187,12 @@
 
     function leaveCurrentRoom(){
         if(activeRoomKey && currentUserKey){
-            // تنظيف وجود المستخدم من الغرفة ومن المايكات عند المغادرة
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
-            rtdb.ref(`room_mics/${activeRoomKey}`).once('value', snap => {
-                let mics = snap.val() || {};
-                for(let i=1; i<=5; i++){
-                    if(mics[i] && mics[i].userKey === currentUserKey){
-                        rtdb.ref(`room_mics/${activeRoomKey}/${i}`).remove();
-                    }
-                }
-            });
             rtdb.ref(`room_messages/${activeRoomKey}`).off();
             rtdb.ref(`room_users/${activeRoomKey}`).off();
-            rtdb.ref(`room_mics/${activeRoomKey}`).off();
         }
         activeRoomKey = null;
         navigateTo('roomsScreen');
-    }
-
-    // 🎙️ دوال نظام المايكات الـ 5 (صعود، نزول، طرد من المشرف، استماع فوري)
-    function toggleMicSlot(micNumber) {
-        if(!activeRoomKey) return;
-        
-        let roomMicsRef = rtdb.ref(`room_mics/${activeRoomKey}`);
-        roomMicsRef.once('value', snap => {
-            let micsData = snap.val() || {};
-            
-            let currentAssignedMic = null;
-            for(let i = 1; i <= 5; i++) {
-                if(micsData[i] && micsData[i].userKey === currentUserKey) {
-                    currentAssignedMic = i;
-                    break;
-                }
-            }
-            
-            if(currentAssignedMic === micNumber) {
-                rtdb.ref(`room_mics/${activeRoomKey}/${micNumber}`).remove().then(() => {
-                    showNeonPopup("⬇️ نزلت من المايك بنجاح.");
-                });
-                return;
-            }
-            
-            if(micsData[micNumber] && micsData[micNumber].userKey) {
-                let occupantName = micsData[micNumber].userName || 'مستخدم';
-                checkIfUserIsRoomHost(activeRoomKey, isHost => {
-                    if(isHost) {
-                        if(confirm(`⚠️ هذا المايك مشغول بواسطة (${occupantName}). هل تريد إنزاله بصفتك مشرف الغرفة؟`)) {
-                            rtdb.ref(`room_mics/${activeRoomKey}/${micNumber}`).remove().then(() => {
-                                showNeonPopup("✅ تم إخلاء المايك بنجاح.");
-                            });
-                        }
-                    } else {
-                        showNeonPopup(`⚠️ عذراً، هذا المايك مشغول حالياً بواسطة (${occupantName}).`);
-                    }
-                });
-                return;
-            }
-            
-            let updates = {};
-            if(currentAssignedMic) {
-                updates[currentAssignedMic] = null;
-            }
-            
-            updates[micNumber] = {
-                userKey: currentUserKey,
-                userName: userData.name || 'مستخدم',
-                userAvatar: userData.avatar || 'https://via.placeholder.com/35'
-            };
-            
-            roomMicsRef.update(updates).then(() => {
-                showNeonPopup(`🎤 صعدت على المايك رقم (${micNumber}) بنجاح.`);
-            });
-        });
-    }
-
-    function checkIfUserIsRoomHost(rKey, callback) {
-        rtdb.ref(`rooms/${rKey}`).once('value', snap => {
-            if(!snap.exists()) return callback(false);
-            let roomInfo = snap.val();
-            let isHost = (roomInfo.creatorKey === currentUserKey || currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
-            callback(isHost);
-        });
-    }
-
-    function listenToRoomMics(rKey) {
-        rtdb.ref(`room_mics/${rKey}`).on('value', snap => {
-            let micsData = snap.val() || {};
-            
-            for(let i = 1; i <= 5; i++) {
-                let avatarBox = document.getElementById(`micAvatarBox-${i}`);
-                let nameBox = document.getElementById(`micNameBox-${i}`);
-                let slotBox = document.getElementById(`micSlotBox-${i}`);
-                
-                if(!avatarBox || !nameBox || !slotBox) continue;
-                
-                if(micsData[i] && micsData[i].userKey) {
-                    let mUser = micsData[i];
-                    avatarBox.innerHTML = `<img src="${mUser.userAvatar}" style="width:100%; height:100%; object-fit:cover;" alt="صورة المتحدث">`;
-                    nameBox.innerText = mUser.userName;
-                    slotBox.style.border = "1.5px solid #22c55e"; 
-                    slotBox.style.background = "rgba(16, 185, 129, 0.15)";
-                } else {
-                    avatarBox.innerHTML = `<span style="font-size:14px;">🎙️</span>`;
-                    nameBox.innerText = `مايك ${i}`;
-                    slotBox.style.border = "1.2px solid rgba(236, 72, 153, 0.4)";
-                    slotBox.style.background = "rgba(30,20,55,0.8)";
-                }
-            }
-        });
     }
 
     function sendRoomChatMessage(){
@@ -1352,7 +1209,7 @@
         });
     }
 
-    function sendRoomGift(giftFullName, giftPrice){
+    function sendRoomGift(giftEmoji, giftPrice){
         if(!activeRoomKey) return;
         let targetVal = document.getElementById('giftTargetSelect').value;
         let myPts = userData.points || 0;
@@ -1370,8 +1227,7 @@
                 updateUI();
                 toggleGiftBoxPanel();
 
-                let emojiPart = giftFullName.split(' ')[0];
-                let descPart = giftFullName;
+                let descPart = `${giftPrice} نقطة`;
 
                 if(targetVal === 'all'){
                     rtdb.ref(`room_messages/${activeRoomKey}`).push({
@@ -1379,7 +1235,7 @@
                         senderKey: currentUserKey,
                         senderName: userData.name || 'مستخدم',
                         senderAvatar: userData.avatar || 'https://via.placeholder.com/35',
-                        giftEmoji: emojiPart,
+                        giftEmoji: giftEmoji,
                         giftDesc: descPart,
                         timestamp: Date.now()
                     });
@@ -1392,7 +1248,7 @@
                             let recipientNewPts = Number(rData.points || 0) + recipientShare;
                             rtdb.ref(`users/${targetVal}`).update({ points: recipientNewPts }).then(()=>{
                                 rtdb.ref(`notifications/${targetVal}`).push({
-                                    text: `🎁 استلمت هدية (${giftFullName}) من (${userData.name}) وأضيفت (${recipientShare} نقطة) لرصيدك.`,
+                                    text: `🎁 استلمت هدية من (${userData.name}) وأضيفت (${recipientShare} نقطة) لرصيدك.`,
                                     timestamp: Date.now()
                                 });
                                 rtdb.ref(`room_messages/${activeRoomKey}`).push({
@@ -1400,7 +1256,7 @@
                                     senderKey: currentUserKey,
                                     senderName: userData.name || 'مستخدم',
                                     senderAvatar: userData.avatar || 'https://via.placeholder.com/35',
-                                    giftEmoji: emojiPart,
+                                    giftEmoji: giftEmoji,
                                     giftDesc: `${descPart} (إلى ${rData.name || 'مستخدم'})`,
                                     timestamp: Date.now()
                                 });
@@ -1891,6 +1747,7 @@
 
     window.addEventListener('load',()=>{
         initLoungeTickerAnimation();
+        initContinuousDollarRain();
         try{
             const firebaseConfig={
                 apiKey: "AIzaSyDTcDrVD2z3PT6WZSUJUtG9GIiIYHIdgSw",
