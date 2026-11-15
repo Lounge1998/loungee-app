@@ -62,10 +62,8 @@
         
         .top-profile-card{background:linear-gradient(135deg, rgba(20, 10, 38, 0.9), rgba(10, 6, 22, 0.95));border:1.5px solid rgba(192,132,252,0.45);border-radius:18px;padding:10px 10px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;box-shadow:0 10px 25px rgba(0,0,0,0.6), inset 0 0 12px rgba(168,85,247,0.15)}
         
-        /* دائرة العداد اليومي المكبرة والمحسنة مع حركة تناثر الدولارات التلقائية المستمرة */
         .coin-center-emblem{width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#4c1d95 0%,#090514 100%);border:2.5px solid #c084fc;display:flex;justify-content:center;align-items:center;box-shadow:0 0 25px rgba(192,132,252,0.85), inset 0 0 10px rgba(255,255,255,0.3);margin:0 auto;cursor:pointer;position:relative;overflow:visible;}
 
-        /* تأثير تناثر الدولارات فقط بشكل تلقائي ومستمر */
         @keyframes floatDollarAnim {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
             100% { transform: translateY(-80px) scale(1.35); opacity: 0; }
@@ -142,6 +140,57 @@
         .neon-popup-btn { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border: none; border-radius: 12px; padding: 8px 28px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 0 12px rgba(147,51,234,0.8); }
 
         .system-notification-item { background: linear-gradient(135deg, rgba(30,20,55,0.9), rgba(15,23,42,0.95)); border: 1.2px solid rgba(192,132,252,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: flex-start; gap: 8px; }
+
+        /* ==================== تصميم المايكات الـ 5 الجديدة (بمطابقة تامة للصورة الفخمة) ==================== */
+        .room-mics-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            padding: 12px 8px;
+            background: radial-gradient(circle at center, #1e113a 0%, #090514 100%);
+            border: 1.5px solid rgba(192, 132, 252, 0.4);
+            border-radius: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(168,85,247,0.2);
+        }
+        .mic-box-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        .mic-circle-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+        .mic-circle-btn svg, .mic-circle-btn span {
+            font-size: 20px;
+            color: #fff;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.8));
+        }
+        .mic-circle-btn.active-speaker {
+            background: radial-gradient(circle, rgba(168,85,247,0.7) 0%, rgba(126,34,206,0.9) 100%);
+            border-color: #c084fc;
+            box-shadow: 0 0 20px rgba(192,132,252,0.9), inset 0 0 10px rgba(255,255,255,0.4);
+        }
+        .mic-index-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 4px;
+            text-shadow: 0 0 6px rgba(0,0,0,0.9);
+        }
     </style>
 </head>
 <body>
@@ -203,7 +252,6 @@
                 <div style="font-size:8px;color:#c084fc;margin-top:1px">💎 نقطة يومياً</div>
             </div>
             <div style="text-align:center">
-                <!-- دائرة العداد اليومي مع تناثر الدولارات التلقائي المستمر وبدون أي كلمات -->
                 <div class="coin-center-emblem" id="mainDailyCircleEmblem"></div>
                 <div class="timer-mini-bar">
                     <span id="timerDisplay" class="timer-time-text">07:10:32</span>
@@ -403,7 +451,7 @@
         </div>
     </div>
 
-    <!-- شاشة غرفة المحادثة الفردية -->
+    <!-- شاشة غرفة المحادثة الفردية (مع نظام المايكات الـ 5 الجديدة المطابقة تماماً للصورة) -->
     <div id="singleRoomScreen" class="screen-page" style="position: relative; padding-bottom: 75px;">
         <div class="top-nav">
             <div style="display:flex;align-items:center;gap:8px">
@@ -421,9 +469,33 @@
             <span id="roomAttendanceDisplay" style="color:#38bdf8; font-weight:bold;">👁️‍🗨️ الحضور: 1</span>
         </div>
 
-        <div id="roomMessagesArea" style="height: calc(100vh - 280px); min-height: 250px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
+        <!-- نظام المايكات الـ 5 الجديدة (بشكل متطابق للصورة الفخمة مع ترقيم 1 إلى 5 والتفاعل الحقيقي) -->
+        <div class="room-mics-container">
+            <div class="mic-box-item" onclick="toggleMicSlot(5)">
+                <div class="mic-circle-btn" id="micSlot5Btn"><span>🎤</span></div>
+                <div class="mic-index-label">5</div>
+            </div>
+            <div class="mic-box-item" onclick="toggleMicSlot(4)">
+                <div class="mic-circle-btn" id="micSlot4Btn"><span>🎤</span></div>
+                <div class="mic-index-label">4</div>
+            </div>
+            <div class="mic-box-item" onclick="toggleMicSlot(3)">
+                <div class="mic-circle-btn" id="micSlot3Btn"><span>🎤</span></div>
+                <div class="mic-index-label">3</div>
+            </div>
+            <div class="mic-box-item" onclick="toggleMicSlot(2)">
+                <div class="mic-circle-btn" id="micSlot2Btn"><span>🎤</span></div>
+                <div class="mic-index-label">2</div>
+            </div>
+            <div class="mic-box-item" onclick="toggleMicSlot(1)">
+                <div class="mic-circle-btn" id="micSlot1Btn"><span>🎤</span></div>
+                <div class="mic-index-label">1</div>
+            </div>
+        </div>
 
-        <!-- صندوق الهدايا المنبثق بالأقسام (تفاعلي & حصري) وبدون أسماء نهائياً -->
+        <div id="roomMessagesArea" style="height: calc(100vh - 340px); min-height: 200px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:10px; border-radius:12px; font-size:11px; border:1px solid rgba(255,255,255,0.08); margin-bottom: 70px;"></div>
+
+        <!-- صندوق الهدايا المنبثق بالأقسام وبدون أسماء -->
         <div id="giftBoxPopupPanel" style="display:none; position:absolute; bottom:65px; left:10px; right:10px; background:rgba(19,9,38,0.98); border:1.5px solid #ec4899; border-radius:16px; padding:12px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,0.9);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:11px; color:#f472b6; font-weight:bold;">🎁 صندوق الهدايا:</span>
@@ -435,13 +507,11 @@
                 </select>
             </div>
             
-            <!-- أزرار تبديل الأقسام (تفاعلي و حصري) -->
             <div style="display:flex; gap:6px; margin-bottom:8px;">
                 <button class="shop-tab-btn active-gold" id="giftTabInteractive" onclick="switchGiftSection('interactive')">تفاعلي</button>
                 <button class="shop-tab-btn" id="giftTabExclusive" onclick="switchGiftSection('exclusive')">حصري</button>
             </div>
 
-            <!-- قسم تفاعلي (بدون أسماء، السعر فقط تحت الهدية) -->
             <div id="giftSectionInteractive" class="shop-tier-content active">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
                     <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🩷', 20)">🩷<br><span style="color:#f472b6">20 نقطة</span></button>
@@ -453,7 +523,6 @@
                 </div>
             </div>
 
-            <!-- قسم حصري (بدون أسماء، سعر موحد 250) -->
             <div id="giftSectionExclusive" class="shop-tier-content">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
                     <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:12px;padding:8px;color:#fff" onclick="sendRoomGift('🎁', 250)">🎁<br><span style="color:#34d399">250 نقطة</span></button>
@@ -885,7 +954,6 @@
     let isCompletedToday = false;
     let clickDebounceTimer = null;
 
-    // تشغيل حركة تناثر الدولارات التلقائية والمستمرة داخل دائرة العداد اليومي
     function initContinuousDollarRain() {
         let emblem = document.getElementById('mainDailyCircleEmblem');
         if(!emblem) return;
@@ -1136,6 +1204,23 @@
         });
         userPresenceRef.onDisconnect().remove();
 
+        // تفعيل استماع المايكات الـ 5 بالريال تايم من الـ Firebase
+        rtdb.ref(`room_mics/${rKey}`).on('value', snap=>{
+            let micsData = snap.val() || {};
+            for(let i=1; i<=5; i++){
+                let btnElem = document.getElementById(`micSlot${i}Btn`);
+                if(!btnElem) continue;
+                let occupant = micsData[i];
+                if(occupant){
+                    btnElem.classList.add('active-speaker');
+                    btnElem.innerHTML = `<img src="${occupant.avatar || 'https://via.placeholder.com/35'}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" title="${occupant.name}">`;
+                } else {
+                    btnElem.classList.remove('active-speaker');
+                    btnElem.innerHTML = `<span>🎤</span>`;
+                }
+            }
+        });
+
         rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
             if(!area) return;
@@ -1185,11 +1270,50 @@
         });
     }
 
+    // صعود وهبوط المايكات الـ 5 بـ Firebase
+    function toggleMicSlot(slotNum){
+        if(!activeRoomKey) return;
+        let micRef = rtdb.ref(`room_mics/${activeRoomKey}/${slotNum}`);
+        micRef.once('value', snap=>{
+            if(snap.exists()){
+                let val = snap.val();
+                if(val.userKey === currentUserKey){
+                    micRef.remove().then(()=>showNeonPopup(`🎙️ تم النزول من المايك ${slotNum}.`));
+                } else {
+                    showNeonPopup("⚠️ عذراً، هذا المايك مشغول حالياً.");
+                }
+            } else {
+                rtdb.ref(`room_mics/${activeRoomKey}`).once('value', allMicsSnap=>{
+                    let alreadyOnMic = false;
+                    allMicsSnap.forEach(m=>{
+                        if(m.val().userKey === currentUserKey) alreadyOnMic = true;
+                    });
+                    if(alreadyOnMic) return showNeonPopup("⚠️ أنت جالس على مايك مسبقاً.");
+
+                    micRef.set({
+                        userKey: currentUserKey,
+                        name: userData.name || 'مستخدم',
+                        avatar: userData.avatar || 'https://via.placeholder.com/35'
+                    }).then(()=>{
+                        micRef.onDisconnect().remove();
+                        showNeonPopup(`🎙️ صعدت إلى المايك رقم ${slotNum} بنجاح والميكروفون يعمل بتميز!`);
+                    });
+                });
+            }
+        });
+    }
+
     function leaveCurrentRoom(){
         if(activeRoomKey && currentUserKey){
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
+            rtdb.ref(`room_mics/${activeRoomKey}`).once('value', snap=>{
+                snap.forEach(m=>{
+                    if(m.val().userKey === currentUserKey) rtdb.ref(`room_mics/${activeRoomKey}/${m.key}`).remove();
+                });
+            });
             rtdb.ref(`room_messages/${activeRoomKey}`).off();
             rtdb.ref(`room_users/${activeRoomKey}`).off();
+            rtdb.ref(`room_mics/${activeRoomKey}`).off();
         }
         activeRoomKey = null;
         navigateTo('roomsScreen');
