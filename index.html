@@ -16,6 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.23.4.js"></script>
     <style>
         *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
         body{margin:0;padding:8px;background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
@@ -134,6 +135,33 @@
         .neon-popup-btn { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border: none; border-radius: 12px; padding: 8px 28px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 0 12px rgba(147,51,234,0.8); }
 
         .system-notification-item { background: linear-gradient(135deg, rgba(30,20,55,0.9), rgba(15,23,42,0.95)); border: 1.2px solid rgba(192,132,252,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: flex-start; gap: 8px; }
+
+        /* Lounge live voice room */
+        .voice-room-shell{background:radial-gradient(circle at 50% 0%,#25346b 0%,#11152e 45%,#080b19 100%);border:1px solid rgba(56,189,248,.35);border-radius:20px;padding:12px;margin-bottom:10px;box-shadow:0 12px 35px #0008}
+        .voice-room-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+        .voice-status{font-size:10px;color:#7dd3fc;background:#0c2944;padding:5px 9px;border-radius:20px}
+        .mic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+        .mic-seat{min-height:112px;background:linear-gradient(160deg,#1d2948,#10172c);border:1px solid #34476d;border-radius:15px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+        .mic-seat.occupied{border-color:#38bdf8;box-shadow:0 0 15px #0ea5e944}
+        .mic-seat.speaking:after{content:'';position:absolute;inset:0;border:2px solid #22d3ee;border-radius:15px;box-shadow:inset 0 0 18px #22d3ee55;pointer-events:none;animation:micPulse 1s infinite}
+        .mic-seat.locked{opacity:.7;border-color:#ef4444}
+        @keyframes micPulse{50%{opacity:.35}}
+        .mic-avatar{width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #64748b;background:#111;margin-bottom:5px}
+        .mic-seat.occupied .mic-avatar{border-color:#38bdf8}
+        .mic-seat-name{font-size:10px;font-weight:bold;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .mic-seat-state{font-size:9px;color:#94a3b8;margin-top:3px}
+        .mic-seat-actions{display:flex;gap:3px;margin-top:5px;z-index:2}
+        .mic-mini-btn{border:0;border-radius:7px;padding:4px 6px;font-size:9px;color:#fff;background:#334155}
+        .mic-mini-btn.take{background:#0284c7}.mic-mini-btn.lock{background:#9f1239}
+        .voice-controls{display:flex;gap:7px;margin-top:11px}
+        .voice-controls button{flex:1;padding:10px 5px;border:0;border-radius:11px;font-weight:bold;color:#fff;background:linear-gradient(135deg,#0284c7,#075985);font-size:11px}
+        .voice-controls button.danger{background:linear-gradient(135deg,#dc2626,#991b1b)}
+        .voice-controls button:disabled{opacity:.45}
+        .room-chat-panel{background:#0c1224;border:1px solid #263552;border-radius:15px;padding:9px;margin:9px 0}
+        .room-chat-line{display:flex;align-items:flex-start;gap:7px;margin:0 0 8px;text-align:right}
+        .room-chat-line img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+        .room-chat-bubble{background:#18243d;border-radius:10px;padding:6px 8px;min-width:0;flex:1;font-size:11px;word-break:break-word}
+        @media(max-width:360px){.mic-grid{gap:5px}.mic-seat{min-height:103px}.mic-avatar{width:39px;height:39px}}
     </style>
 </head>
 <body>
@@ -411,45 +439,40 @@
     </div>
 
     <div id="singleRoomScreen" class="screen-page">
-        <div class="top-nav">
-            <div style="display:flex;align-items:center;gap:8px">
-                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:1px solid #ec4899" alt="صورة الروم">
-                <div>
-                    <h3 id="currentRoomTitleDisplay" style="margin:0;color:#f472b6;font-size:13px">اسم الغرفة</h3>
-                    <span id="currentRoomIdDisplay" style="font-size:9px;color:#94a3b8">ID: ---</span>
-                </div>
+        <div class="voice-room-top">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <img id="currentRoomCoverImg" src="https://via.placeholder.com/35" style="width:42px;height:42px;border-radius:13px;object-fit:cover;border:1px solid #38bdf8" alt="صورة الغرفة">
+                <div style="min-width:0"><h3 id="currentRoomTitleDisplay" style="margin:0;color:#fff;font-size:14px">اسم الغرفة</h3><span id="currentRoomIdDisplay" style="font-size:10px;color:#7dd3fc">ID: ---</span></div>
             </div>
-            <button class="nav-btn back" onclick="leaveCurrentRoom()">⬅️ خروج من الغرفة</button>
+            <button class="nav-btn back" onclick="leaveCurrentRoom()" aria-label="خروج">✕ خروج</button>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
-            <div id="roomMessagesArea" style="height:230px;overflow-y:auto;background:rgba(0,0,0,0.4);padding:8px;border-radius:10px;font-size:11px;border:1px solid rgba(255,255,255,0.08)"></div>
-            <div style="width:90px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px;overflow-y:auto;max-height:230px">
-                <div style="font-size:10px;color:#c084fc;font-weight:bold;text-align:center;margin-bottom:4px">المتواجدون (<span id="roomUsersCount">0</span>)</div>
-                <div id="roomUsersListContainer" style="font-size:10px;color:#cbd5e1"></div>
+        <section class="voice-room-shell">
+            <div class="voice-room-top"><b style="font-size:13px;color:#e0f2fe">🎙️ المايكات الصوتية</b><span class="voice-status" id="voiceConnectionStatus">غير متصل صوتياً</span></div>
+            <div class="mic-grid" id="roomMicGrid">
+                <div class="mic-seat" id="micSeat1"></div><div class="mic-seat" id="micSeat2"></div><div class="mic-seat" id="micSeat3"></div><div class="mic-seat" id="micSeat4"></div><div class="mic-seat" id="micSeat5"></div>
             </div>
+            <div class="voice-controls">
+                <button id="voiceMuteButton" onclick="toggleRoomMute()" disabled>🎤 كتم الصوت</button>
+                <button class="danger" onclick="leaveRoomMic()">مغادرة المايك</button>
+            </div>
+            <div style="font-size:9px;color:#94a3b8;text-align:center;margin-top:8px">اضغط على مايك فارغ لطلب الصعود. المايكات المقفلة لا تقبل طلبات.</div>
+        </section>
+        <div class="room-chat-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><b style="font-size:12px;color:#7dd3fc">💬 الدردشة العامة</b><span style="font-size:10px;color:#94a3b8">المتواجدون: <b id="roomUsersCount">0</b></span></div>
+            <div id="roomUsersListContainer" style="display:flex;gap:5px;overflow-x:auto;margin-bottom:7px;font-size:10px;color:#cbd5e1"></div>
+            <div id="roomMessagesArea" style="height:180px;overflow-y:auto;padding:6px;font-size:11px"></div>
+            <div style="display:flex;gap:5px;align-items:center"><input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة..." style="margin:0;flex:1"><button class="action-btn btn-purple" style="width:65px;height:38px" onclick="sendRoomChatMessage()">إرسال</button></div>
         </div>
-
-        <div style="background:rgba(15,23,42,0.95);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px;margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <span style="font-size:11px;color:#f472b6;font-weight:bold">🎁 صندوق الهدايا السريع:</span>
-                <select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px">
-                    <option value="all">الجميع (الشات العام)</option>
-                </select>
-            </div>
+        <div style="background:rgba(15,23,42,.95);border:1px solid rgba(56,189,248,.25);border-radius:12px;padding:8px;margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;color:#7dd3fc;font-weight:bold">🎁 صندوق الهدايا</span><select id="giftTargetSelect" class="select-box" style="width:130px;margin:0;padding:4px;font-size:10px"><option value="all">الجميع</option></select></div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🩷 قلب وردي', 20)">🩷 قلب وردي<br><span style="color:#f472b6">20 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🌹 وردة', 25)">🌹 وردة<br><span style="color:#f472b6">25 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🐱 قطة', 30)">🐱 قطة<br><span style="color:#f472b6">30 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🎸 قيتار', 50)">🎸 قيتار<br><span style="color:#f472b6">50 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🇮🇶 علم العراق', 100)">🇮🇶 علم العراق<br><span style="color:#f472b6">100 ن</span></button>
-                <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(236,72,153,0.3);font-size:10px;padding:6px;color:#fff" onclick="sendRoomGift('🏰 قصر الملكة', 5000)">🏰 قصر الملكة<br><span style="color:#f472b6">5000 ن</span></button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('🇮🇶 علم العراق',100)">🇮🇶 العلم<br>100 ن</button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('🌹 وردة',25)">🌹 وردة<br>25 ن</button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('🐱 قطة',30)">🐱 قطة<br>30 ن</button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('🩷 قلب وردي',30)">🩷 قلب<br>30 ن</button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('🏰 قصر الملكة',5000)">🏰 قصر الملكة<br>5000 ن</button>
+                <button class="action-btn" style="background:#18243d;color:#fff;font-size:10px;padding:6px" onclick="sendRoomGift('💞 طائرات الحب',3000)">💞 طائرات الحب<br>3000 ن</button>
             </div>
-        </div>
-
-        <div style="display:flex;gap:4px;align-items:center">
-            <input type="text" id="roomChatInputMsg" class="input-box" placeholder="اكتب رسالة للغرفة..." style="margin:0;flex:1">
-            <button class="action-btn btn-purple" style="width:65px;padding:0;height:38px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="sendRoomChatMessage()">إرسال</button>
         </div>
     </div>
 
@@ -842,6 +865,11 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
+    // إعدادات الصوت: ضع App ID الخاص بمشروع Agora ورابط Cloud Function لإصدار Token. لا تضع App Certificate داخل HTML.
+    const LOUNGE_AGORA_APP_ID = 'YOUR_AGORA_APP_ID';
+    const LOUNGE_AGORA_TOKEN_URL = 'YOUR_FIREBASE_FUNCTION_TOKEN_URL';
+    let loungeAgoraClient = null, loungeLocalAudioTrack = null, loungeCurrentMic = null, loungeMuted = false, loungeAgoraUid = null;
+    let roomMicListener = null, roomBanListener = null;
     let activeViewingPostKey = null;
 
     const fullQuestionsPool = [
@@ -1063,59 +1091,136 @@
     }
 
     function joinRoom(rKey, roomId, roomName, cover){
+        if(activeRoomKey && activeRoomKey !== rKey) leaveCurrentRoom();
         activeRoomKey = rKey;
         document.getElementById('currentRoomTitleDisplay').innerText = roomName;
         document.getElementById('currentRoomIdDisplay').innerText = `ID: ${roomId}`;
-        document.getElementById('currentRoomCoverImg').src = cover;
+        document.getElementById('currentRoomCoverImg').src = cover || 'https://via.placeholder.com/42';
+        document.getElementById('roomMessagesArea').innerHTML = '';
         navigateTo('singleRoomScreen');
 
-        let userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
-        userPresenceRef.set({
-            name: userData.name || 'مستخدم',
-            customId: userData.customId || '---'
-        });
+        const userPresenceRef = rtdb.ref(`room_users/${rKey}/${currentUserKey}`);
+        userPresenceRef.set({name:userData.name||'مستخدم',customId:userData.customId||'---',avatar:userData.avatar||'',joinedAt:Date.now()});
         userPresenceRef.onDisconnect().remove();
-
-        rtdb.ref(`room_messages/${rKey}`).on('value', snap=>{
-            let area = document.getElementById('roomMessagesArea');
-            if(!area) return;
-            if(!snap.exists()){ area.innerHTML = "أهلاً بك في الغرفة! ابدأ المحادثة أو أرسل الهدايا."; return; }
-            let h = '';
-            snap.forEach(m=>{
-                let msg = m.val();
-                h += `<div style="margin-bottom:6px;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</div>`;
-            });
-            area.innerHTML = h;
-            area.scrollTop = area.scrollHeight;
+        rtdb.ref(`room_messages/${rKey}`).limitToLast(100).on('value', snap=>{
+            const area=document.getElementById('roomMessagesArea'); if(!area)return;
+            if(!snap.exists()){area.innerHTML='<div style="color:#94a3b8;text-align:center;padding:20px">أهلاً بك في الغرفة</div>';return;}
+            let h=''; snap.forEach(m=>{const msg=m.val();const av=msg.senderAvatar||'https://via.placeholder.com/26';h+=`<div class="room-chat-line"><img src="${av}" onerror="this.src='https://via.placeholder.com/26'"><div class="room-chat-bubble"><b style="color:#7dd3fc">${msg.senderName||'مستخدم'}</b><div>${msg.text||''}</div></div></div>`;});
+            area.innerHTML=h; area.scrollTop=area.scrollHeight;
         });
-
         rtdb.ref(`room_users/${rKey}`).on('value', snap=>{
-            let uList = document.getElementById('roomUsersListContainer');
-            let targetSelect = document.getElementById('giftTargetSelect');
-            let uCountSpan = document.getElementById('roomUsersCount');
-            if(!uList || !targetSelect) return;
-            let count = 0, uHtml = '', selectHtml = '<option value="all">الجميع (الشات العام)</option>';
-            snap.forEach(u=>{
-                let dat = u.val();
-                let uKey = u.key;
-                count++;
-                uHtml += `<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">🟢 ${dat.name}</div>`;
-                if(uKey !== currentUserKey) selectHtml += `<option value="${uKey}">${dat.name}</option>`;
-            });
-            uList.innerHTML = uHtml;
-            uCountSpan.innerText = count;
-            targetSelect.innerHTML = selectHtml;
+            const uList=document.getElementById('roomUsersListContainer'),targetSelect=document.getElementById('giftTargetSelect');
+            let count=0, usersHtml='', selectHtml='<option value="all">الجميع</option>';
+            snap.forEach(u=>{const dat=u.val()||{},uKey=u.key;count++;usersHtml+=`<span style="white-space:nowrap;background:#18243d;padding:4px 7px;border-radius:12px">${dat.name||'مستخدم'}</span>`;if(uKey!==currentUserKey)selectHtml+=`<option value="${uKey}">${dat.name||'مستخدم'}</option>`;});
+            if(uList)uList.innerHTML=usersHtml;if(targetSelect)targetSelect.innerHTML=selectHtml;document.getElementById('roomUsersCount').innerText=count;
         });
+        roomMicListener = rtdb.ref(`room_mics/${rKey}`); roomMicListener.on('value', renderRoomMics);
+        roomBanListener = rtdb.ref(`room_bans/${rKey}/${currentUserKey}`);
+        roomBanListener.on('value', snap=>{if(snap.exists() && Number(snap.val().until||0)>Date.now()){leaveRoomMic();showNeonPopup('🚫 أنت محظور من استخدام مايكات هذه الغرفة لمدة 24 ساعة.');}});
+        rtdb.ref(`room_mics/${rKey}`).once('value', snap=>{if(!snap.exists()){let init={};for(let i=1;i<=5;i++)init[i]={locked:false};rtdb.ref(`room_mics/${rKey}`).update(init);}});
+        ensureAgoraClient().catch(e=>{document.getElementById('voiceConnectionStatus').innerText='الصوت بانتظار إعداد الخادم';});
     }
 
-    function leaveCurrentRoom(){
-        if(activeRoomKey && currentUserKey){
-            rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
-            rtdb.ref(`room_messages/${activeRoomKey}`).off();
-            rtdb.ref(`room_users/${activeRoomKey}`).off();
-        }
-        activeRoomKey = null;
-        navigateTo('roomsScreen');
+    function renderRoomMics(snap){
+        const owner = (rtdb && activeRoomKey) ? false : false;
+        const roomOwnerRef = activeRoomKey ? `rooms/${activeRoomKey}/creatorKey` : '';
+        const draw = ownerKey => {
+            const isOwner = ownerKey === currentUserKey;
+            for(let i=1;i<=5;i++){
+                const seat=document.getElementById(`micSeat${i}`);if(!seat)continue;
+                const data=snap.child(String(i)).val()||{};const occupied=!!data.userKey;const locked=!!data.locked;
+                seat.className='mic-seat'+(occupied?' occupied':'')+(locked?' locked':'');
+                const avatar=data.avatar||'https://via.placeholder.com/45';
+                seat.innerHTML=`<img class="mic-avatar" src="${avatar}" onerror="this.src='https://via.placeholder.com/45'"><div class="mic-seat-name">${occupied?(data.name||'مستخدم'):'مايك '+i}</div><div class="mic-seat-state">${occupied?(data.muted?'مكتوم':'🎙️ مباشر'):(locked?'🔒 مقفل':'متاح')}</div><div class="mic-seat-actions">${!occupied&&!locked?`<button class="mic-mini-btn take" onclick="requestRoomMic(${i})">صعود</button>`:''}${isOwner?`<button class="mic-mini-btn lock" onclick="toggleRoomMicLock(${i},${!locked})">${locked?'فتح':'قفل'}</button>${occupied?`<button class="mic-mini-btn" onclick="ownerRemoveRoomMic(${i},'${data.userKey||''}')">إخراج</button>`:''}`:''}</div>`;
+            }
+        };
+        rtdb.ref(roomOwnerRef).once('value',s=>draw(s.val()));
+    }
+
+    async function getAgoraRoomToken(role, uid){
+        if(!LOUNGE_AGORA_APP_ID || LOUNGE_AGORA_APP_ID==='YOUR_AGORA_APP_ID' || !LOUNGE_AGORA_TOKEN_URL || LOUNGE_AGORA_TOKEN_URL==='YOUR_FIREBASE_FUNCTION_TOKEN_URL') throw new Error('يلزم إعداد Agora App ID ورابط خدمة Token الآمنة أولاً.');
+        const response=await fetch(LOUNGE_AGORA_TOKEN_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(auth.currentUser?await auth.currentUser.getIdToken(): '')},body:JSON.stringify({roomId:activeRoomKey,uid:uid||0,role})});
+        if(!response.ok)throw new Error('تعذر الحصول على تصريح الصوت من الخادم.');
+        return await response.json();
+    }
+
+    async function ensureAgoraClient(){
+        if(loungeAgoraClient)return; if(!window.AgoraRTC)throw new Error('تعذر تحميل خدمة الصوت.');
+        loungeAgoraClient=AgoraRTC.createClient({mode:'live',codec:'vp8'});
+        loungeAgoraClient.setClientRole('audience');
+        loungeAgoraClient.on('user-published',async(user,mediaType)=>{await loungeAgoraClient.subscribe(user,mediaType);if(mediaType==='audio')user.audioTrack.play();});
+        loungeAgoraClient.on('user-unpublished',()=>{});
+        const data=await getAgoraRoomToken('audience');
+        loungeAgoraUid=data.uid||null;
+        await loungeAgoraClient.join(LOUNGE_AGORA_APP_ID, String(activeRoomKey), data.token, loungeAgoraUid);
+        document.getElementById('voiceConnectionStatus').innerText='متصل للاستماع';
+    }
+
+    async function requestRoomMic(micNo){
+        if(!activeRoomKey)return;
+        if(!confirm('هل تريد الصعود إلى المايك رقم '+micNo+'؟'))return;
+        try{
+            const ban=await rtdb.ref(`room_bans/${activeRoomKey}/${currentUserKey}`).once('value');if(ban.exists()&&Number(ban.val().until||0)>Date.now())return showNeonPopup('🚫 لا يمكنك استخدام المايكات حالياً.');
+            const seatRef=rtdb.ref(`room_mics/${activeRoomKey}/${micNo}`);
+            const claim=await seatRef.transaction(v=>{v=v||{};if(v.locked||v.userKey)return;return {...v,userKey:currentUserKey,name:userData.name||'مستخدم',avatar:userData.avatar||'',muted:false,joinedAt:Date.now()};});
+            if(!claim.committed)return showNeonPopup('هذا المايك مشغول أو مقفل.');
+            loungeCurrentMic=micNo; await publishRoomAudio();
+        }catch(e){await seatRefSafeClear(micNo);showNeonPopup('تعذر تشغيل الصوت: '+e.message);}
+    }
+
+    async function publishRoomAudio(){
+        try{
+            if(!loungeAgoraClient)await ensureAgoraClient();
+            const tokenData=await getAgoraRoomToken('speaker', loungeAgoraUid);
+            if(tokenData.uid && loungeAgoraUid && String(tokenData.uid)!==String(loungeAgoraUid))throw new Error('خادم التصريح أعاد UID مختلفاً.');
+            if(tokenData.token)await loungeAgoraClient.renewToken(tokenData.token);
+            await loungeAgoraClient.setClientRole('host');
+            loungeLocalAudioTrack=await AgoraRTC.createMicrophoneAudioTrack({encoderConfig:'speech_standard'});
+            await loungeAgoraClient.publish([loungeLocalAudioTrack]);
+            document.getElementById('voiceMuteButton').disabled=false;document.getElementById('voiceConnectionStatus').innerText='أنت على المايك '+loungeCurrentMic;
+        }catch(e){await seatRefSafeClear(loungeCurrentMic);loungeCurrentMic=null;throw e;}
+    }
+
+    async function toggleRoomMute(){
+        if(!loungeLocalAudioTrack)return; loungeMuted=!loungeMuted;loungeLocalAudioTrack.setEnabled(!loungeMuted);
+        document.getElementById('voiceMuteButton').innerText=loungeMuted?'🔇 إلغاء الكتم':'🎤 كتم الصوت';
+        if(activeRoomKey&&loungeCurrentMic)rtdb.ref(`room_mics/${activeRoomKey}/${loungeCurrentMic}/muted`).set(loungeMuted);
+    }
+
+    async function seatRefSafeClear(micNo){
+        if(!activeRoomKey||!micNo)return;const ref=rtdb.ref(`room_mics/${activeRoomKey}/${micNo}`);await ref.transaction(v=>v&&v.userKey===currentUserKey?{...v,userKey:null,name:null,avatar:null,muted:false}:v);
+    }
+
+    async function leaveRoomMic(){
+        if(loungeLocalAudioTrack){try{loungeLocalAudioTrack.stop();loungeLocalAudioTrack.close();}catch(e){}loungeLocalAudioTrack=null;}
+        if(loungeAgoraClient){try{await loungeAgoraClient.unpublish();await loungeAgoraClient.setClientRole('audience');}catch(e){}}
+        if(loungeCurrentMic)await seatRefSafeClear(loungeCurrentMic);loungeCurrentMic=null;loungeMuted=false;
+        const b=document.getElementById('voiceMuteButton');if(b){b.disabled=true;b.innerText='🎤 كتم الصوت';}
+        const st=document.getElementById('voiceConnectionStatus');if(st)st.innerText=loungeAgoraClient?'متصل للاستماع':'غير متصل صوتياً';
+    }
+
+    async function toggleRoomMicLock(micNo,lockIt){
+        const owner=await rtdb.ref(`rooms/${activeRoomKey}/creatorKey`).once('value');if(owner.val()!==currentUserKey)return;
+        const ref=rtdb.ref(`room_mics/${activeRoomKey}/${micNo}`);await ref.transaction(v=>{v=v||{};return {...v,locked:!!lockIt};});
+    }
+
+    async function ownerRemoveRoomMic(micNo,targetKey){
+        const owner=await rtdb.ref(`rooms/${activeRoomKey}/creatorKey`).once('value');if(owner.val()!==currentUserKey||!targetKey)return;
+        if(!confirm('إخراج المستخدم من المايك؟'))return;
+        await rtdb.ref(`room_mics/${activeRoomKey}/${micNo}`).update({userKey:null,name:null,avatar:null,muted:false});
+        if(targetKey!==currentUserKey)await rtdb.ref(`room_bans/${activeRoomKey}/${targetKey}`).set({until:Date.now()+86400000,by:currentUserKey});
+        else await leaveRoomMic();
+    }
+
+    async function leaveCurrentRoom(){
+        if(!activeRoomKey)return;const oldRoom=activeRoomKey;
+        if(!confirm('هل تريد الخروج من الغرفة؟'))return;
+        await leaveRoomMic();
+        rtdb.ref(`room_users/${oldRoom}/${currentUserKey}`).remove();
+        rtdb.ref(`room_messages/${oldRoom}`).off();rtdb.ref(`room_users/${oldRoom}`).off();
+        if(roomMicListener)roomMicListener.off();if(roomBanListener)roomBanListener.off();
+        if(loungeAgoraClient){try{await loungeAgoraClient.leave();}catch(e){}loungeAgoraClient=null;}
+        activeRoomKey=null;navigateTo('roomsScreen');
     }
 
     function sendRoomChatMessage(){
@@ -1124,6 +1229,7 @@
         rtdb.ref(`room_messages/${activeRoomKey}`).push({
             senderKey: currentUserKey,
             senderName: userData.name || 'مستخدم',
+            senderAvatar: userData.avatar || '',
             text: txt,
             timestamp: Date.now()
         }).then(()=>{
