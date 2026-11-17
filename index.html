@@ -14,7 +14,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
-        *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
+        *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;-webkit-tap-highlight-color:transparent}
+        button,.nav-btn,.grid-btn-item,.bottom-nav-item,.input-box,.select-box{transition:background-color 0.2s ease,border-color 0.2s ease,box-shadow 0.2s ease,transform 0.2s ease}
         body{margin:0;padding:8px;background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
         .container{width:100%;max-width:420px;padding-bottom:85px}
         .screen-page{display:none;width:100%;min-height:85vh;flex-direction:column;justify-content:flex-start}
@@ -35,7 +36,7 @@
         @keyframes darkHorrorWave { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         #authScreen.screen-page.active { background: linear-gradient(-45deg, #020617, #0f172a, #3b0764, #18181b, #000000); background-size: 500% 500%; -webkit-animation: darkHorrorWave 10s ease infinite; animation: darkHorrorWave 10s ease infinite; justify-content: center; align-items: center; border-radius: 20px; }
 
-        .auth-card{background:rgba(15,23,42,0.95);-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px);border:1.5px solid rgba(168,85,247,0.6);border-radius:24px;padding:24px 18px;box-shadow:0 30px 60px rgba(0,0,0,0.95), 0 0 30px rgba(168,85,247,0.3);text-align:center;width:100%;position:relative;z-index:10}
+        .auth-card{background:rgba(15,23,42,0.95);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);border:1.5px solid rgba(168,85,247,0.6);border-radius:24px;padding:24px 18px;box-shadow:0 30px 60px rgba(0,0,0,0.95), 0 0 30px rgba(168,85,247,0.3);text-align:center;width:100%;position:relative;z-index:10}
         
         @-webkit-keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); } 50% { -webkit-transform: scale(1.05); transform: scale(1.05); -webkit-filter: drop-shadow(0 0 25px rgba(239,68,68,0.9)) brightness(1.2); filter: drop-shadow(0 0 25px rgba(239,68,68,0.9)) brightness(1.2); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); } }
         @keyframes horrorGlow { 0% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); } 50% { -webkit-transform: scale(1.05); transform: scale(1.05); -webkit-filter: drop-shadow(0 0 25px rgba(239,68,68,0.9)) brightness(1.2); filter: drop-shadow(0 0 25px rgba(239,68,68,0.9)) brightness(1.2); } 100% { -webkit-transform: scale(1); transform: scale(1); -webkit-filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)); } }
@@ -98,7 +99,7 @@
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
-        .bottom-nav-bar{position:fixed;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:100%;max-width:420px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1.5px solid rgba(168,85,247,0.4);display:flex;justify-content:space-around;align-items:center;padding:10px 8px;z-index:999;padding-bottom:calc(10px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,0.8)}
+        .bottom-nav-bar{position:fixed;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:100%;max-width:420px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-top:1.5px solid rgba(168,85,247,0.4);display:flex;justify-content:space-around;align-items:center;padding:10px 8px;z-index:999;padding-bottom:calc(10px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,0.8)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;font-size:10px;cursor:pointer;gap:3px;font-weight:600}
         .bottom-nav-item.active{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.8)}
         .bottom-nav-item span{font-size:18px}
@@ -125,7 +126,7 @@
         
         .wheel-box{width:140px;height:140px;border-radius:50%;border:5px solid #c084fc;margin:8px auto;position:relative;overflow:hidden;-webkit-transition:-webkit-transform 5s cubic-bezier(0.1,0.9,0.1,1);transition:transform 5s cubic-bezier(0.1,0.9,0.1,1);background:conic-gradient(#ef4444 0deg 60deg,#3b82f6 60deg 120deg,#10b981 120deg 180deg,#9333ea 180deg 240deg,#8b5cf6 240deg 300deg,#ec4899 300deg 360deg);box-shadow:0 0 18px rgba(192,132,252,0.7)}
         .wheel-pointer{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:15px solid #fff;margin:0 auto;margin-bottom:-6px;z-index:10;position:relative;filter:drop-shadow(0 0 4px #fff)}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:1000;padding:15px}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1000;padding:15px}
         .modal-content{background:linear-gradient(135deg, #130926, #070411);border:1.5px solid rgba(192,132,252,0.5);border-radius:20px;width:100%;max-width:380px;padding:16px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.9), 0 0 25px rgba(168,85,247,0.3)}
         
         .admin-badge{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;padding:6px 14px;border-radius:12px;font-size:11px;font-weight:bold;border:1px solid #f87171;cursor:pointer;display:none;margin-bottom:8px;box-shadow:0 0 15px rgba(239,68,68,0.7)}
@@ -135,7 +136,7 @@
         .withdraw-method-btn { background: rgba(30,20,55,0.8); border: 1.2px solid rgba(192,132,252,0.3); border-radius: 8px; padding: 8px 4px; font-size: 10px; font-weight: bold; color: #cbd5e1; cursor: pointer; text-align: center; }
         .withdraw-method-btn.active { background: linear-gradient(135deg, #9333ea, #c084fc); color: #fff; border-color: #c084fc; box-shadow: 0 0 12px rgba(192,132,252,0.7); }
 
-        .neon-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .neon-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
         .neon-popup-card { width: 100%; max-width: 320px; background: #0b0617; border: 2px solid #a855f7; border-radius: 22px; padding: 30px 20px 18px 20px; text-align: center; position: relative; box-shadow: 0 0 30px rgba(168,85,247,0.7), inset 0 0 15px rgba(168,85,247,0.3); }
         .neon-popup-icon-circle { width: 62px; height: 62px; background: #0b0617; border: 2.2px solid #c084fc; border-radius: 50%; position: absolute; top: -33px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(192,132,252,0.9); }
         .neon-popup-msg { color: #fff; font-size: 12px; font-weight: bold; line-height: 1.5; margin-bottom: 18px; margin-top: 10px; word-break: break-word; }
@@ -888,6 +889,13 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
+    let realtimeSyncUid = '';
+    let realtimeUserRef = null, realtimeUserHandler = null;
+    let realtimeSettingsRef = null, realtimeSettingsHandler = null;
+    let notificationsRef = null, notificationsHandler = null;
+    let loungePostsRef = null, loungePostsHandler = null;
+    let activeChatRef = null, activeChatHandler = null;
+    let avatarNeedsSave = false;
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -910,6 +918,33 @@
     let currentQuestion = null;
     let isCompletedToday = false;
     let clickDebounceTimer = null;
+
+    function compressImageFile(file, maxSize = 800, quality = 0.68) {
+        return new Promise((resolve, reject) => {
+            if (!file || !file.type || !file.type.startsWith('image/')) return reject(new Error('ملف الصورة غير صالح'));
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error('تعذر قراءة الصورة'));
+            reader.onload = () => {
+                const image = new Image();
+                image.onerror = () => reject(new Error('تعذر معالجة الصورة'));
+                image.onload = () => {
+                    const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+                    const width = Math.max(1, Math.round(image.width * scale));
+                    const height = Math.max(1, Math.round(image.height * scale));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const context = canvas.getContext('2d');
+                    if (!context) return reject(new Error('تعذر تجهيز الصورة'));
+                    context.drawImage(image, 0, 0, width, height);
+                    try { resolve(canvas.toDataURL('image/jpeg', quality)); }
+                    catch (error) { reject(error); }
+                };
+                image.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     function initWindEffectInCircle() {
         let emblem = document.getElementById('mainDailyCircleEmblem');
@@ -1056,60 +1091,56 @@
             };
 
             if(coverFile){
-                let reader = new FileReader();
-                reader.onload = (e)=> createAction(e.target.result);
-                reader.readAsDataURL(coverFile);
+                compressImageFile(coverFile, 420, 0.68).then(createAction).catch(()=>showNeonPopup('❌ تعذر تجهيز صورة الغرفة.'));
             } else {
                 createAction('');
             }
         });
     }
 
-    // تحسين سرعة تحميل الغرف وحل مشكلة الثقل وعدم الفتح
+    // تحميل آخر 50 غرفة فقط، مع جلب غرفة المستخدم إن كانت أقدم من القائمة.
     function loadRoomsList(){
         if(!rtdb) return;
-        rtdb.ref('rooms').once('value', snap=>{
+        const roomsRef = rtdb.ref('rooms');
+        Promise.all([
+            roomsRef.limitToLast(50).once('value'),
+            roomsRef.orderByChild('creatorKey').equalTo(currentUserKey).limitToFirst(1).once('value')
+        ]).then(([recentSnap, ownSnap])=>{
             let container = document.getElementById('roomsListContainer');
             let createSection = document.getElementById('createRoomSectionCard');
             if(!container) return;
-
-            let userHasRoom = false;
+            const rooms = new Map();
+            recentSnap.forEach(item=>rooms.set(item.key, item.val()));
+            ownSnap.forEach(item=>rooms.set(item.key, item.val()));
+            let userHasRoom = ownSnap.exists();
             let html = '';
-            
-            snap.forEach(item=>{
-                let r = item.val();
-                let rKey = item.key;
+            rooms.forEach((r, rKey)=>{
+                if(!r || r.isLoungePost) return;
                 if(r.creatorKey === currentUserKey) userHasRoom = true;
-
                 let deleteAdminBtn = '';
                 if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
                     deleteAdminBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:10px;margin-top:4px;" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف الغرفة (إدارة) 🗑️</button>`;
                 }
-
+                const cover = r.cover || 'https://via.placeholder.com/85';
                 html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right; margin-bottom:6px;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
+                        <img loading="lazy" src="${cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
                         <div>
-                            <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
-                            <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 معرف الغرفة: ${r.roomId} | المنشئ: ${r.creatorName}</div>
+                            <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName || 'غرفة'}</div>
+                            <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 معرف الغرفة: ${r.roomId || '---'} | المنشئ: ${r.creatorName || 'مستخدم'}</div>
                             ${deleteAdminBtn}
                         </div>
                     </div>
                     <div>
-                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
+                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId || ''}', '${r.roomName || 'غرفة'}', '${cover}')">دخول 🚪</button>
                     </div>
                 </div>`;
             });
-
-            if(createSection){
-                createSection.style.display = userHasRoom ? 'none' : 'block';
-            }
-
-            if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد غرف محادثة متاحة حالياً.</div>";
-            } else {
-                container.innerHTML = html;
-            }
+            if(createSection) createSection.style.display = userHasRoom ? 'none' : 'block';
+            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد غرف محادثة متاحة حالياً.</div>";
+        }).catch(()=>{
+            const container = document.getElementById('roomsListContainer');
+            if(container) container.innerHTML = "<div style='text-align:center;color:#ef4444;padding:20px;font-size:11px;'>تعذر تحميل الغرف، حاول مرة أخرى.</div>";
         });
     }
 
@@ -1694,17 +1725,23 @@
         };
 
         if(imgFile){
-            let reader = new FileReader();
-            reader.onload = (e)=> createPostAction(e.target.result);
-            reader.readAsDataURL(imgFile);
+            compressImageFile(imgFile, 900, 0.66).then(createPostAction).catch(()=>showNeonPopup('❌ تعذر تجهيز صورة المنشور.'));
         } else {
             createPostAction('');
         }
     }
 
+    function stopLoungePostsListener(){
+        if(loungePostsRef && loungePostsHandler) loungePostsRef.off('value', loungePostsHandler);
+        loungePostsRef = null;
+        loungePostsHandler = null;
+    }
+
     function loadLoungePosts(){
         if(!rtdb) return;
-        rtdb.ref('rooms').limitToLast(50).on('value', snap=>{
+        stopLoungePostsListener();
+        loungePostsRef = rtdb.ref('rooms').limitToLast(50);
+        loungePostsHandler = snap=>{
             let container = document.getElementById('loungePostsContainer');
             if(!container) return;
             if(!snap.exists()){
@@ -1723,12 +1760,12 @@
                 let deleteBtn = (isMyPost || isAdmin) ? 
                     `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
 
-                let imgHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
+                let imgHtml = p.image ? `<img loading="lazy" src="${p.image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
 
                 html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                         <div style="display:flex; align-items:center; gap:6px;">
-                            <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #c084fc;" alt="صورة">
+                            <img loading="lazy" src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #c084fc;" alt="صورة">
                             <div>
                                 <b style="color:#fff; font-size:12px;">${p.authorName}</b>
                                 <div style="font-size:8px; color:#94a3b8;">معرف: ${p.authorId} | ${dateStr}</div>
@@ -1745,7 +1782,8 @@
                 </div>`;
             });
             container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً.</div>";
-        });
+        };
+        loungePostsRef.on('value', loungePostsHandler);
     }
 
     function likeLoungePost(postKey){
@@ -1831,13 +1869,20 @@
                         try{ localStorage.setItem('dinarUserKey', currentUserKey); }catch(e){}
                         initRealtimeSync();
                         navigateTo('mainScreen');
-                    } else { navigateTo('authScreen'); }
+                    } else {
+                        stopRealtimeSync();
+                        currentEmail=''; currentUserKey='';
+                        base64Image=''; avatarNeedsSave=false;
+                        navigateTo('authScreen');
+                    }
                 });
             } else { navigateTo('authScreen'); }
         }, 300);
     });
 
     function navigateTo(screenId){
+        const currentScreen = document.querySelector('.screen-page.active');
+        if(currentScreen && currentScreen.id === 'loungePostsScreen' && screenId !== 'loungePostsScreen') stopLoungePostsListener();
         document.querySelectorAll('.screen-page').forEach(p=>p.classList.remove('active'));
         const t=document.getElementById(screenId);if(t)t.classList.add('active');
         if(screenId==='quizScreen') initDailyQuizSession();
@@ -1912,7 +1957,7 @@
             btn.disabled=false;btn.innerText="تأكيد الحساب ✨";
             currentUserKey = userCredential.user.uid;
             let defaultName=email.split('@')[0],assignedId=(email==='msaftwtn@gmail.com')?'1':Math.floor(100000+Math.random()*900000).toString();
-            const newUser={name:defaultName,email:email,password:pass,customId:assignedId,points:0,gems:0,bio:'',lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0,lastOutOfOrderTime:0};
+            const newUser={name:defaultName,email:email,customId:assignedId,points:0,gems:0,bio:'',lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0,lastOutOfOrderTime:0};
             rtdb.ref('users/'+currentUserKey).set(newUser).then(()=>{
                 currentEmail=email;
                 try{localStorage.setItem('dinarUserKey',currentUserKey);}catch(e){}
@@ -1929,12 +1974,41 @@
         });
     }
 
+    function stopRealtimeSync(){
+        if(realtimeUserRef && realtimeUserHandler) realtimeUserRef.off('value', realtimeUserHandler);
+        if(realtimeSettingsRef && realtimeSettingsHandler) realtimeSettingsRef.off('value', realtimeSettingsHandler);
+        if(notificationsRef && notificationsHandler) notificationsRef.off('value', notificationsHandler);
+        realtimeUserRef = realtimeUserHandler = null;
+        realtimeSettingsRef = realtimeSettingsHandler = null;
+        notificationsRef = notificationsHandler = null;
+        realtimeSyncUid = '';
+        stopLoungePostsListener();
+        if(activeChatRef && activeChatHandler) activeChatRef.off('value', activeChatHandler);
+        activeChatRef = activeChatHandler = null;
+        if(activeRoomKey && currentUserKey){
+            rtdb.ref(`room_messages/${activeRoomKey}`).off();
+            rtdb.ref(`room_users/${activeRoomKey}`).off();
+            rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).onDisconnect().cancel();
+            rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
+        }
+        activeRoomKey = null;
+    }
+
     function initRealtimeSync(){
-        if(!currentUserKey||!rtdb)return;
-        rtdb.ref('users/'+currentUserKey).on('value',snap=>{
+        if(!currentUserKey || !rtdb) return;
+        if(realtimeSyncUid === currentUserKey && realtimeUserRef && realtimeSettingsRef) return;
+        stopRealtimeSync();
+        realtimeSyncUid = currentUserKey;
+
+        realtimeUserRef = rtdb.ref('users/'+currentUserKey);
+        realtimeUserHandler = snap=>{
             if(snap.exists()){
-                userData=snap.val();
-                if(userData.isBanned&&currentEmail!=='msaftwtn@gmail.com'){
+                userData=snap.val() || {};
+                if(Object.prototype.hasOwnProperty.call(userData, 'password')){
+                    delete userData.password;
+                    rtdb.ref('users/'+currentUserKey+'/password').remove();
+                }
+                if(userData.isBanned && currentEmail!=='msaftwtn@gmail.com'){
                     showNeonPopup("🚫 تم تجميد حسابك.");
                     handleLogout();
                     return;
@@ -1944,13 +2018,17 @@
                 if(!userData.customId||!/^\d+$/.test(userData.customId)){userData.customId=Math.floor(100000+Math.random()*900000).toString();rtdb.ref('users/'+currentUserKey).update({customId:userData.customId});}
                 updateUI();checkActiveTimer();checkAndTriggerDailyCounterNotification();
             }
-        });
-        rtdb.ref('app_settings').on('value',snap=>{
+        };
+        realtimeUserRef.on('value', realtimeUserHandler);
+
+        realtimeSettingsRef = rtdb.ref('app_settings');
+        realtimeSettingsHandler = snap=>{
             globalAppSettings=snap.exists()?snap.val():{withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في منصة Lounge الرسمية.'};
             let tickerElem = document.getElementById('tickerTextDisplay');
             if(tickerElem && globalAppSettings.tickerText) tickerElem.innerText = globalAppSettings.tickerText;
-        });
-        loadNotifications();loadFriendSystem();
+        };
+        realtimeSettingsRef.on('value', realtimeSettingsHandler);
+        loadNotifications();
     }
 
     function updateUI(){
@@ -2055,11 +2133,18 @@
 
     function saveToDB(){
         if(!currentUserKey||!rtdb)return Promise.resolve();
-        return rtdb.ref('users/'+currentUserKey).update(userData);
+        const payload = {...userData};
+        delete payload.password;
+        if(!avatarNeedsSave) delete payload.avatar;
+        return rtdb.ref('users/'+currentUserKey).update(payload).then(()=>{
+            if(avatarNeedsSave) avatarNeedsSave = false;
+        });
     }
     
     function handleLogout(){
         if(timerInterval) clearInterval(timerInterval);
+        stopRealtimeSync();
+        base64Image=''; avatarNeedsSave=false;
         try{ localStorage.removeItem('dinarUserKey'); }catch(e){}
         if(auth) auth.signOut();
         currentEmail='';currentUserKey='';
@@ -2337,7 +2422,9 @@
 
     function loadNotifications(){
         if(!currentUserKey||!rtdb)return;
-        rtdb.ref(`notifications/${currentUserKey}`).limitToLast(20).on('value',snap=>{
+        if(notificationsRef && notificationsHandler) notificationsRef.off('value', notificationsHandler);
+        notificationsRef = rtdb.ref(`notifications/${currentUserKey}`).limitToLast(20);
+        notificationsHandler = snap=>{
             let c=document.getElementById('notificationsContainer'),b=document.getElementById('mainNotificationBadge');if(!c)return;
             if(!snap.exists()){c.innerHTML="لا توجد إشعارات جديدة";if(b)b.style.display='none';return;}
             if(b)b.style.display='block';let html='';
@@ -2348,7 +2435,8 @@
                 </div>`;
             });
             c.innerHTML=html;
-        });
+        };
+        notificationsRef.on('value', notificationsHandler);
     }
 
     function clearAllNotifications(){if(!currentUserKey||!rtdb||!confirm("⚠️ مسح جميع الإشعارات؟"))return;rtdb.ref(`notifications/${currentUserKey}`).remove().then(()=>{document.getElementById('notificationsContainer').innerHTML="لا توجد إشعارات جديدة";document.getElementById('mainNotificationBadge').style.display='none';showNeonPopup("🗑️ تم الحذف.");});}
@@ -2422,11 +2510,13 @@
     function clearFriendsDisplayList(){let c=document.getElementById('friendsListContainer');if(c)c.innerHTML="لا يوجد أصدقاء معروضون";}
 
     function openChatModal(fk,fName){
+        if(activeChatRef && activeChatHandler) activeChatRef.off('value', activeChatHandler);
         activeChatFriendKey=fk;activeChatFriendName=fName;
         document.getElementById('chatTitle').innerText=`${fName} 👤`;
         document.getElementById('chatModal').style.display='flex';
         let chatId=[currentUserKey,fk].sort().join('_');
-        rtdb.ref(`chats/${chatId}`).limitToLast(50).on('value',snap=>{
+        activeChatRef = rtdb.ref(`chats/${chatId}`).limitToLast(50);
+        activeChatHandler = snap=>{
             let a=document.getElementById('chatMessagesArea');if(!a)return;
             if(!snap.exists()){a.innerHTML="ابدأ المحادثة...";return;}let h='';
             snap.forEach(m=>{
@@ -2435,11 +2525,13 @@
                 h+=`<div style="text-align:${isMe?'left':'right'};margin-bottom:5px"><span style="${bg};padding:5px 9px;border-radius:6px;display:inline-block;max-width:85%;word-break:break-word"><b>${msg.senderName || 'مستخدم'}:</b> ${msg.text || ''}</span></div>`;
             });
             a.innerHTML=h;a.scrollTop=a.scrollHeight;
-        });
+        };
+        activeChatRef.on('value', activeChatHandler);
     }
 
     function closeChatModal(){
-        if(activeChatFriendKey){ rtdb.ref(`chats/${[currentUserKey,activeChatFriendKey].sort().join('_')}`).off(); }
+        if(activeChatRef && activeChatHandler) activeChatRef.off('value', activeChatHandler);
+        activeChatRef = activeChatHandler = null;
         activeChatFriendKey='';activeChatFriendName='';document.getElementById('chatModal').style.display='none';
     }
 
@@ -2452,12 +2544,20 @@
     }
 
     function triggerImageUpload(){document.getElementById('hiddenImageInput').click();}
-    function previewImage(e){const f=e.target.files[0];if(f){const rd=new FileReader();rd.onload=ce=>{base64Image=ce.target.result;document.getElementById('avatarPreview').src=base64Image;};rd.readAsDataURL(f);}}
+    function previewImage(e){
+        const f=e.target.files[0];
+        if(!f) return;
+        compressImageFile(f, 256, 0.64).then(data=>{
+            base64Image=data;
+            const preview=document.getElementById('avatarPreview');
+            if(preview) preview.src=base64Image;
+        }).catch(()=>showNeonPopup('❌ تعذر تجهيز الصورة الشخصية.'));
+    }
     function validateBioLength(i){if(i.value.length>60)i.value=i.value.substring(0,60);document.getElementById('bioCounter').innerText=`${i.value.length} / 60`;}
 
     function saveProfileData(){
         let n=document.getElementById('profileNameInput').value.trim(),b=document.getElementById('profileBioInput').value.trim();
-        if(n)userData.name=n;if(b!==undefined)userData.bio=b.substring(0,60);if(base64Image)userData.avatar=base64Image;
+        if(n)userData.name=n;if(b!==undefined)userData.bio=b.substring(0,60);if(base64Image){userData.avatar=base64Image;avatarNeedsSave=true;}
         saveToDB().then(()=>{base64Image='';updateUI();showNeonPopup('✅ تم حفظ التعديلات بنجاح.');});
     }
 
