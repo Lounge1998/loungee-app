@@ -94,6 +94,13 @@
         .grid-btn-item span{font-size:12px;color:#fff;font-weight:bold}
         .grid-btn-item .icon-circle{font-size:20px}
 
+        /* تصميم المربعات الرئيسية الجديدة (بدل المستطيلات الطويلة) */
+        .squares-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+        .main-square-card { aspect-ratio: 1 / 1; background: linear-gradient(135deg, rgba(30, 15, 55, 0.9), rgba(15, 23, 42, 0.95)); border: 1.5px solid rgba(192,132,252,0.4); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; padding: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.15); }
+        .main-square-card:active { transform: scale(0.95); }
+        .main-square-icon { font-size: 26px; margin-bottom: 6px; filter: drop-shadow(0 0 8px rgba(192,132,252,0.6)); }
+        .main-square-title { font-size: 11px; font-weight: bold; color: #fff; line-height: 1.3; }
+
         @-webkit-keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
@@ -235,74 +242,34 @@
             </div>
         </div>
 
+        <!-- المربعات الثلاثة المرتبة بدلاً من الأزرار الطويلة -->
+        <div class="squares-grid-container">
+            <div class="main-square-card" onclick="openCategoryModal('mainServices')">
+                <div class="main-square-icon">🗂️</div>
+                <div class="main-square-title">الخدمات الرئيسية</div>
+            </div>
+            <div class="main-square-card" onclick="openCategoryModal('interactionGames')">
+                <div class="main-square-icon">🎮</div>
+                <div class="main-square-title">التفاعل والألعاب</div>
+            </div>
+            <div class="main-square-card" onclick="openCategoryModal('extraServices')">
+                <div class="main-square-icon">📦</div>
+                <div class="main-square-title">الخدمات الإضافية</div>
+            </div>
+        </div>
+
         <div class="grid-buttons-custom">
-            <div class="grid-btn-item" style="background: linear-gradient(135deg, rgba(40,15,65,0.9), rgba(15,25,50,0.9)); border: 1.5px solid rgba(192,132,252,0.5);" onclick="navigateTo('loungeGamesScreen')">
-                <div style="display:flex; align-items:center; gap:10px; width:100%;">
-                    <div class="icon-circle" style="font-size:20px;">🎮</div>
-                    <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">ألعاب المنصة</span>
-                        <div style="font-size:9px; color:#c084fc; margin-top:1px;">تحدي الأسئلة + الذاكرة + خارج الترتيب (50 نقطة يومياً)</div>
-                    </div>
-                </div>
-                <div style="font-size:12px; color:#f0abfc;">‹</div>
-            </div>
-
-            <div class="grid-btn-item" onclick="navigateTo('agentsScreen')">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="icon-circle">👥</div>
-                    <span>قائمة الوكلاء المعتمدين</span>
-                </div>
-                <div style="font-size:12px; color:#c084fc; font-weight:bold;">‹</div>
-            </div>
-
-            <div class="grid-btn-item" onclick="openWithdrawModal()">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="icon-circle">💸</div>
-                    <span>سحب الأرباح النقدية</span>
-                </div>
-                <div style="font-size:12px; color:#c084fc; font-weight:bold;">‹</div>
-            </div>
-
-            <div class="grid-btn-item" onclick="navigateTo('leaderboardScreen')">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="icon-circle">🏆</div>
-                    <span>لوحة الشرف الأسبوعية</span>
-                </div>
-                <div style="font-size:12px; color:#c084fc; font-weight:bold;">‹</div>
-            </div>
-            
+            <!-- العداد المباشر للعرض والتفاعل السريع -->
             <div id="clickAndWinMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(35,15,60,0.9), rgba(15,35,40,0.9)); border: 1.5px solid rgba(192,132,252,0.6);" onclick="handleUserClickAndWin()">
                 <div style="display:flex; align-items:center; gap:10px; width:100%;">
                     <div class="icon-circle" style="font-size:20px;">🚀</div>
                     <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">نظام الكبس والتفاعل</span>
+                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">نظام الكبس والتفاعل (مباشر)</span>
                         <div style="font-size:9px; color:#c084fc; margin-top:1px;">( 100 ) نقطة + 100 جوهرة 💎</div>
-                        <div style="font-size:8px; color:#34d399; font-weight:bold; margin-top:2px;" id="clickLiveCounterDisplay">📈 العداد الحالي: 278 / 500,000</div>
+                        <div style="font-size:8px; color:#34d399; font-weight:bold; margin-top:2px;" id="clickLiveCounterDisplay">📈 العداد الحالي: 0 / 25,000</div>
                     </div>
                 </div>
                 <div style="font-size:12px; color:#f0abfc;">‹</div>
-            </div>
-
-            <div id="counterTradingMainBtn" class="grid-btn-item" style="background: linear-gradient(135deg, rgba(15,35,30,0.9), rgba(25,15,50,0.9)); border: 1.5px solid rgba(16,185,129,0.5);" onclick="navigateTo('counterTradingScreen')">
-                <div style="display:flex; align-items:center; gap:10px; width:100%;">
-                    <div class="icon-circle" style="font-size:20px;">🤝</div>
-                    <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">سوق تداول العدادات اليومية</span>
-                        <div style="font-size:9px; color:#cbd5e1; margin-top:1px;">تداول العدادات بين المستخدمين بأمان تام</div>
-                    </div>
-                </div>
-                <div style="font-size:12px; color:#34d399;">‹</div>
-            </div>
-
-            <div class="grid-btn-item" style="background: linear-gradient(135deg, rgba(50,20,40,0.9), rgba(20,15,45,0.9)); border: 1.5px solid rgba(236,72,153,0.5);" onclick="navigateTo('loungePostsScreen')">
-                <div style="display:flex; align-items:center; gap:10px; width:100%;">
-                    <div class="icon-circle" style="font-size:20px;">📸</div>
-                    <div style="text-align:right; flex:1;">
-                        <span style="font-size:12px; color:#fff; font-weight:900; display:block;">منشورات المنصة</span>
-                        <div style="font-size:9px; color:#f472b6; margin-top:1px;">شارك منشوراتك وكتاباتك (نشر اختياري مع صورة أو كتابي)</div>
-                    </div>
-                </div>
-                <div style="font-size:12px; color:#f472b6;">‹</div>
             </div>
         </div>
         
@@ -312,6 +279,18 @@
             <div class="bottom-nav-rooms-circle" onclick="navigateTo('roomsScreen')" title="غرف المحادثة والهدايا">💬</div>
             <button class="bottom-nav-item" onclick="navigateTo('friendsScreen')"><span>👥</span><div>الأصدقاء</div></button>
             <button class="bottom-nav-item" onclick="navigateTo('shopScreen')"><span>🛒</span><div>المتجر</div></button>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة للمربعات الثلاثة المنظمة -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content" style="text-align:right; max-width:340px; padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h4 id="categoryModalTitle" style="margin:0;color:#c084fc;font-size:14px">قائمة الخيارات</h4>
+                <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeCategoryModal()">✖</button>
+            </div>
+            <div id="categoryModalBodyList" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <button class="action-btn btn-purple" style="margin-top:12px; padding:8px; font-size:11px;" onclick="closeCategoryModal()">إغلاق 🚪</button>
         </div>
     </div>
 
@@ -932,6 +911,41 @@
         safeCopyTextToClipboard(linkText, "📋 تم نسخ الرابط بنجاح!");
     }
 
+    // إدارة محتوى المربعات الثلاثة المنسقة
+    function openCategoryModal(categoryKey) {
+        let titleEl = document.getElementById('categoryModalTitle');
+        let bodyList = document.getElementById('categoryModalBodyList');
+        if(!titleEl || !bodyList) return;
+
+        let html = '';
+        if(categoryKey === 'mainServices') {
+            titleEl.innerText = "🗂️ الخدمات الرئيسية";
+            html = `
+                <button class="action-btn btn-purple" style="padding:12px; font-size:12px; margin-bottom:6px;" onclick="closeCategoryModal(); navigateTo('agentsScreen');">🏢 قائمة الوكلاء المعتمدين</button>
+                <button class="action-btn btn-gold" style="padding:12px; font-size:12px;" onclick="closeCategoryModal(); openWithdrawModal();">💸 سحب الأرباح النقدية</button>
+            `;
+        } else if(categoryKey === 'interactionGames') {
+            titleEl.innerText = "🎮 التفاعل والألعاب";
+            html = `
+                <button class="action-btn btn-blue" style="padding:12px; font-size:12px; margin-bottom:6px;" onclick="closeCategoryModal(); navigateTo('loungeGamesScreen');">🎮 ألعاب المنصة (الأسئلة والذاكرة وخارج الترتيب)</button>
+                <button class="action-btn btn-purple" style="padding:12px; font-size:12px; margin-bottom:6px;" onclick="closeCategoryModal(); handleUserClickAndWin();">🚀 نظام الكبس والتفاعل (مباشر)</button>
+                <button class="action-btn btn-gold" style="padding:12px; font-size:12px;" onclick="closeCategoryModal(); navigateTo('leaderboardScreen');">🏆 لوحة الشرف الأسبوعية</button>
+            `;
+        } else if(categoryKey === 'extraServices') {
+            titleEl.innerText = "📦 الخدمات الإضافية";
+            html = `
+                <button class="action-btn btn-purple" style="padding:12px; font-size:12px; margin-bottom:6px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="closeCategoryModal(); navigateTo('loungePostsScreen');">📸 منشورات المنصة</button>
+                <button class="action-btn btn-green" style="padding:12px; font-size:12px;" onclick="closeCategoryModal(); navigateTo('counterTradingScreen');">🤝 سوق تداول العدادات اليومية</button>
+            `;
+        }
+        bodyList.innerHTML = html;
+        document.getElementById('categoryModal').style.display = 'flex';
+    }
+
+    function closeCategoryModal() {
+        document.getElementById('categoryModal').style.display = 'none';
+    }
+
     function switchGiftSection(sectionName) {
         let btnInt = document.getElementById('giftTabInteractive');
         let btnExc = document.getElementById('giftTabExclusive');
@@ -1065,7 +1079,6 @@
         });
     }
 
-    // تحسين سرعة تحميل الغرف وحل مشكلة الثقل وعدم الفتح
     function loadRoomsList(){
         if(!rtdb) return;
         rtdb.ref('rooms').once('value', snap=>{
@@ -1153,7 +1166,6 @@
         });
     }
 
-    // تحسين أداء دخول الغرفة وحل الثقل وتنظيف الاتصالات السابقة تماماً
     function joinRoom(rKey, roomId, roomName, cover){
         if(activeRoomKey && activeRoomKey !== rKey){
             rtdb.ref(`room_users/${activeRoomKey}/${currentUserKey}`).remove();
@@ -1175,7 +1187,6 @@
         });
         userPresenceRef.onDisconnect().remove();
 
-        // استخدام limitToLast لتحسين خفة وأداء رسائل الروم ومنع الثقل
         rtdb.ref(`room_messages/${rKey}`).limitToLast(50).on('value', snap=>{
             let area = document.getElementById('roomMessagesArea');
             if(!area) return;
@@ -1438,12 +1449,13 @@
         });
     }
 
+    // تعديل قيمة الهدف للتكبيس إلى 25,000 تكبيسة حصراً
     function handleUserClickAndWin(){
         if(globalAppSettings.dailyCounterLocked && currentEmail !== 'msaftwtn@gmail.com') return showNeonPopup('⚠️ النظام متوقف مؤقتاً من الإدارة.');
         let btn = document.getElementById('clickAndWinMainBtn');
         if(btn){ btn.classList.remove('click-active-anim'); void btn.offsetWidth; btn.classList.add('click-active-anim'); }
         userData.userClicksCount = (userData.userClicksCount || 0) + 1;
-        let currentClicks = userData.userClicksCount, maxTarget = 500000;
+        let currentClicks = userData.userClicksCount, maxTarget = 25000;
         document.getElementById('clickLiveCounterDisplay').innerText = `📈 العداد الحالي: ${currentClicks.toLocaleString()} / ${maxTarget.toLocaleString()}`;
         if(currentClicks >= maxTarget){
             userData.userClicksCount = 0;
@@ -1451,7 +1463,7 @@
             userData.gems = (userData.gems || 0) + 100;
             saveToDB().then(()=>{
                 updateUI();
-                showNeonPopup("🎉 مبروك! أتممت الحد المطلوبة وحصلت على 100 نقطة و 100 جوهرة بنجاح.");
+                showNeonPopup("🎉 مبروك! أتممت الـ 25,000 تكبيسة وحصلت على 100 نقطة و 100 جوهرة بنجاح.");
             });
         } else {
             if(clickDebounceTimer) clearTimeout(clickDebounceTimer);
@@ -1592,7 +1604,6 @@
         };
     }
 
-    // إصلاح دالة لعبة "خارج الترتيب" لضمان منح الـ 50 نقطة وحفظها في قاعدة البيانات بسلاسة وتأكيد تام
     function openOutOfOrderGameModal(){
         let now = new Date().getTime();
         let cooldown = 24 * 60 * 60 * 1000;
@@ -1823,6 +1834,15 @@
             }
         }catch(e){}
         
+        // تفعيل دعم أزرار الرجوع الرسمية للموبايل والتصفح السلس بحرية
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.screen) {
+                switchScreenWithoutHistory(event.state.screen);
+            } else {
+                switchScreenWithoutHistory('mainScreen');
+            }
+        });
+
         setTimeout(()=>{
             if(auth){
                 auth.onAuthStateChanged((user)=>{
@@ -1830,14 +1850,22 @@
                         currentUserKey = user.uid;
                         try{ localStorage.setItem('dinarUserKey', currentUserKey); }catch(e){}
                         initRealtimeSync();
-                        navigateTo('mainScreen');
-                    } else { navigateTo('authScreen'); }
+                        navigateTo('mainScreen', false);
+                    } else { navigateTo('authScreen', false); }
                 });
-            } else { navigateTo('authScreen'); }
-        }, 300);
+            } else { navigateTo('authScreen', false); }
+        }, 150); // تسريع الاستجابة ودخول التطبيق فوراً
     });
 
-    function navigateTo(screenId){
+    // إدارة التنقل ودعم التاريخ وحرية التصفح بأزرار الموبايل
+    function navigateTo(screenId, pushToHistory = true){
+        if(pushToHistory){
+            history.pushState({ screen: screenId }, "", "#" + screenId);
+        }
+        switchScreenWithoutHistory(screenId);
+    }
+
+    function switchScreenWithoutHistory(screenId){
         document.querySelectorAll('.screen-page').forEach(p=>p.classList.remove('active'));
         const t=document.getElementById(screenId);if(t)t.classList.add('active');
         if(screenId==='quizScreen') initDailyQuizSession();
@@ -1968,7 +1996,7 @@
         let cVal = userData.activeCounterVal || 0;
         document.getElementById('activeCounterInfo').innerText = cVal > 0 ? `${cVal.toLocaleString()} نقطة يومياً` : (userData.activeCounter || 'لا يوجد');
         let clickDisplay = document.getElementById('clickLiveCounterDisplay');
-        if(clickDisplay){ clickDisplay.innerText = `📈 العداد الحالي: ${(userData.userClicksCount || 0).toLocaleString()} / 500,000`; }
+        if(clickDisplay){ clickDisplay.innerText = `📈 العداد الحالي: ${(userData.userClicksCount || 0).toLocaleString()} / 25,000`; }
         let badgeHtml = '';
         if(userData.isAgent) badgeHtml += ` <span class="badge-tag agent">وكيل معتمد 💼</span>`;
         let hdrBadge = document.getElementById('userHeaderBadgeArea');
