@@ -16,7 +16,7 @@
     <style>
         *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
         body{margin:0;padding:6px 8px;background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-        .container{width:100%;max-width:420px;padding-bottom:92px}
+        .container{width:100%;max-width:420px;padding-bottom:102px}
         .screen-page{display:none;width:100%;min-height:82vh;flex-direction:column;justify-content:flex-start}
         .screen-page.active{display:flex}
         
@@ -104,17 +104,12 @@
         .main-square-icon { font-size: 22px; margin-bottom: 4px; }
         .main-square-title { font-size: 11px; font-weight: bold; color: #fff; line-height: 1.25; }
 
-        .quick-highlights-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 6px; }
-        .quick-highlight-btn { border-radius: 15px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 11px; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
-        .quick-wheel-btn { background: linear-gradient(135deg, #db2777, #f59e0b); border: 1.5px solid #f472b6; }
-        .quick-shop-btn { background: linear-gradient(135deg, #0284c7, #10b981); border: 1.5px solid #38bdf8; }
-
         @-webkit-keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
-        /* رفع شريط التنقل السفلي قليلاً عن أسفل الشاشة لوضوح أفضل أمام المستخدم */
-        .bottom-nav-bar{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:calc(100% - 16px);max-width:404px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.55);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,0.85), 0 0 18px rgba(56,189,248,0.2)}
+        /* رفع شريط التنقل السفلي قليلاً عن أسفل الشاشة ليظهر بوضوح للمستخدمين */
+        .bottom-nav-bar{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:calc(100% - 16px);max-width:404px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.55);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,0.85), 0 0 18px rgba(56,189,248,0.2)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#cbd5e1;font-size:10px;cursor:pointer;gap:2px;font-weight:600}
         .bottom-nav-item.active{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.8)}
         .bottom-nav-item span{font-size:17px}
@@ -279,17 +274,6 @@
                     </div>
                 </div>
                 <div style="font-size:12px; color:#7dd3fc;">‹</div>
-            </div>
-        </div>
-
-        <div class="quick-highlights-row">
-            <div class="quick-highlight-btn quick-wheel-btn" onclick="navigateTo('wheelScreen')">
-                <span>🎡 عجلة الحظ</span>
-                <span>❯</span>
-            </div>
-            <div class="quick-highlight-btn quick-shop-btn" onclick="navigateTo('friendsScreen')">
-                <span>👥 متجر الأصدقاء</span>
-                <span>❯</span>
             </div>
         </div>
         
