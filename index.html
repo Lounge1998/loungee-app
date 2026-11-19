@@ -46,11 +46,6 @@
         .tab-btn.active{background:linear-gradient(135deg,#0ea5e9,#ec4899);color:#fff;box-shadow:0 4px 15px rgba(14,165,233,0.6)}
         .input-box,.select-box{width:100%;padding:9px;margin-bottom:8px;background:rgba(10,5,24,0.85);border:1.5px solid rgba(56,189,248,0.4);border-radius:12px;color:#fff;font-size:12px;outline:none;text-align:right;box-shadow:inset 0 2px 5px rgba(0,0,0,0.8)}
         .input-box:focus{border-color:#38bdf8;box-shadow:0 0 15px rgba(56,189,248,0.5), inset 0 2px 5px rgba(0,0,0,0.8)}
-
-        .google-auth-divider{display:flex;align-items:center;gap:8px;margin:12px 0;color:#94a3b8;font-size:10px}
-        .google-auth-divider::before,.google-auth-divider::after{content:"";flex:1;height:1px;background:rgba(148,163,184,0.25)}
-        .btn-google{background:linear-gradient(135deg,#ffffff,#e2e8f0);color:#0f172a;display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid rgba(56,189,248,0.65);box-shadow:0 4px 15px rgba(255,255,255,0.2)}
-        .google-badge-g{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#0f172a;color:#facc15;font-weight:900;font-size:11px}
         
         .top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
         .nav-btn{background:linear-gradient(135deg, rgba(14,165,233,0.22), rgba(236,72,153,0.22));border:1.5px solid rgba(56,189,248,0.55);color:#7dd3fc;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:bold;cursor:pointer;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.4)}
@@ -113,6 +108,7 @@
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
+        /* رفع شريط التنقل السفلي قليلاً عن أسفل الشاشة ليظهر بوضوح للمستخدمين */
         .bottom-nav-bar{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:calc(100% - 16px);max-width:404px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.55);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,0.85), 0 0 18px rgba(56,189,248,0.2)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#cbd5e1;font-size:10px;cursor:pointer;gap:2px;font-weight:600}
         .bottom-nav-item.active{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.8)}
@@ -187,12 +183,6 @@
                 <input type="password" id="signupPass" class="input-box" placeholder="كلمة المرور (6 أحرف فأكثر)">
                 <button id="signupBtn" class="action-btn btn-green" onclick="handleSignup()">تأكيد إنشاء الحساب ✨</button>
             </div>
-
-            <div class="google-auth-divider">أو</div>
-            <button id="googleLoginBtn" class="action-btn btn-google" onclick="handleGoogleLogin()">
-                <span class="google-badge-g">G</span>
-                <span>المتابعة عبر حساب Google</span>
-            </button>
         </div>
     </div>
 
@@ -1812,162 +1802,6 @@
         });
     }
 
-    function createDefaultUserObject(firebaseUser, fallbackPassword = '') {
-        const email = firebaseUser.email || '';
-        const defaultName = firebaseUser.displayName || (email ? email.split('@')[0] : 'مستخدم Lounge');
-        const assignedId = (email === 'msaftwtn@gmail.com') ? '1' : Math.floor(100000 + Math.random() * 900000).toString();
-        return {
-            name: defaultName,
-            email: email,
-            password: fallbackPassword || '',
-            customId: assignedId,
-            points: 0,
-            gems: 0,
-            bio: '',
-            avatar: firebaseUser.photoURL || '',
-            lastSpinTime: 0,
-            activeCounter: 'لا يوجد',
-            activeCounterVal: 0,
-            lastWithdrawTime: 0,
-            isBanned: false,
-            whatsapp: '',
-            withdrawCount: 0,
-            isAgent: false,
-            agentTelegram: '',
-            agentWhatsapp: '',
-            agentBag: 0,
-            agentProvince: '',
-            agentAvatar: '',
-            gameWins: 0,
-            userClicksCount: 0,
-            isVerified: false,
-            verificationPhone: '',
-            verificationStatus: 'none',
-            lastMemoryGameTime: 0,
-            lastOutOfOrderTime: 0
-        };
-    }
-
-    function completeAuthenticatedUserSession(firebaseUser, fallbackPassword = '') {
-        return new Promise((resolve, reject) => {
-            if (!firebaseUser || !rtdb) {
-                reject(new Error('تعذر تهيئة جلسة المستخدم أو قاعدة البيانات.'));
-                return;
-            }
-            const uid = firebaseUser.uid;
-            const email = firebaseUser.email || '';
-            currentUserKey = uid;
-            currentEmail = email;
-
-            rtdb.ref('users/' + uid).once('value').then((snap) => {
-                let finishLogin = () => {
-                    try { localStorage.setItem('dinarUserKey', currentUserKey); } catch (e) {}
-                    if (email !== 'msaftwtn@gmail.com') {
-                        let devKey = localStorage.getItem('dinarDeviceUuid');
-                        if (!devKey) {
-                            devKey = 'dev_' + Math.random().toString(36).substring(2) + Date.now();
-                            localStorage.setItem('dinarDeviceUuid', devKey);
-                        }
-                        rtdb.ref(`device_bindings/${devKey}`).once('value').then((bSnap) => {
-                            if (bSnap.exists() && bSnap.val().userKey !== uid) {
-                                rtdb.ref(`users/${uid}`).update({ isBanned: true });
-                                if (auth) auth.signOut();
-                                showNeonPopup("🚫 تم حظر الحساب لاكتشاف استخدام متعدد.");
-                                navigateTo('authScreen');
-                                reject(new Error('MULTI_DEVICE_BAN'));
-                                return;
-                            }
-                            rtdb.ref(`device_bindings/${devKey}`).set({ userKey: uid });
-                            initRealtimeSync();
-                            navigateTo('mainScreen');
-                            resolve();
-                        }).catch(() => {
-                            initRealtimeSync();
-                            navigateTo('mainScreen');
-                            resolve();
-                        });
-                    } else {
-                        initRealtimeSync();
-                        navigateTo('mainScreen');
-                        resolve();
-                    }
-                };
-
-                if (snap.exists()) {
-                    let uDat = snap.val();
-                    if (uDat.isBanned && email !== 'msaftwtn@gmail.com') {
-                        if (auth) auth.signOut();
-                        showNeonPopup("🚫 تم تجميد أو حظر هذا الحساب.");
-                        reject(new Error('USER_BANNED'));
-                        return;
-                    }
-                    let updates = {};
-                    if (email === 'msaftwtn@gmail.com' && uDat.customId !== '1') {
-                        updates.customId = '1';
-                    }
-                    if (!uDat.customId || !/^\d+$/.test(uDat.customId)) {
-                        updates.customId = (email === 'msaftwtn@gmail.com') ? '1' : Math.floor(100000 + Math.random() * 900000).toString();
-                    }
-                    if (!uDat.avatar && firebaseUser.photoURL) {
-                        updates.avatar = firebaseUser.photoURL;
-                    }
-                    if (!uDat.name && firebaseUser.displayName) {
-                        updates.name = firebaseUser.displayName;
-                    }
-                    if (Object.keys(updates).length > 0) {
-                        rtdb.ref('users/' + uid).update(updates).then(finishLogin).catch(finishLogin);
-                    } else {
-                        finishLogin();
-                    }
-                } else {
-                    const newUser = createDefaultUserObject(firebaseUser, fallbackPassword);
-                    rtdb.ref('users/' + uid).set(newUser).then(finishLogin).catch(reject);
-                }
-            }).catch(reject);
-        });
-    }
-
-    function handleGoogleLogin() {
-        if (!auth || !rtdb) return showNeonPopup("❌ خطأ بالاتصال بخدمة المصادقة أو قاعدة البيانات.");
-        const btn = document.getElementById('googleLoginBtn');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '<span>جاري تحويلك إلى Google...</span>';
-        }
-        const restoreGoogleBtn = () => {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<span class="google-badge-g">G</span><span>المتابعة عبر حساب Google</span>';
-            }
-        };
-
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-
-        auth.signInWithPopup(provider).then((result) => {
-            restoreGoogleBtn();
-            if (result && result.user) {
-                completeAuthenticatedUserSession(result.user).catch((err) => {
-                    showNeonPopup("❌ تعذر ربط حساب Google بقاعدة البيانات: " + err.message);
-                });
-            }
-        }).catch((error) => {
-            if (
-                error.code === 'auth/popup-blocked' ||
-                error.code === 'auth/popup-closed-by-user' ||
-                error.code === 'auth/operation-not-supported-in-this-environment'
-            ) {
-                auth.signInWithRedirect(provider).catch((redirErr) => {
-                    restoreGoogleBtn();
-                    showNeonPopup("❌ تعذر فتح تسجيل Google: " + redirErr.message);
-                });
-            } else {
-                restoreGoogleBtn();
-                showNeonPopup("❌ خطأ في تسجيل الدخول عبر Google: " + error.message);
-            }
-        });
-    }
-
     window.addEventListener('load',()=>{
         initLoungeTickerAnimation();
         initWindEffectInCircle();
@@ -2000,32 +1834,12 @@
 
         setTimeout(()=>{
             if(auth){
-                auth.getRedirectResult().then((redirResult) => {
-                    if (redirResult && redirResult.user) {
-                        completeAuthenticatedUserSession(redirResult.user).catch(() => {});
-                    }
-                }).catch(() => {});
-
                 auth.onAuthStateChanged((user)=>{
                     if(user){
                         currentUserKey = user.uid;
-                        currentEmail = user.email || '';
                         try{ localStorage.setItem('dinarUserKey', currentUserKey); }catch(e){}
-                        rtdb.ref('users/' + user.uid).once('value').then((snap) => {
-                            if (!snap.exists()) {
-                                const newUser = createDefaultUserObject(user);
-                                rtdb.ref('users/' + user.uid).set(newUser).then(() => {
-                                    initRealtimeSync();
-                                    navigateTo('mainScreen', false);
-                                });
-                            } else {
-                                initRealtimeSync();
-                                navigateTo('mainScreen', false);
-                            }
-                        }).catch(() => {
-                            initRealtimeSync();
-                            navigateTo('mainScreen', false);
-                        });
+                        initRealtimeSync();
+                        navigateTo('mainScreen', false);
                     } else { navigateTo('authScreen', false); }
                 });
             } else { navigateTo('authScreen', false); }
@@ -2071,9 +1885,32 @@
         
         auth.signInWithEmailAndPassword(email, pass).then((userCredential)=>{
             btn.disabled=false;btn.innerText="دخول الحساب 🚀";
-            completeAuthenticatedUserSession(userCredential.user, pass).catch((err) => {
-                if (err.message !== 'USER_BANNED' && err.message !== 'MULTI_DEVICE_BAN') {
-                    showNeonPopup("❌ خطأ في مزامنة الحساب: " + err.message);
+            currentUserKey = userCredential.user.uid;
+            rtdb.ref('users/'+currentUserKey).once('value',snap=>{
+                if(snap.exists()){
+                    let uDat=snap.val();
+                    if(uDat.isBanned && email!=='msaftwtn@gmail.com'){
+                        auth.signOut();
+                        return showNeonPopup("🚫 تم تجميد أو حظر هذا الحساب.");
+                    }
+                    currentEmail=email;
+                    try{localStorage.setItem('dinarUserKey',currentUserKey);}catch(e){}
+                    if(email==='msaftwtn@gmail.com'&&uDat.customId!=='1')rtdb.ref('users/'+currentUserKey).update({customId:'1'});
+                    
+                    if(email!=='msaftwtn@gmail.com'){
+                        let devKey=localStorage.getItem('dinarDeviceUuid');
+                        if(!devKey){devKey='dev_'+Math.random().toString(36).substring(2)+Date.now();localStorage.setItem('dinarDeviceUuid',devKey);}
+                        rtdb.ref(`device_bindings/${devKey}`).once('value',bSnap=>{
+                            if(bSnap.exists()&&bSnap.val().userKey!==currentUserKey){
+                                rtdb.ref(`users/${currentUserKey}`).update({isBanned:true});
+                                auth.signOut();
+                                showNeonPopup("🚫 تم حظر الحساب لاكتشاف استخدام متعدد.");
+                                navigateTo('authScreen');
+                                return;
+                            } else { rtdb.ref(`device_bindings/${devKey}`).set({userKey:currentUserKey}); }
+                        });
+                    }
+                    initRealtimeSync();navigateTo('mainScreen');
                 }
             });
         }).catch((error)=>{
@@ -2089,8 +1926,18 @@
         
         auth.createUserWithEmailAndPassword(email, pass).then((userCredential)=>{
             btn.disabled=false;btn.innerText="تأكيد الحساب ✨";
-            completeAuthenticatedUserSession(userCredential.user, pass).catch((err) => {
-                showNeonPopup("❌ خطأ في إنشاء سجل المستخدم: " + err.message);
+            currentUserKey = userCredential.user.uid;
+            let defaultName=email.split('@')[0],assignedId=(email==='msaftwtn@gmail.com')?'1':Math.floor(100000+Math.random()*900000).toString();
+            const newUser={name:defaultName,email:email,password:pass,customId:assignedId,points:0,gems:0,bio:'',lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0,lastOutOfOrderTime:0};
+            rtdb.ref('users/'+currentUserKey).set(newUser).then(()=>{
+                currentEmail=email;
+                try{localStorage.setItem('dinarUserKey',currentUserKey);}catch(e){}
+                if(email!=='msaftwtn@gmail.com'){
+                    let devKey=localStorage.getItem('dinarDeviceUuid');
+                    if(!devKey){devKey='dev_'+Math.random().toString(36).substring(2)+Date.now();localStorage.setItem('dinarDeviceUuid',devKey);}
+                    rtdb.ref(`device_bindings/${devKey}`).set({userKey:currentUserKey});
+                }
+                initRealtimeSync();navigateTo('mainScreen');
             });
         }).catch((error)=>{
             btn.disabled=false;btn.innerText="تأكيد الحساب ✨";
