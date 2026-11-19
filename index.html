@@ -2595,15 +2595,15 @@
                     <b>المستخدم:</b> ${d.userName} (${d.userId})<br>
                     <b>المحافظة:</b> ${d.province||''} | <b>تليجرام:</b> ${d.telegram||'---'} | <b>واتساب:</b> ${d.whatsapp||'---'}<br>
                     <b>رسوم الخصم:</b> ${Number(d.feePaid||6000000).toLocaleString()} نقطة
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
+                    <div style="display:flex;gap:4px;margin:8px 0;position:relative;z-index:5;">
+                        <button onclick="adminApproveAgent('${d.userKey}','${d.telegram}','${d.whatsapp}','${d.province||''}','${d.agentAvatar||''}','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;font-weight:bold;">موافقة ✔️</button>
+                        <button onclick="adminRejectAgent('${d.userKey}', ${d.feePaid||6000000}, '${item.key}')" style="background:#ef4444;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;font-weight:bold;">رفض وإعادة النقاط ✖</button>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
                         <div><span style="font-size:9px;color:#38bdf8;">بطاقة السكن (أمام):</span>${hfImg}</div>
                         <div><span style="font-size:9px;color:#38bdf8;">بطاقة السكن (خلف):</span>${hbImg}</div>
                         <div><span style="font-size:9px;color:#facc15;">البطاقة الوطنية (أمام):</span>${nfImg}</div>
                         <div><span style="font-size:9px;color:#facc15;">البطاقة الوطنية (خلف):</span>${nbImg}</div>
-                    </div>
-                    <div style="display:flex;gap:4px;margin-top:8px;">
-                        <button onclick="adminApproveAgent('${d.userKey}','${d.telegram}','${d.whatsapp}','${d.province||''}','${d.agentAvatar||''}','${item.key}')" style="background:#10b981;color:#fff;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">موافقة ✔️</button>
-                        <button onclick="adminRejectAgent('${d.userKey}', ${d.feePaid||6000000}, '${item.key}')" style="background:#ef4444;color:#fff;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:10px;flex:1;">رفض وإعادة النقاط ✖</button>
                     </div>
                 </div>`;
             });
