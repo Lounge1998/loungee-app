@@ -16,7 +16,7 @@
     <style>
         *{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;transition:all 0.2s ease;-webkit-tap-highlight-color:transparent}
         body{margin:0;padding:6px 8px;background:radial-gradient(circle at center,#1a0b2e 0%,#090514 60%,#030207 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-        .container{width:100%;max-width:420px;padding-bottom:74px}
+        .container{width:100%;max-width:420px;padding-bottom:92px}
         .screen-page{display:none;width:100%;min-height:82vh;flex-direction:column;justify-content:flex-start}
         .screen-page.active{display:flex}
         
@@ -95,7 +95,6 @@
         .grid-btn-item span{font-size:12px;color:#fff;font-weight:bold}
         .grid-btn-item .icon-circle{font-size:19px}
 
-        /* تصميم المربعات الرئيسية الجديدة بألوان متنوعة وارتفاع مريح للوصول السريع للعجلة والمتجر */
         .squares-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 6px; }
         .main-square-card { height: 78px; background: linear-gradient(135deg, rgba(30, 15, 55, 0.92), rgba(15, 23, 42, 0.96)); border: 1.5px solid rgba(192,132,252,0.45); border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; padding: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.15); }
         .main-square-card.cat-main { border-color: rgba(250,204,21,0.6); background: linear-gradient(135deg, rgba(66, 32, 6, 0.75), rgba(15, 23, 42, 0.95)); }
@@ -105,7 +104,6 @@
         .main-square-icon { font-size: 22px; margin-bottom: 4px; }
         .main-square-title { font-size: 11px; font-weight: bold; color: #fff; line-height: 1.25; }
 
-        /* شريط الوصول السريع للعجلة والمتجر مباشرة فوق الشريط السفلي لضمان ظهوره فوراً دون سحب */
         .quick-highlights-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 6px; }
         .quick-highlight-btn { border-radius: 15px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 11px; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
         .quick-wheel-btn { background: linear-gradient(135deg, #db2777, #f59e0b); border: 1.5px solid #f472b6; }
@@ -115,7 +113,8 @@
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
-        .bottom-nav-bar{position:fixed;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:100%;max-width:420px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1.5px solid rgba(56,189,248,0.45);display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;padding-bottom:calc(8px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,0.8)}
+        /* رفع شريط التنقل السفلي قليلاً عن أسفل الشاشة لوضوح أفضل أمام المستخدم */
+        .bottom-nav-bar{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:calc(100% - 16px);max-width:404px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.55);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,0.85), 0 0 18px rgba(56,189,248,0.2)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#cbd5e1;font-size:10px;cursor:pointer;gap:2px;font-weight:600}
         .bottom-nav-item.active{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.8)}
         .bottom-nav-item span{font-size:17px}
@@ -254,7 +253,6 @@
             </div>
         </div>
 
-        <!-- المربعات الثلاثة المرتبة بألوان متنوعة -->
         <div class="squares-grid-container">
             <div class="main-square-card cat-main" onclick="openCategoryModal('mainServices')">
                 <div class="main-square-icon">🗂️</div>
@@ -284,7 +282,6 @@
             </div>
         </div>
 
-        <!-- ظهور واضح ومباشر لمتجر الأصدقاء وعجلة الحظ بدون الحاجة لسحب الشاشة -->
         <div class="quick-highlights-row">
             <div class="quick-highlight-btn quick-wheel-btn" onclick="navigateTo('wheelScreen')">
                 <span>🎡 عجلة الحظ</span>
@@ -305,7 +302,6 @@
         </div>
     </div>
 
-    <!-- نافذة منبثقة للمربعات الثلاثة المنظمة -->
     <div id="categoryModal" class="modal">
         <div class="modal-content" style="text-align:right; max-width:340px; padding:16px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -317,7 +313,6 @@
         </div>
     </div>
 
-    <!-- شاشة ألعاب المنصة -->
     <div id="loungeGamesScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#38bdf8;font-size:15px">🎮 ألعاب المنصة</h3>
@@ -407,7 +402,6 @@
         </div>
     </div>
 
-    <!-- شاشة غرفة المحادثة الفردية -->
     <div id="singleRoomScreen" class="screen-page" style="position: relative; padding-bottom: 75px;">
         <div class="top-nav">
             <div style="display:flex;align-items:center;gap:8px">
@@ -660,7 +654,6 @@
     </div>
 </div>
 
-<!-- نافذة روابط التواصل الاجتماعي الرسمية (بعد حذف حقل تليجرام التواصل مع الدعم حصراً) -->
 <div id="socialLinksModal" class="modal">
     <div class="modal-content" style="text-align:right; max-width:340px; padding:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -1847,7 +1840,6 @@
             }
         }catch(e){}
         
-        // تفعيل دعم أزرار الرجوع الرسمية للموبايل والتصفح السلس بحرية
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.screen) {
                 switchScreenWithoutHistory(event.state.screen);
@@ -2176,7 +2168,6 @@
     function openAgentApplyModal(){ document.getElementById('agentApplyModal').style.display='flex'; }
     function closeAgentApplyModal(){ document.getElementById('agentApplyModal').style.display='none'; }
 
-    // حفظ صور المستمسكات كـ Data URL ليتم عرضها بوضوح في لوحة الإدارة
     function submitAgentApplication(){
         let prov = document.getElementById('agentProvinceInput').value.trim();
         let tg = document.getElementById('agentTelegramInput').value.trim();
@@ -2602,7 +2593,6 @@
         rtdb.ref('app_settings').update({tickerText: txt}).then(()=>showNeonPopup("📢 تم نشر الإعلان بنجاح."));
     }
 
-    // عرض صور المستمسكات بوضوح للإدارة مع الحفاظ على أزرار القبول والرفض
     function openAdminAgentApplications(){
         if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
         document.getElementById('adminAgentAppsModal').style.display='flex';
