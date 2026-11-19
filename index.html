@@ -177,6 +177,17 @@
                 <input type="password" id="loginPass" class="input-box" placeholder="كلمة المرور">
                 <button id="loginBtn" class="action-btn btn-blue" onclick="handleLogin()">دخول الحساب 🚀</button>
                 <button id="googleLoginBtn" type="button" class="action-btn btn-gold" style="margin-top:8px;" onclick="handleGoogleLogin()">تسجيل الدخول عبر Google 🌐</button>
+
+                <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(56,189,248,0.25);text-align:right;">
+                    <div style="font-size:11px;color:#38bdf8;font-weight:bold;margin-bottom:6px;">📱 الدخول برقم الهاتف (إرسال طلب التحقق):</div>
+                    <input type="tel" id="phoneAuthInput" class="input-box" placeholder="رقم الهاتف مع رمز الدولة (مثال: +9647...)" style="direction:ltr;text-align:left;">
+                    <div id="recaptcha-container" style="margin-bottom:8px;"></div>
+                    <button id="sendPhoneOtpBtn" type="button" class="action-btn btn-green" onclick="handlePhoneSendOtp()">إرسال طلب الرمز 📲</button>
+                    <div id="phoneOtpVerifyBox" style="display:none;margin-top:8px;">
+                        <input type="text" id="phoneOtpCodeInput" class="input-box" placeholder="أدخل رمز التحقق (6 أرقام)" style="direction:ltr;text-align:center;">
+                        <button id="verifyPhoneOtpBtn" type="button" class="action-btn btn-purple" onclick="handlePhoneVerifyOtp()">تأكيد الرمز والدخول ✔️</button>
+                    </div>
+                </div>
             </div>
             <div id="signupForm" style="display:none">
                 <input type="email" id="signupEmail" class="input-box" placeholder="البريد الإلكتروني">
@@ -859,6 +870,8 @@
     let totalWheelDegrees=0, pendingBuyItem = null;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
+    let phoneRecaptchaVerifier = null;
+    let phoneConfirmationResult = null;
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -1990,6 +2003,111 @@
             if(error.code !== 'auth/popup-closed-by-user'){
                 showNeonPopup("❌ خطأ في تسجيل الدخول بـ Google: " + error.message);
             }
+        });
+    }
+
+    function ensurePhoneRecaptcha(){
+        if(!auth) return null;
+        if(!phoneRecaptchaVerifier){
+            phoneRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                size: 'normal'
+            });
+            phoneRecaptchaVerifier.render().catch(()=>{});
+        }
+        return phoneRecaptchaVerifier;
+    }
+
+    function handlePhoneSendOtp(){
+        if(!auth || !rtdb) return showNeonPopup("❌ خطأ بالاتصال.");
+        const rawPhone = document.getElementById('phoneAuthInput').value.trim();
+        if(!rawPhone || !rawPhone.startsWith('+') || rawPhone.length < 8){
+            return showNeonPopup("⚠️ يرجى إدخال رقم الهاتف مع رمز الدولة (مثال: +9647...)");
+        }
+
+        const sendBtn = document.getElementById('sendPhoneOtpBtn');
+        if(sendBtn){ sendBtn.disabled = true; sendBtn.innerText = "جاري إرسال الطلب..."; }
+
+        const verifier = ensurePhoneRecaptcha();
+        auth.signInWithPhoneNumber(rawPhone, verifier).then((confirmationResult)=>{
+            phoneConfirmationResult = confirmationResult;
+            if(sendBtn){ sendBtn.disabled = false; sendBtn.innerText = "إرسال طلب الرمز 📲"; }
+            document.getElementById('phoneOtpVerifyBox').style.display = 'block';
+            showNeonPopup("✅ تم إرسال طلب رمز التحقق إلى الرقم بنجاح.");
+        }).catch((error)=>{
+            if(sendBtn){ sendBtn.disabled = false; sendBtn.innerText = "إرسال طلب الرمز 📲"; }
+            if(phoneRecaptchaVerifier && typeof phoneRecaptchaVerifier.clear === 'function'){
+                try{ phoneRecaptchaVerifier.clear(); phoneRecaptchaVerifier = null; }catch(e){}
+            }
+            showNeonPopup("❌ تعذر إرسال الطلب: " + error.message);
+        });
+    }
+
+    function handlePhoneVerifyOtp(){
+        if(!phoneConfirmationResult) return showNeonPopup("⚠️ أرسل طلب الرمز أولاً.");
+        const code = document.getElementById('phoneOtpCodeInput').value.trim();
+        if(!code) return showNeonPopup("⚠️ يرجى إدخال رمز التحقق.");
+
+        const verifyBtn = document.getElementById('verifyPhoneOtpBtn');
+        if(verifyBtn){ verifyBtn.disabled = true; verifyBtn.innerText = "جاري التحقق..."; }
+
+        phoneConfirmationResult.confirm(code).then((result)=>{
+            if(verifyBtn){ verifyBtn.disabled = false; verifyBtn.innerText = "تأكيد الرمز والدخول ✔️"; }
+            const pUser = result.user;
+            currentUserKey = pUser.uid;
+            currentEmail = pUser.email || '';
+
+            rtdb.ref('users/' + currentUserKey).once('value', snap=>{
+                if(snap.exists()){
+                    let uDat = snap.val();
+                    if(uDat.isBanned){
+                        auth.signOut();
+                        return showNeonPopup("🚫 تم تجميد أو حظر هذا الحساب.");
+                    }
+                    try{ localStorage.setItem('dinarUserKey', currentUserKey); }catch(e){}
+                    initRealtimeSync();
+                    navigateTo('mainScreen');
+                } else {
+                    let assignedId = Math.floor(100000 + Math.random()*900000).toString();
+                    const newUser = {
+                        name: pUser.phoneNumber || 'مستخدم هاتف',
+                        email: '',
+                        password: '',
+                        customId: assignedId,
+                        points: 0,
+                        gems: 0,
+                        bio: '',
+                        avatar: '',
+                        lastSpinTime: 0,
+                        activeCounter: 'لا يوجد',
+                        activeCounterVal: 0,
+                        lastWithdrawTime: 0,
+                        isBanned: false,
+                        whatsapp: pUser.phoneNumber || '',
+                        withdrawCount: 0,
+                        isAgent: false,
+                        agentTelegram: '',
+                        agentWhatsapp: '',
+                        agentBag: 0,
+                        agentProvince: '',
+                        agentAvatar: '',
+                        gameWins: 0,
+                        userClicksCount: 0,
+                        isVerified: false,
+                        verificationPhone: pUser.phoneNumber || '',
+                        verificationStatus: 'none',
+                        lastMemoryGameTime: 0,
+                        lastOutOfOrderTime: 0
+                    };
+                    rtdb.ref('users/' + currentUserKey).set(newUser).then(()=>{
+                        try{ localStorage.setItem('dinarUserKey', currentUserKey); }catch(e){}
+                        initRealtimeSync();
+                        navigateTo('mainScreen');
+                    });
+                }
+            });
+        }).catch((error)=>{
+            if(verifyBtn){ verifyBtn.disabled = false; verifyBtn.innerText = "تأكيد الرمز والدخول ✔️"; }
+            showNeonPopup("❌ رمز التحقق غير صحيح: " + error.message);
         });
     }
 
