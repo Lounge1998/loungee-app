@@ -108,7 +108,6 @@
         @keyframes clickPulse { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.96); transform: scale(0.96); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
         .click-active-anim { -webkit-animation: clickPulse 0.12s ease-in-out; animation: clickPulse 0.12s ease-in-out; }
 
-        /* رفع شريط التنقل السفلي قليلاً عن أسفل الشاشة ليظهر بوضوح للمستخدمين */
         .bottom-nav-bar{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);width:calc(100% - 16px);max-width:404px;background:rgba(10, 5, 22, 0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.55);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,0.85), 0 0 18px rgba(56,189,248,0.2)}
         .bottom-nav-item{display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#cbd5e1;font-size:10px;cursor:pointer;gap:2px;font-weight:600}
         .bottom-nav-item.active{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.8)}
@@ -330,40 +329,6 @@
         </div>
     </div>
 
-    <div id="loungePostsScreen" class="screen-page">
-        <div class="top-nav">
-            <h3 style="margin:0;color:#f472b6;font-size:15px">📸 منشورات المنصة</h3>
-            <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
-        </div>
-
-        <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:10px;text-align:right">
-            <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ نشر منشور جديد (كتابي أو مع صورة اختيارية)</h4>
-            <input type="text" id="newPostTitle" class="input-box" placeholder="عنوان المنشور..." style="margin-bottom:6px;">
-            <textarea id="newPostText" class="input-box" placeholder="اكتب ما بخاطرك..." style="height:60px;resize:none;margin-bottom:6px;"></textarea>
-            <label style="font-size:10px;color:#cbd5e1;display:block;margin-bottom:4px">صورة المنشور (اختياري):</label>
-            <input type="file" id="newPostImageInput" accept="image/*" class="input-box" style="margin-bottom:8px;padding:6px;font-size:10px">
-            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="publishLoungePost()">نشر المنشور الآن 🚀</button>
-        </div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div style="font-size:12px;color:#38bdf8;font-weight:bold;text-align:right">📰 أحدث منشورات الأعضاء:</div>
-            <button class="action-btn btn-blue" style="width:auto;padding:4px 10px;font-size:10px;" onclick="navigateTo('myProfilePostsScreen')">منشوراتي الشخصية 👤</button>
-        </div>
-        <div id="loungePostsContainer" style="display:flex;flex-direction:column;gap:10px;">
-            <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل المنشورات...</div>
-        </div>
-    </div>
-
-    <div id="myProfilePostsScreen" class="screen-page">
-        <div class="top-nav">
-            <h3 style="margin:0;color:#38bdf8;font-size:15px">👤 منشوراتي الشخصية</h3>
-            <button class="nav-btn back" onclick="navigateTo('loungePostsScreen')">⬅️ رجوع للمنشورات</button>
-        </div>
-        <div id="myProfilePostsContainer" style="display:flex;flex-direction:column;gap:10px;">
-            <div style="text-align:center;color:#cbd5e1;font-size:12px;padding:20px">جاري تحميل منشوراتك...</div>
-        </div>
-    </div>
-
     <div id="roomsScreen" class="screen-page">
         <div class="top-nav">
             <h3 style="margin:0;color:#ec4899;font-size:15px">💬 غرف المحادثة والهدايا</h3>
@@ -372,7 +337,7 @@
 
         <div id="createRoomSectionCard" class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(236,72,153,0.4);margin-bottom:12px;text-align:right">
             <h4 style="margin:0 0 6px 0;color:#f472b6;font-size:13px">✨ إنشاء غرفة محادثة خاصة</h4>
-            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="openCreateRoomModal()">إنشاء غرفة جديدة مجاناً 🚀</button>
+            <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="openCreateRoomModal()">إنشاء غرفة جديدة (1,000 نقطة) 🚀</button>
         </div>
 
         <div style="display:flex;gap:6px;margin-bottom:10px;">
@@ -684,11 +649,12 @@
             <h4 style="margin:0;color:#f472b6;font-size:13px">✨ إنشاء غرفة محادثة جديدة</h4>
             <button style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer" onclick="closeCreateRoomModal()">✖</button>
         </div>
+        <p style="font-size:10px;color:#fde047;margin:0 0 8px 0;">رسوم إنشاء الغرفة: 1,000 نقطة تُخصم من رصيدك.</p>
         <label style="font-size:10px;color:#cbd5e1;">اسم الغرفة:</label>
         <input type="text" id="newRoomNameInput" class="input-box" placeholder="مثال: غرفة النقاش العام..." style="margin-bottom:6px">
         <label style="font-size:10px;color:#cbd5e1;">صورة الغرفة:</label>
         <input type="file" id="newRoomCoverInput" accept="image/*" class="input-box" style="margin-bottom:10px">
-        <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="confirmCreateRoom()">إنشاء الغرفة فوراً 🚀</button>
+        <button class="action-btn btn-purple" style="padding:8px;font-size:11px;background:linear-gradient(135deg,#db2777,#9333ea)" onclick="confirmCreateRoom()">إنشاء الغرفة (1,000 نقطة) 🚀</button>
     </div>
 </div>
 
@@ -856,7 +822,7 @@
     let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,customId:'',name:'',avatar:'',bio:'',lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0, lastOutOfOrderTime:0};
     let base64Image='',activeChatFriendKey='',activeChatFriendName='',timerInterval=null;
     let globalAppSettings={withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في منصة Lounge الرسمية.'};
-    let totalWheelDegrees=0, pendingBuyItem = null;
+    let totalWheelDegrees=0, pendingBuyItem = null, isProcessingCounterBuy = false;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
 
@@ -925,7 +891,6 @@
         } else if(categoryKey === 'extraServices') {
             titleEl.innerText = "📦 الخدمات الإضافية";
             html = `
-                <button class="action-btn btn-purple" style="padding:12px; font-size:12px; margin-bottom:6px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="closeCategoryModal(); navigateTo('loungePostsScreen');">📸 منشورات المنصة</button>
                 <button class="action-btn btn-green" style="padding:12px; font-size:12px;" onclick="closeCategoryModal(); navigateTo('counterTradingScreen');">🤝 سوق تداول العدادات اليومية</button>
             `;
         }
@@ -1019,7 +984,8 @@
         rtdb.ref('rooms').once('value', snap=>{
             let hasRoom = false;
             snap.forEach(item=>{
-                if(item.val().creatorKey === currentUserKey) hasRoom = true;
+                let val = item.val();
+                if(val && !val.isLoungePost && val.creatorKey === currentUserKey) hasRoom = true;
             });
             if(hasRoom) return showNeonPopup("⚠️ عذراً، لا يمكنك إنشاء أكثر من غرفة محادثة واحدة.");
             document.getElementById('createRoomModal').style.display='flex';
@@ -1028,14 +994,19 @@
     function closeCreateRoomModal(){ document.getElementById('createRoomModal').style.display='none'; }
 
     function confirmCreateRoom(){
+        const ROOM_CREATION_FEE = 1000;
         let roomName = document.getElementById('newRoomNameInput').value.trim();
         let coverFile = document.getElementById('newRoomCoverInput').files[0];
         if(!roomName) return showNeonPopup("⚠️ يرجى إدخال اسم الغرفة!");
+        if((userData.points || 0) < ROOM_CREATION_FEE){
+            return showNeonPopup(`⚠️ رصيدك غير كافي لإنشاء غرفة. يتطلب إنشاء الغرفة ${ROOM_CREATION_FEE.toLocaleString()} نقطة.`);
+        }
 
         rtdb.ref('rooms').once('value', snap=>{
             let hasRoom = false;
             snap.forEach(item=>{
-                if(item.val().creatorKey === currentUserKey) hasRoom = true;
+                let val = item.val();
+                if(val && !val.isLoungePost && val.creatorKey === currentUserKey) hasRoom = true;
             });
             if(hasRoom){
                 closeCreateRoomModal();
@@ -1043,27 +1014,43 @@
             }
 
             let createAction = (coverBase64)=>{
-                let roomId = userData.customId || '1';
-                rtdb.ref('rooms').push({
-                    roomId: roomId,
-                    roomName: roomName,
-                    creatorKey: currentUserKey,
-                    creatorName: userData.name || 'مستخدم',
-                    creatorCustomId: userData.customId || '---',
-                    cover: coverBase64 || 'https://via.placeholder.com/85',
-                    timestamp: Date.now()
-                }).then(()=>{
-                    closeCreateRoomModal();
-                    document.getElementById('newRoomNameInput').value = '';
-                    showNeonPopup("✅ تم إنشاء الغرفة بنجاح.");
-                    loadRoomsList();
+                rtdb.ref(`users/${currentUserKey}/points`).transaction((currPts) => {
+                    let currentBalance = Number(currPts || 0);
+                    if(currentBalance < ROOM_CREATION_FEE) return;
+                    return currentBalance - ROOM_CREATION_FEE;
+                }, (error, committed, snapshot) => {
+                    if(error || !committed){
+                        return showNeonPopup(`⚠️ رصيدك غير كافي لإنشاء غرفة. يتطلب إنشاء الغرفة ${ROOM_CREATION_FEE.toLocaleString()} نقطة.`);
+                    }
+                    let updatedPoints = Number(snapshot.val() || 0);
+                    userData.points = updatedPoints;
+                    updateUI();
+
+                    let roomId = userData.customId || '1';
+                    rtdb.ref('rooms').push({
+                        roomId: roomId,
+                        roomName: roomName,
+                        creatorKey: currentUserKey,
+                        creatorName: userData.name || 'مستخدم',
+                        creatorCustomId: userData.customId || '---',
+                        cover: coverBase64 || 'https://via.placeholder.com/85',
+                        creationFeePaid: ROOM_CREATION_FEE,
+                        timestamp: Date.now()
+                    }).then(()=>{
+                        closeCreateRoomModal();
+                        document.getElementById('newRoomNameInput').value = '';
+                        document.getElementById('newRoomCoverInput').value = '';
+                        showNeonPopup(`✅ تم إنشاء الغرفة بنجاح وخصم ${ROOM_CREATION_FEE.toLocaleString()} نقطة من رصيدك.`);
+                        loadRoomsList();
+                    }).catch(() => {
+                        rtdb.ref(`users/${currentUserKey}/points`).transaction(p => Number(p || 0) + ROOM_CREATION_FEE);
+                        showNeonPopup("⚠️ حدث خطأ أثناء إنشاء الغرفة، يرجى المحاولة مرة أخرى.");
+                    });
                 });
             };
 
             if(coverFile){
-                let reader = new FileReader();
-                reader.onload = (e)=> createAction(e.target.result);
-                reader.readAsDataURL(coverFile);
+                compressImageToBase64(coverFile, 300, 300, 0.75).then(coverBase64 => createAction(coverBase64));
             } else {
                 createAction('');
             }
@@ -1082,6 +1069,7 @@
             
             snap.forEach(item=>{
                 let r = item.val();
+                if(!r || r.isLoungePost || !r.roomName) return;
                 let rKey = item.key;
                 if(r.creatorKey === currentUserKey) userHasRoom = true;
 
@@ -1092,7 +1080,7 @@
 
                 html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right; margin-bottom:6px;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
+                        <img src="${r.cover || 'https://via.placeholder.com/45'}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
                         <div>
                             <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
                             <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 معرف الغرفة: ${r.roomId} | المنشئ: ${r.creatorName}</div>
@@ -1100,7 +1088,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
+                        <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover || 'https://via.placeholder.com/35'}')">دخول 🚪</button>
                     </div>
                 </div>`;
             });
@@ -1109,7 +1097,7 @@
                 createSection.style.display = userHasRoom ? 'none' : 'block';
             }
 
-            if(!snap.exists()){
+            if(!html){
                 container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد غرف محادثة متاحة حالياً.</div>";
             } else {
                 container.innerHTML = html;
@@ -1136,19 +1124,20 @@
             let html = '';
             snap.forEach(item=>{
                 let r = item.val();
+                if(!r || r.isLoungePost || !r.roomName) return;
                 let rKey = item.key;
                 if(String(r.roomId) === String(searchId)){
                     found = true;
                     html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(236,72,153,0.3); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${r.cover}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
+                            <img src="${r.cover || 'https://via.placeholder.com/45'}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #ec4899;" alt="روم">
                             <div>
                                 <div style="font-size:13px; color:#f472b6; font-weight:bold;">${r.roomName}</div>
                                 <div style="font-size:10px; color:#38bdf8; margin-top:2px;">🏠 معرف الغرفة: ${r.roomId} | المنشئ: ${r.creatorName}</div>
                             </div>
                         </div>
                         <div>
-                            <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover}')">دخول 🚪</button>
+                            <button class="action-btn btn-purple" style="padding:6px 12px; font-size:11px; background:linear-gradient(135deg,#db2777,#9333ea)" onclick="joinRoom('${rKey}', '${r.roomId}', '${r.roomName}', '${r.cover || 'https://via.placeholder.com/35'}')">دخول 🚪</button>
                         </div>
                     </div>`;
                 }
@@ -1355,6 +1344,7 @@
             document.getElementById('sellCounterTypeInput').value = '';
             document.getElementById('sellCounterPriceInput').value = '';
             showNeonPopup("✅ تم عرض العداد للبيع في السوق بنجاح.");
+            loadTradingCountersMarket();
         });
     }
 
@@ -1370,6 +1360,7 @@
             let html = '';
             snap.forEach(item=>{
                 let d = item.val(), itemKey = item.key;
+                if(!d) return;
                 html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(16,185,129,0.4); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
                     <div style="flex:1;">
                         <div style="font-size:12px; color:#fde047; font-weight:bold;">عداد ${Number(d.counterVal).toLocaleString()} نقطة يومياً</div>
@@ -1385,57 +1376,97 @@
 
     function promptBuyTradingCounter(itemKey, sellerKey, counterVal, price){
         if(sellerKey === currentUserKey) return showNeonPopup("⚠️ لا يمكنك شراء عدادك المعروض بنفسك.");
-        pendingBuyItem = { itemKey, sellerKey, counterVal, price };
-        document.getElementById('buyConfirmText').innerText = `هل أنت متأكد من شراء عداد (${counterVal.toLocaleString()} نقطة يومياً) بسعر (${price.toLocaleString()} نقطة)؟`;
+        pendingBuyItem = { itemKey, sellerKey, counterVal: Number(counterVal), price: Number(price) };
+        document.getElementById('buyConfirmText').innerText = `هل أنت متأكد من شراء عداد (${Number(counterVal).toLocaleString()} نقطة يومياً) بسعر (${Number(price).toLocaleString()} نقطة)؟`;
         document.getElementById('buyConfirmModal').style.display = 'flex';
     }
 
     function closeBuyConfirmModal(){ document.getElementById('buyConfirmModal').style.display = 'none'; pendingBuyItem = null; }
 
     function executeBuyCounterTransaction(){
-        if(!pendingBuyItem) return closeBuyConfirmModal();
+        if(!pendingBuyItem || isProcessingCounterBuy) return;
         let { itemKey, sellerKey, counterVal, price } = pendingBuyItem;
         
-        if((userData.points || 0) < price){
+        if(Number(userData.points || 0) < price){
             closeBuyConfirmModal();
             return showNeonPopup(`❌ ليس لديك رصيد نقاط كافي لإتمام الشراء.`);
         }
-        
-        rtdb.ref(`users/${sellerKey}`).once('value', sSnap=>{
-            if(!sSnap.exists()){
+
+        isProcessingCounterBuy = true;
+        let claimedListing = null;
+
+        rtdb.ref(`trading_counters/${itemKey}`).transaction((currListing) => {
+            if(!currListing) return;
+            claimedListing = currListing;
+            return null;
+        }, (err, committed) => {
+            if(err || !committed || !claimedListing){
+                isProcessingCounterBuy = false;
                 closeBuyConfirmModal();
-                return showNeonPopup(`❌ عذراً، عارض العداد غير موجود.`);
+                loadTradingCountersMarket();
+                return showNeonPopup("⚠️ عذراً، تم بيع هذا العداد مسبقاً أو لم يعد متاحاً.");
             }
-            let sellerData = sSnap.val();
 
-            rtdb.ref(`trading_counters/${itemKey}`).remove().then(()=>{
-                let newBuyerPts = userData.points - price;
-                let existingBuyerCounterVal = userData.activeCounterVal || 0;
-                let updatedBuyerCounterVal = existingBuyerCounterVal + counterVal;
+            let listingCounterVal = Number(claimedListing.counterVal || counterVal);
+            let listingPrice = Number(claimedListing.price || price);
+            let actualSellerKey = claimedListing.sellerKey || sellerKey;
 
-                rtdb.ref(`users/${currentUserKey}`).update({
-                    points: newBuyerPts,
-                    activeCounterVal: updatedBuyerCounterVal,
-                    activeCounter: `عداد ${updatedBuyerCounterVal.toLocaleString()} نقطة يومياً`
-                }).then(()=>{
-                    
-                    let newSellerPts = Number(sellerData.points || 0) + price;
-                    rtdb.ref(`users/${sellerKey}`).update({
-                        points: newSellerPts,
-                        activeCounterVal: 0,
-                        activeCounter: 'لا يوجد'
-                    }).then(()=>{
-                        
-                        rtdb.ref(`notifications/${sellerKey}`).push({
-                            text: `🎉 تم بيع عدادك (${counterVal.toLocaleString()} نقطة) بنجاح وأضيفت (${price.toLocaleString()} نقطة) لرصيدك.`,
-                            timestamp: Date.now()
+            rtdb.ref(`users/${currentUserKey}`).transaction((buyerObj) => {
+                if(!buyerObj) return buyerObj;
+                let bPts = Number(buyerObj.points || 0);
+                if(bPts < listingPrice) return;
+                let newBCounter = Number(buyerObj.activeCounterVal || 0) + listingCounterVal;
+                buyerObj.points = bPts - listingPrice;
+                buyerObj.activeCounterVal = newBCounter;
+                buyerObj.activeCounter = `عداد ${newBCounter.toLocaleString()} نقطة يومياً`;
+                return buyerObj;
+            }, (bErr, bCommitted, bSnap) => {
+                if(bErr || !bCommitted){
+                    rtdb.ref(`trading_counters/${itemKey}`).set(claimedListing);
+                    isProcessingCounterBuy = false;
+                    closeBuyConfirmModal();
+                    return showNeonPopup("❌ تعذر إتمام الشراء، يرجى التأكد من رصيدك والمحاولة مرة أخرى.");
+                }
+
+                let updatedBuyerPts = bSnap && bSnap.val() ? Number(bSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - listingPrice);
+                let updatedBuyerCounter = bSnap && bSnap.val() ? Number(bSnap.val().activeCounterVal || 0) : Number(userData.activeCounterVal || 0) + listingCounterVal;
+                userData.points = updatedBuyerPts;
+                userData.activeCounterVal = updatedBuyerCounter;
+                userData.activeCounter = `عداد ${updatedBuyerCounter.toLocaleString()} نقطة يومياً`;
+                updateUI();
+
+                rtdb.ref(`users/${actualSellerKey}`).transaction((sellerObj) => {
+                    if(!sellerObj) return sellerObj;
+                    let sPts = Number(sellerObj.points || 0) + listingPrice;
+                    let remainingCounter = Math.max(0, Number(sellerObj.activeCounterVal || 0) - listingCounterVal);
+                    sellerObj.points = sPts;
+                    sellerObj.activeCounterVal = remainingCounter;
+                    sellerObj.activeCounter = remainingCounter > 0 ? `عداد ${remainingCounter.toLocaleString()} نقطة يومياً` : 'لا يوجد';
+                    return sellerObj;
+                }, (sErr) => {
+                    if(sErr){
+                        rtdb.ref(`users/${actualSellerKey}`).once('value').then(uSnap => {
+                            if(uSnap.exists()){
+                                let sData = uSnap.val();
+                                let rem = Math.max(0, Number(sData.activeCounterVal || 0) - listingCounterVal);
+                                return rtdb.ref(`users/${actualSellerKey}`).update({
+                                    points: Number(sData.points || 0) + listingPrice,
+                                    activeCounterVal: rem,
+                                    activeCounter: rem > 0 ? `عداد ${rem.toLocaleString()} نقطة يومياً` : 'لا يوجد'
+                                });
+                            }
                         });
-                        
-                        closeBuyConfirmModal();
-                        updateUI();
-                        showNeonPopup(`🎉 تمت عملية الشراء بنجاح.`);
+                    }
+                    rtdb.ref(`notifications/${actualSellerKey}`).push({
+                        text: `🎉 تم بيع عدادك (${listingCounterVal.toLocaleString()} نقطة) بنجاح وأضيفت (${listingPrice.toLocaleString()} نقطة) لرصيدك.`,
+                        timestamp: Date.now()
                     });
                 });
+
+                isProcessingCounterBuy = false;
+                closeBuyConfirmModal();
+                loadTradingCountersMarket();
+                showNeonPopup(`🎉 تمت عملية الشراء بنجاح.`);
             });
         });
     }
@@ -1665,140 +1696,38 @@
         }
     }
 
-    function publishLoungePost(){
-        let title = document.getElementById('newPostTitle').value.trim();
-        let desc = document.getElementById('newPostText').value.trim();
-        let imgFile = document.getElementById('newPostImageInput').files[0];
-        
-        if(!title && !desc && !imgFile) return showNeonPopup("⚠️ يرجى إدخال محتوى المنشور أو إرفاق صورة.");
-
-        let createPostAction = (imgBase64)=>{
-            rtdb.ref('rooms').push({
-                isLoungePost: true,
-                authorKey: currentUserKey,
-                authorName: userData.name || 'مستخدم',
-                authorId: userData.customId || '---',
-                authorAvatar: userData.avatar || 'https://via.placeholder.com/40',
-                title: title,
-                text: desc,
-                image: imgBase64 || '',
-                likesCount: 0,
-                likedUsers: {},
-                timestamp: Date.now()
-            }).then(()=>{
-                document.getElementById('newPostTitle').value = '';
-                document.getElementById('newPostText').value = '';
-                document.getElementById('newPostImageInput').value = '';
-                showNeonPopup("✅ تم نشر المنشور بنجاح.");
-                loadLoungePosts();
-            });
-        };
-
-        if(imgFile){
-            let reader = new FileReader();
-            reader.onload = (e)=> createPostAction(e.target.result);
-            reader.readAsDataURL(imgFile);
-        } else {
-            createPostAction('');
-        }
-    }
-
-    function loadLoungePosts(){
-        if(!rtdb) return;
-        rtdb.ref('rooms').limitToLast(50).on('value', snap=>{
-            let container = document.getElementById('loungePostsContainer');
-            if(!container) return;
-            if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً.</div>";
-                return;
-            }
-            let html = '';
-            snap.forEach(item=>{
-                let p = item.val();
-                if(!p.isLoungePost) return;
-                let pKey = item.key;
-                let dateStr = new Date(p.timestamp).toLocaleString();
-                let isMyPost = (p.authorKey === currentUserKey);
-                let isAdmin = (currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1');
-                
-                let deleteBtn = (isMyPost || isAdmin) ? 
-                    `<button class="action-btn" style="background:#ef4444;color:#fff;padding:2px 6px;font-size:9px;" onclick="deleteLoungePost('${pKey}')">حذف 🗑️</button>` : '';
-
-                let imgHtml = p.image ? `<img src="${p.image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:6px;" alt="صورة المنشور">` : '';
-
-                html += `<div class="card" style="text-align:right; margin-bottom:8px; background:rgba(20,10,40,0.85);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <img src="${p.authorAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #38bdf8;" alt="صورة">
-                            <div>
-                                <b style="color:#fff; font-size:12px;">${p.authorName}</b>
-                                <div style="font-size:8px; color:#94a3b8;">معرف: ${p.authorId} | ${dateStr}</div>
-                            </div>
-                        </div>
-                        <div>${deleteBtn}</div>
-                    </div>
-                    ${p.title ? `<div style="font-size:12px; color:#f472b6; font-weight:bold; margin-bottom:4px;">📌 ${p.title}</div>` : ''}
-                    ${p.text ? `<div style="font-size:11px; color:#f8fafc; margin-bottom:6px; word-break:break-word;">${p.text}</div>` : ''}
-                    ${imgHtml}
-                    <div style="display:flex; justify-content:flex-start; align-items:center; font-size:11px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
-                        <button class="action-btn" style="width:auto; background:rgba(236,72,153,0.22); border:1px solid #f472b6; color:#fff; padding:4px 12px; font-size:10px;" onclick="likeLoungePost('${pKey}')">❤️ إعجاب (${p.likesCount || 0})</button>
-                    </div>
-                </div>`;
-            });
-            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد منشورات حالياً.</div>";
-        });
-    }
-
-    function likeLoungePost(postKey){
-        if(!currentUserKey) return;
-        rtdb.ref(`rooms/${postKey}`).once('value', snap=>{
-            if(!snap.exists()) return;
-            let post = snap.val();
-            let likedUsers = post.likedUsers || {};
-            
-            if(likedUsers[currentUserKey]){
-                return;
-            }
-            
-            likedUsers[currentUserKey] = true;
-            let newLikes = (post.likesCount || 0) + 1;
-            rtdb.ref(`rooms/${postKey}`).update({ 
-                likesCount: newLikes,
-                likedUsers: likedUsers
-            });
-        });
-    }
-
-    function deleteLoungePost(postKey){
-        if(!confirm("⚠️ هل أنت متأكد من حذف هذا المنشور؟")) return;
-        rtdb.ref(`rooms/${postKey}`).remove().then(()=>{
-            showNeonPopup("✅ تم الحذف بنجاح.");
-            loadLoungePosts();
-        });
-    }
-
-    function loadMyProfilePosts(){
-        rtdb.ref('rooms').orderByChild('authorKey').equalTo(currentUserKey).once('value', snap=>{
-            let container = document.getElementById('myProfilePostsContainer');
-            if(!container) return;
-            if(!snap.exists()){
-                container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>ليس لديك أي منشورات حالياً.</div>";
-                return;
-            }
-            let html = '';
-            snap.forEach(item=>{
-                let p = item.val();
-                if(!p.isLoungePost) return;
-                let pKey = item.key;
-                let dateStr = new Date(p.timestamp).toLocaleString();
-                html += `<div class="card" style="text-align:right; margin-bottom:8px;">
-                    <div style="font-size:9px; color:#94a3b8; margin-bottom:4px;">${dateStr}</div>
-                    ${p.title ? `<div style="font-size:11px; color:#f472b6; font-weight:bold;">${p.title}</div>` : ''}
-                    ${p.text ? `<div style="font-size:11px; color:#fff; margin-bottom:6px;">${p.text}</div>` : ''}
-                    <button class="action-btn" style="background:#ef4444; color:#fff; padding:4px; font-size:10px;" onclick="deleteLoungePost('${pKey}'); loadMyProfilePosts();">حذف المنشور 🗑️</button>
-                </div>`;
-            });
-            container.innerHTML = html || "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>ليس لديك أي منشورات.</div>";
+    function compressImageToBase64(file, maxWidth = 800, maxHeight = 800, quality = 0.72) {
+        return new Promise((resolve, reject) => {
+            if (!file) return reject(new Error("ملف الصورة غير موجود"));
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error("تعذر قراءة ملف الصورة"));
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onerror = () => reject(new Error("تعذر معالجة أبعاد الصورة"));
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = Math.max(1, Math.round(width * ratio));
+                        height = Math.max(1, Math.round(height * ratio));
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return resolve(event.target.result);
+                    ctx.drawImage(img, 0, 0, width, height);
+                    try {
+                        const compressed = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressed && compressed.startsWith('data:image') ? compressed : event.target.result);
+                    } catch (e) {
+                        resolve(event.target.result);
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         });
     }
 
@@ -1861,8 +1790,6 @@
         if(screenId==='agentsScreen') loadApprovedAgentsList();
         if(screenId==='counterTradingScreen') loadTradingCountersMarket();
         if(screenId==='roomsScreen') loadRoomsList();
-        if(screenId==='loungePostsScreen') loadLoungePosts();
-        if(screenId==='myProfilePostsScreen') loadMyProfilePosts();
         if(screenId==='profileScreen'){
             let b=document.getElementById('profileBioInput');if(b)document.getElementById('bioCounter').innerText=`${b.value.length} / 60`;
             updateVerificationStatusUI();
@@ -2165,46 +2092,54 @@
         if(!prov || !tg || !wa || !aImg || !hF || !hB || !nF || !nB) return showNeonPopup("⚠️ يرجى ملء كافة الحقول ورفع المستمسكات المطلوبة.");
         let requiredFee = 6000000;
         if((userData.points || 0) < requiredFee) return showNeonPopup(`❌ رصيدك الحالي لا يكفي. رسوم التقديم هي 6,000,000 نقطة.`);
-        
-        let rA = new FileReader(), r1 = new FileReader(), r2 = new FileReader(), r3 = new FileReader(), r4 = new FileReader();
-        rA.onload = (eA)=>{
-            let agentAvatar64 = eA.target.result;
-            r1.onload = (e1)=>{
-                let hFront64 = e1.target.result;
-                r2.onload = (e2)=>{
-                    let hBack64 = e2.target.result;
-                    r3.onload = (e3)=>{
-                        let nFront64 = e3.target.result;
-                        r4.onload = (e4)=>{
-                            let nBack64 = e4.target.result;
-                            
-                            let newPoints = (userData.points || 0) - requiredFee;
-                            rtdb.ref(`users/${currentUserKey}`).update({ points: newPoints }).then(()=>{
-                                userData.points = newPoints;
-                                updateUI();
-                                
-                                rtdb.ref('agent_applications').push({
-                                    userKey: currentUserKey, userName: userData.name, userId: userData.customId,
-                                    province: prov, telegram: tg, whatsapp: wa, agentAvatar: agentAvatar64,
-                                    feePaid: requiredFee,
-                                    housingFront: hFront64, housingBack: hBack64,
-                                    nationalFront: nFront64, nationalBack: nBack64,
-                                    timestamp: Date.now()
-                                }).then(()=>{
-                                    closeAgentApplyModal();
-                                    showNeonPopup("✅ تم إرسال طلب الوكالة وصور المستمسكات للإدارة بنجاح.");
-                                });
-                            });
-                        };
-                        r4.readAsDataURL(nB);
-                    };
-                    r3.readAsDataURL(nF);
-                };
-                r2.readAsDataURL(hB);
-            };
-            r1.readAsDataURL(hF);
-        };
-        rA.readAsDataURL(aImg);
+
+        Promise.all([
+            compressImageToBase64(aImg, 350, 350, 0.72),
+            compressImageToBase64(hF, 850, 850, 0.68),
+            compressImageToBase64(hB, 850, 850, 0.68),
+            compressImageToBase64(nF, 850, 850, 0.68),
+            compressImageToBase64(nB, 850, 850, 0.68)
+        ]).then(([agentAvatar64, hFront64, hBack64, nFront64, nBack64]) => {
+            if(
+                !agentAvatar64 || !agentAvatar64.startsWith('data:image') ||
+                !hFront64 || !hFront64.startsWith('data:image') ||
+                !hBack64 || !hBack64.startsWith('data:image') ||
+                !nFront64 || !nFront64.startsWith('data:image') ||
+                !nBack64 || !nBack64.startsWith('data:image')
+            ) {
+                return showNeonPopup("⚠️ تعذر تجهيز إحدى الصور، يرجى اختيار صور واضحة وإعادة المحاولة.");
+            }
+
+            rtdb.ref(`users/${currentUserKey}/points`).transaction((currPts) => {
+                let bal = Number(currPts || 0);
+                if(bal < requiredFee) return;
+                return bal - requiredFee;
+            }, (err, committed, snap) => {
+                if(err || !committed){
+                    return showNeonPopup(`❌ رصيدك الحالي لا يكفي. رسوم التقديم هي 6,000,000 نقطة.`);
+                }
+                let newPoints = Number(snap.val() || 0);
+                userData.points = newPoints;
+                updateUI();
+
+                rtdb.ref('agent_applications').push({
+                    userKey: currentUserKey, userName: userData.name || 'مستخدم', userId: userData.customId || '---',
+                    province: prov, telegram: tg, whatsapp: wa, agentAvatar: agentAvatar64,
+                    feePaid: requiredFee,
+                    housingFront: hFront64, housingBack: hBack64,
+                    nationalFront: nFront64, nationalBack: nBack64,
+                    timestamp: Date.now()
+                }).then(()=>{
+                    closeAgentApplyModal();
+                    showNeonPopup("✅ تم إرسال طلب الوكالة وصور المستمسكات للإدارة بنجاح.");
+                }).catch((saveErr)=>{
+                    rtdb.ref(`users/${currentUserKey}/points`).transaction(p => Number(p || 0) + requiredFee);
+                    showNeonPopup("❌ تعذر رفع الطلب، يرجى تقليل حجم الصور والمحاولة مرة أخرى: " + (saveErr && saveErr.message ? saveErr.message : ''));
+                });
+            });
+        }).catch(() => {
+            showNeonPopup("⚠️ حدث خطأ أثناء قراءة أو معالجة صور المستمسكات.");
+        });
     }
 
     function loadApprovedAgentsList(){
@@ -2471,7 +2406,7 @@
     }
 
     function triggerImageUpload(){document.getElementById('hiddenImageInput').click();}
-    function previewImage(e){const f=e.target.files[0];if(f){const rd=new FileReader();rd.onload=ce=>{base64Image=ce.target.result;document.getElementById('avatarPreview').src=base64Image;};rd.readAsDataURL(f);}}
+    function previewImage(e){const f=e.target.files[0];if(f){compressImageToBase64(f,350,350,0.75).then(res=>{base64Image=res;document.getElementById('avatarPreview').src=base64Image;});}}
     function validateBioLength(i){if(i.value.length>60)i.value=i.value.substring(0,60);document.getElementById('bioCounter').innerText=`${i.value.length} / 60`;}
 
     function saveProfileData(){
@@ -2577,6 +2512,13 @@
         rtdb.ref('app_settings').update({tickerText: txt}).then(()=>showNeonPopup("📢 تم نشر الإعلان بنجاح."));
     }
 
+    function renderDocImageTag(val, altText) {
+        if (typeof val === 'string' && (val.startsWith('data:image') || val.startsWith('http://') || val.startsWith('https://'))) {
+            return `<img src="${val}" class="doc-preview-img" alt="${altText}">`;
+        }
+        return `<div style="font-size:9px;color:#94a3b8;padding:6px;background:rgba(2,6,23,0.7);border-radius:6px;margin-top:3px;">لا توجد صورة</div>`;
+    }
+
     function openAdminAgentApplications(){
         if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
         document.getElementById('adminAgentAppsModal').style.display='flex';
@@ -2586,10 +2528,10 @@
             let h = '';
             snap.forEach(item=>{
                 let d = item.val();
-                let hfImg = (typeof d.housingFront === 'string' && d.housingFront.startsWith('data:image')) ? `<img src="${d.housingFront}" class="doc-preview-img" alt="بطاقة السكن أمام">` : `<div style="font-size:9px;color:#94a3b8;">لا توجد صورة</div>`;
-                let hbImg = (typeof d.housingBack === 'string' && d.housingBack.startsWith('data:image')) ? `<img src="${d.housingBack}" class="doc-preview-img" alt="بطاقة السكن خلف">` : `<div style="font-size:9px;color:#94a3b8;">لا توجد صورة</div>`;
-                let nfImg = (typeof d.nationalFront === 'string' && d.nationalFront.startsWith('data:image')) ? `<img src="${d.nationalFront}" class="doc-preview-img" alt="البطاقة الوطنية أمام">` : `<div style="font-size:9px;color:#94a3b8;">لا توجد صورة</div>`;
-                let nbImg = (typeof d.nationalBack === 'string' && d.nationalBack.startsWith('data:image')) ? `<img src="${d.nationalBack}" class="doc-preview-img" alt="البطاقة الوطنية خلف">` : `<div style="font-size:9px;color:#94a3b8;">لا توجد صورة</div>`;
+                let hfImg = renderDocImageTag(d.housingFront, "بطاقة السكن أمام");
+                let hbImg = renderDocImageTag(d.housingBack, "بطاقة السكن خلف");
+                let nfImg = renderDocImageTag(d.nationalFront, "البطاقة الوطنية أمام");
+                let nbImg = renderDocImageTag(d.nationalBack, "البطاقة الوطنية خلف");
 
                 h += `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(234,179,8,0.35);padding:8px;border-radius:10px;margin-bottom:8px">
                     <b>المستخدم:</b> ${d.userName} (${d.userId})<br>
