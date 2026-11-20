@@ -825,6 +825,8 @@
     let totalWheelDegrees=0, pendingBuyItem = null, isProcessingCounterBuy = false;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
+    let weeklySettlementInterval = null;
+    let isSettlingWeeklyLeaderboard = false;
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -850,6 +852,125 @@
 
     function isAdminAccount() {
         return currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1';
+    }
+
+    function getLastFriday6AMTimestamp(nowMs = Date.now()) {
+        const d = new Date(nowMs);
+        const candidate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 6, 0, 0, 0);
+        const day = d.getDay(); // 0 = Sun ... 5 = Fri ... 6 = Sat
+        let daysSinceFriday = (day - 5 + 7) % 7;
+        if (daysSinceFriday === 0 && d.getTime() < candidate.getTime()) {
+            daysSinceFriday = 7;
+        }
+        candidate.setDate(candidate.getDate() - daysSinceFriday);
+        return candidate.getTime();
+    }
+
+    function checkAndRunWeeklyLeaderboardReset() {
+        if (!rtdb || !currentUserKey || isSettlingWeeklyLeaderboard) return;
+        const nowMs = Date.now();
+        const lastFriday6AM = getLastFriday6AMTimestamp(nowMs);
+        if (nowMs < lastFriday6AM) return;
+
+        const weekId = `week_${lastFriday6AM}`;
+        const settlementRef = rtdb.ref(`weekly_leaderboard_settlements/${weekId}`);
+
+        isSettlingWeeklyLeaderboard = true;
+        settlementRef.transaction((current) => {
+            if (current && (current.settled === true || current.inProgress === true)) {
+                return;
+            }
+            return {
+                inProgress: true,
+                settled: false,
+                friday6AM: lastFriday6AM,
+                startedBy: currentUserKey,
+                startedAt: nowMs
+            };
+        }, (err, committed) => {
+            if (err || !committed) {
+                isSettlingWeeklyLeaderboard = false;
+                return;
+            }
+
+            rtdb.ref('users').once('value').then((snap) => {
+                const allUsers = [];
+                snap.forEach((uSnap) => {
+                    const uVal = uSnap.val();
+                    if (!uVal) return;
+                    const clicks = Number(uVal.userClicksCount || 0);
+                    allUsers.push({
+                        key: uSnap.key,
+                        name: uVal.name || 'مستخدم',
+                        customId: uVal.customId || '---',
+                        clicks: clicks,
+                        gems: Number(uVal.gems || 0)
+                    });
+                });
+
+                const ranked = allUsers
+                    .filter((u) => u.clicks > 0)
+                    .sort((a, b) => b.clicks - a.clicks);
+
+                const prizes = [600, 300, 150];
+                const winnersArchive = [];
+                const rewardPromises = [];
+
+                for (let i = 0; i < Math.min(3, ranked.length); i++) {
+                    const winner = ranked[i];
+                    const prizeGems = prizes[i];
+                    winnersArchive.push({
+                        rank: i + 1,
+                        userKey: winner.key,
+                        name: winner.name,
+                        customId: winner.customId,
+                        clicks: winner.clicks,
+                        gemsAwarded: prizeGems
+                    });
+
+                    rewardPromises.push(
+                        rtdb.ref(`users/${winner.key}/gems`).transaction((currGems) => Number(currGems || 0) + prizeGems)
+                    );
+                    rewardPromises.push(
+                        rtdb.ref(`notifications/${winner.key}`).push({
+                            text: `🏆 مبروك! حصلت على المركز #${i + 1} في التصنيف الأسبوعي وتم منحك ${prizeGems} جوهرة 💎.`,
+                            timestamp: Date.now()
+                        })
+                    );
+                }
+
+                const resetPromises = allUsers
+                    .filter((u) => u.clicks > 0)
+                    .map((u) => rtdb.ref(`users/${u.key}/userClicksCount`).set(0));
+
+                return Promise.all([...rewardPromises, ...resetPromises]).then(() => {
+                    return rtdb.ref(`weekly_leaderboard_history/${weekId}`).set({
+                        weekId: weekId,
+                        friday6AM: lastFriday6AM,
+                        settledAt: Date.now(),
+                        winners: winnersArchive
+                    });
+                }).then(() => {
+                    return settlementRef.set({
+                        inProgress: false,
+                        settled: true,
+                        friday6AM: lastFriday6AM,
+                        settledBy: currentUserKey,
+                        settledAt: Date.now(),
+                        winnersCount: winnersArchive.length
+                    });
+                });
+            }).then(() => {
+                isSettlingWeeklyLeaderboard = false;
+                if (document.getElementById('leaderboardScreen')?.classList.contains('active')) {
+                    loadLeaderboardData();
+                }
+            }).catch(() => {
+                settlementRef.remove().finally(() => {
+                    isSettlingWeeklyLeaderboard = false;
+                });
+            });
+        });
     }
 
     function initWindEffectInCircle() {
@@ -1409,58 +1530,55 @@
     function executeBuyCounterTransaction(){
         if(!pendingBuyItem || isProcessingCounterBuy) return;
         let { itemKey, sellerKey, counterVal, price } = pendingBuyItem;
-        
+
         if(Number(userData.points || 0) < price){
             closeBuyConfirmModal();
             return showNeonPopup(`❌ ليس لديك رصيد نقاط كافي لإتمام الشراء.`);
         }
 
         isProcessingCounterBuy = true;
-        let claimedListing = null;
 
-        rtdb.ref(`trading_counters/${itemKey}`).transaction((currListing) => {
-            if(!currListing) return;
-            claimedListing = currListing;
-            return null;
-        }, (err, committed) => {
-            if(err || !committed || !claimedListing){
+        rtdb.ref(`trading_counters/${itemKey}`).once('value').then((listingSnap) => {
+            if(!listingSnap.exists()){
                 isProcessingCounterBuy = false;
                 closeBuyConfirmModal();
                 loadTradingCountersMarket();
                 return showNeonPopup("⚠️ عذراً، تم بيع هذا العداد مسبقاً أو لم يعد متاحاً.");
             }
 
-            let listingCounterVal = Number(claimedListing.counterVal || counterVal);
-            let listingPrice = Number(claimedListing.price || price);
-            let actualSellerKey = claimedListing.sellerKey || sellerKey;
+            const listingData = listingSnap.val();
+            const listingCounterVal = Number(listingData.counterVal || counterVal);
+            const listingPrice = Number(listingData.price || price);
+            const actualSellerKey = listingData.sellerKey || sellerKey;
 
-            rtdb.ref(`users/${currentUserKey}`).transaction((buyerObj) => {
+            return rtdb.ref(`users/${currentUserKey}`).transaction((buyerObj) => {
                 if(!buyerObj) return buyerObj;
-                let bPts = Number(buyerObj.points || 0);
+                const bPts = Number(buyerObj.points || 0);
                 if(bPts < listingPrice) return;
-                let newBCounter = Number(buyerObj.activeCounterVal || 0) + listingCounterVal;
+                const newBCounter = Number(buyerObj.activeCounterVal || 0) + listingCounterVal;
                 buyerObj.points = bPts - listingPrice;
                 buyerObj.activeCounterVal = newBCounter;
                 buyerObj.activeCounter = `عداد ${newBCounter.toLocaleString()} نقطة يومياً`;
                 return buyerObj;
             }, (bErr, bCommitted, bSnap) => {
                 if(bErr || !bCommitted){
-                    rtdb.ref(`trading_counters/${itemKey}`).set(claimedListing);
                     isProcessingCounterBuy = false;
                     closeBuyConfirmModal();
                     return showNeonPopup("❌ تعذر إتمام الشراء، يرجى التأكد من رصيدك والمحاولة مرة أخرى.");
                 }
 
-                let updatedBuyerPts = bSnap && bSnap.val() ? Number(bSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - listingPrice);
-                let updatedBuyerCounter = bSnap && bSnap.val() ? Number(bSnap.val().activeCounterVal || 0) : Number(userData.activeCounterVal || 0) + listingCounterVal;
+                const updatedBuyerPts = bSnap && bSnap.val() ? Number(bSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - listingPrice);
+                const updatedBuyerCounter = bSnap && bSnap.val() ? Number(bSnap.val().activeCounterVal || 0) : Number(userData.activeCounterVal || 0) + listingCounterVal;
                 userData.points = updatedBuyerPts;
                 userData.activeCounterVal = updatedBuyerCounter;
                 userData.activeCounter = `عداد ${updatedBuyerCounter.toLocaleString()} نقطة يومياً`;
                 updateUI();
 
+                rtdb.ref(`trading_counters/${itemKey}`).remove().catch(() => {});
+
                 rtdb.ref(`users/${actualSellerKey}`).transaction((sellerObj) => {
                     if(!sellerObj) return sellerObj;
-                    let sPts = Number(sellerObj.points || 0) + listingPrice;
+                    const sPts = Number(sellerObj.points || 0) + listingPrice;
                     sellerObj.points = sPts;
                     sellerObj.activeCounterVal = 0;
                     sellerObj.activeCounter = 'لا يوجد';
@@ -1469,7 +1587,7 @@
                     if(sErr){
                         rtdb.ref(`users/${actualSellerKey}`).once('value').then(uSnap => {
                             if(uSnap.exists()){
-                                let sData = uSnap.val();
+                                const sData = uSnap.val();
                                 return rtdb.ref(`users/${actualSellerKey}`).update({
                                     points: Number(sData.points || 0) + listingPrice,
                                     activeCounterVal: 0,
@@ -1489,6 +1607,10 @@
                 loadTradingCountersMarket();
                 showNeonPopup(`🎉 تمت عملية الشراء بنجاح. تم خصم (${listingPrice.toLocaleString()} نقطة) وإضافة العداد إلى حسابك.`);
             });
+        }).catch(() => {
+            isProcessingCounterBuy = false;
+            closeBuyConfirmModal();
+            showNeonPopup("⚠️ حدث خطأ أثناء إتمام الشراء، يرجى المحاولة مرة أخرى.");
         });
     }
 
@@ -1915,6 +2037,9 @@
             if(tickerElem && globalAppSettings.tickerText) tickerElem.innerText = globalAppSettings.tickerText;
         });
         loadNotifications();loadFriendSystem();
+        checkAndRunWeeklyLeaderboardReset();
+        if (weeklySettlementInterval) clearInterval(weeklySettlementInterval);
+        weeklySettlementInterval = setInterval(checkAndRunWeeklyLeaderboardReset, 30000);
     }
 
     function updateUI(){
@@ -2024,6 +2149,7 @@
     
     function handleLogout(){
         if(timerInterval) clearInterval(timerInterval);
+        if(weeklySettlementInterval) clearInterval(weeklySettlementInterval);
         try{ localStorage.removeItem('dinarUserKey'); }catch(e){}
         if(auth) auth.signOut();
         currentEmail='';currentUserKey='';
@@ -2283,6 +2409,7 @@
     }
 
     function loadLeaderboardData(){
+        checkAndRunWeeklyLeaderboardReset();
         rtdb.ref('users').orderByChild('userClicksCount').limitToLast(30).once('value',snap=>{
             let c=document.getElementById('leaderboardClickingList');
             if(!snap.exists()){
