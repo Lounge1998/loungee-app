@@ -154,6 +154,7 @@
 
         .system-notification-item { background: linear-gradient(135deg, rgba(30,20,55,0.9), rgba(15,23,42,0.95)); border: 1.2px solid rgba(56,189,248,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: flex-start; gap: 8px; }
         .doc-preview-img { width: 100%; max-height: 140px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(56,189,248,0.5); background: rgba(2,6,23,0.85); margin-top: 3px; }
+        .clickable-user-name { cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
     </style>
 </head>
 <body>
@@ -274,6 +275,14 @@
                 </div>
                 <div style="font-size:12px; color:#7dd3fc;">‹</div>
             </div>
+
+            <div id="approvedAgentsDirectBtn" class="grid-btn-item" style="border-color:rgba(250,204,21,0.55);" onclick="navigateTo('agentsScreen')">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="icon-circle">🏢</div>
+                    <span>قائمة الوكلاء المعتمدين</span>
+                </div>
+                <div style="font-size:12px; color:#fde047;">‹</div>
+            </div>
         </div>
         
         <div class="bottom-nav-bar">
@@ -293,6 +302,23 @@
             </div>
             <div id="categoryModalBodyList" style="display:flex; flex-direction:column; gap:8px;"></div>
             <button class="action-btn btn-orange" style="margin-top:12px; padding:8px; font-size:11px;" onclick="closeCategoryModal()">إغلاق 🚪</button>
+        </div>
+    </div>
+
+    <div id="visitedProfileModal" class="modal">
+        <div class="modal-content" style="text-align:center; max-width:330px; padding:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <h4 style="margin:0;color:#38bdf8;font-size:14px">👤 الملف الشخصي</h4>
+                <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeVisitedProfileModal()">✖</button>
+            </div>
+            <img id="visitedProfileAvatar" src="https://via.placeholder.com/85" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:2.5px solid #38bdf8;margin:0 auto 8px auto;display:block;box-shadow:0 0 15px rgba(56,189,248,0.55)" alt="صورة المستخدم">
+            <div id="visitedProfileName" style="font-size:15px;font-weight:bold;color:#fff;margin-bottom:4px">---</div>
+            <div id="visitedProfileId" style="font-size:11px;color:#facc15;font-weight:bold;margin-bottom:8px">ID: ---</div>
+            <div style="background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:10px;margin-bottom:12px;text-align:right">
+                <div style="font-size:10px;color:#94a3b8;margin-bottom:3px">النبذة الشخصية (Bio):</div>
+                <div id="visitedProfileBio" style="font-size:12px;color:#e2e8f0;word-break:break-word">لا توجد نبذة تعريفية</div>
+            </div>
+            <div id="visitedProfileActionsArea"></div>
         </div>
     </div>
 
@@ -827,6 +853,7 @@
     let activeRoomKey = null;
     let weeklySettlementInterval = null;
     let isSettlingWeeklyLeaderboard = false;
+    let currentFriendKeys = new Set();
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -854,10 +881,74 @@
         return currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1';
     }
 
+    function escapeHtmlAttr(str) {
+        return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function openVisitedProfileModal(targetUserKey, fallbackName = '', fallbackCustomId = '') {
+        if (!rtdb || !targetUserKey) return;
+        if (targetUserKey === currentUserKey) {
+            navigateTo('profileScreen');
+            return;
+        }
+
+        Promise.all([
+            rtdb.ref(`users/${targetUserKey}`).once('value'),
+            rtdb.ref(`friends/${currentUserKey}/${targetUserKey}`).once('value')
+        ]).then(([uSnap, fSnap]) => {
+            const target = uSnap.exists() ? uSnap.val() : {};
+            const isAlreadyFriend = fSnap.exists() || currentFriendKeys.has(targetUserKey);
+
+            document.getElementById('visitedProfileAvatar').src = target.avatar || 'https://via.placeholder.com/85';
+            document.getElementById('visitedProfileName').innerText = target.name || fallbackName || 'مستخدم';
+            document.getElementById('visitedProfileId').innerText = `ID: ${target.customId || fallbackCustomId || '---'}`;
+            const bioText = (target.bio && String(target.bio).trim()) ? String(target.bio).trim() : 'لا توجد نبذة تعريفية';
+            document.getElementById('visitedProfileBio').innerText = bioText;
+
+            const actionsArea = document.getElementById('visitedProfileActionsArea');
+            if (isAlreadyFriend) {
+                actionsArea.innerHTML = '';
+            } else {
+                const safeName = escapeHtmlAttr(target.name || fallbackName || 'مستخدم');
+                const safeId = escapeHtmlAttr(target.customId || fallbackCustomId || '---');
+                actionsArea.innerHTML = `<button id="visitedAddFriendBtn" class="action-btn btn-blue" style="padding:9px;font-size:12px;" onclick="sendFriendRequestFromVisitedProfile('${targetUserKey}', '${safeName}', '${safeId}')">إضافة صديق ➕</button>`;
+            }
+
+            document.getElementById('visitedProfileModal').style.display = 'flex';
+        });
+    }
+
+    function closeVisitedProfileModal() {
+        document.getElementById('visitedProfileModal').style.display = 'none';
+    }
+
+    function sendFriendRequestFromVisitedProfile(targetUserKey, targetName, targetCustomId) {
+        if (!rtdb || !currentUserKey || !targetUserKey || targetUserKey === currentUserKey) return;
+        rtdb.ref(`friends/${currentUserKey}/${targetUserKey}`).once('value').then((fSnap) => {
+            if (fSnap.exists() || currentFriendKeys.has(targetUserKey)) {
+                const actionsArea = document.getElementById('visitedProfileActionsArea');
+                if (actionsArea) actionsArea.innerHTML = '';
+                return showNeonPopup("هذا المستخدم موجود بالفعل في قائمة أصدقائك.");
+            }
+            rtdb.ref(`friend_requests/${targetUserKey}/${currentUserKey}`).set({
+                name: userData.name || 'مستخدم',
+                customId: userData.customId || '---',
+                timestamp: Date.now()
+            }).then(() => {
+                const btn = document.getElementById('visitedAddFriendBtn');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = "تم إرسال طلب الصداقة ✓";
+                }
+                showNeonPopup(`✅ تم إرسال طلب الصداقة إلى (${targetName}) بنجاح.`);
+            });
+        });
+    }
+
     function getLastFriday6AMTimestamp(nowMs = Date.now()) {
         const d = new Date(nowMs);
         const candidate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 6, 0, 0, 0);
-        const day = d.getDay(); // 0 = Sun ... 5 = Fri ... 6 = Sat
+        const day = d.getDay();
         let daysSinceFriday = (day - 5 + 7) % 7;
         if (daysSinceFriday === 0 && d.getTime() < candidate.getTime()) {
             daysSinceFriday = 7;
@@ -1003,7 +1094,6 @@
         if(categoryKey === 'mainServices') {
             titleEl.innerText = "🗂️ الخدمات الرئيسية";
             html = `
-                <button class="action-btn btn-gold" style="padding:12px; font-size:12px; margin-bottom:6px;" onclick="closeCategoryModal(); navigateTo('agentsScreen');">🏢 قائمة الوكلاء المعتمدين</button>
                 <button class="action-btn btn-green" style="padding:12px; font-size:12px;" onclick="closeCategoryModal(); openWithdrawModal();">💸 سحب الأرباح النقدية</button>
             `;
         } else if(categoryKey === 'interactionGames') {
@@ -1301,12 +1391,16 @@
                 let msg = m.val();
                 let senderAvatar = msg.senderAvatar || 'https://via.placeholder.com/35';
                 let senderName = msg.senderName || 'مستخدم';
+                let senderKey = msg.senderKey || '';
                 let messageText = msg.text || '';
+                const nameClickAttr = senderKey
+                    ? `class="clickable-user-name" onclick="openVisitedProfileModal('${escapeHtmlAttr(senderKey)}', '${escapeHtmlAttr(senderName)}')"`
+                    : '';
                 
                 if(msg.isGiftCard){
                     h += `<div style="margin-bottom:10px; display:flex; flex-direction:column; align-items:center; text-align:center; background:linear-gradient(135deg, rgba(219,39,119,0.25), rgba(147,51,234,0.25)); border:1.5px solid #ec4899; padding:10px; border-radius:14px; box-shadow:0 0 15px rgba(236,72,153,0.4);">
                         <img src="${senderAvatar}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #ec4899; margin-bottom:4px;" alt="صورة">
-                        <div style="font-size:11px; color:#f472b6; font-weight:bold;">${senderName} أرسل هدية مميزة! 🎁</div>
+                        <div style="font-size:11px; color:#f472b6; font-weight:bold;"><span ${nameClickAttr}>${senderName}</span> أرسل هدية مميزة! 🎁</div>
                         <div style="font-size:24px; margin:6px 0;">${msg.giftEmoji}</div>
                         <div style="font-size:12px; color:#fff; font-weight:bold;">${msg.giftDesc}</div>
                     </div>`;
@@ -1314,7 +1408,7 @@
                     h += `<div style="margin-bottom:10px; display:flex; align-items:flex-start; gap:8px; text-align:right;">
                         <img src="${senderAvatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ec4899; flex-shrink:0;" alt="صورة المستخدم">
                         <div style="flex:1;">
-                            <div style="font-size:10px; color:#f472b6; font-weight:bold; margin-bottom:2px;">${senderName}</div>
+                            <div style="font-size:10px; color:#f472b6; font-weight:bold; margin-bottom:2px;"><span ${nameClickAttr}>${senderName}</span></div>
                             <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:10px; word-break:break-word; color:#fff; font-size:11px;">${messageText}</div>
                         </div>
                     </div>`;
@@ -1529,73 +1623,75 @@
 
     function executeBuyCounterTransaction(){
         if(!pendingBuyItem || isProcessingCounterBuy) return;
-        let { itemKey, sellerKey, counterVal, price } = pendingBuyItem;
+        const { itemKey, sellerKey, counterVal, price } = pendingBuyItem;
 
-        if(Number(userData.points || 0) < price){
+        if(Number(userData.points || 0) < Number(price)){
             closeBuyConfirmModal();
-            return showNeonPopup(`❌ ليس لديك رصيد نقاط كافي لإتمام الشراء.`);
+            return showNeonPopup("❌ ليس لديك رصيد نقاط كافي لإتمام الشراء.");
         }
 
         isProcessingCounterBuy = true;
+        const listingRef = rtdb.ref(`trading_counters/${itemKey}`);
+        let claimedListing = null;
 
-        rtdb.ref(`trading_counters/${itemKey}`).once('value').then((listingSnap) => {
-            if(!listingSnap.exists()){
+        listingRef.transaction((currentListing) => {
+            if(!currentListing) return;
+            claimedListing = {
+                sellerKey: currentListing.sellerKey || sellerKey,
+                sellerId: currentListing.sellerId || '---',
+                counterVal: Number(currentListing.counterVal || counterVal),
+                price: Number(currentListing.price || price),
+                timestamp: currentListing.timestamp || Date.now()
+            };
+            return null;
+        }, (claimErr, claimCommitted) => {
+            if(claimErr || !claimCommitted || !claimedListing){
                 isProcessingCounterBuy = false;
                 closeBuyConfirmModal();
                 loadTradingCountersMarket();
                 return showNeonPopup("⚠️ عذراً، تم بيع هذا العداد مسبقاً أو لم يعد متاحاً.");
             }
 
-            const listingData = listingSnap.val();
-            const listingCounterVal = Number(listingData.counterVal || counterVal);
-            const listingPrice = Number(listingData.price || price);
-            const actualSellerKey = listingData.sellerKey || sellerKey;
+            const listingCounterVal = Number(claimedListing.counterVal);
+            const listingPrice = Number(claimedListing.price);
+            const actualSellerKey = claimedListing.sellerKey;
 
-            return rtdb.ref(`users/${currentUserKey}`).transaction((buyerObj) => {
+            rtdb.ref(`users/${currentUserKey}`).transaction((buyerObj) => {
                 if(!buyerObj) return buyerObj;
                 const bPts = Number(buyerObj.points || 0);
                 if(bPts < listingPrice) return;
-                const newBCounter = Number(buyerObj.activeCounterVal || 0) + listingCounterVal;
+                const existingActiveVal = Number(buyerObj.activeCounterVal || 0);
+                const newBCounter = existingActiveVal > 0 ? (existingActiveVal + listingCounterVal) : listingCounterVal;
                 buyerObj.points = bPts - listingPrice;
                 buyerObj.activeCounterVal = newBCounter;
                 buyerObj.activeCounter = `عداد ${newBCounter.toLocaleString()} نقطة يومياً`;
                 return buyerObj;
             }, (bErr, bCommitted, bSnap) => {
                 if(bErr || !bCommitted){
-                    isProcessingCounterBuy = false;
-                    closeBuyConfirmModal();
-                    return showNeonPopup("❌ تعذر إتمام الشراء، يرجى التأكد من رصيدك والمحاولة مرة أخرى.");
+                    listingRef.transaction((curr) => curr || claimedListing, () => {
+                        isProcessingCounterBuy = false;
+                        closeBuyConfirmModal();
+                        loadTradingCountersMarket();
+                        showNeonPopup("❌ تعذر إتمام الشراء، يرجى التأكد من رصيدك والمحاولة مرة أخرى.");
+                    });
+                    return;
                 }
 
                 const updatedBuyerPts = bSnap && bSnap.val() ? Number(bSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - listingPrice);
-                const updatedBuyerCounter = bSnap && bSnap.val() ? Number(bSnap.val().activeCounterVal || 0) : Number(userData.activeCounterVal || 0) + listingCounterVal;
+                const updatedBuyerCounter = bSnap && bSnap.val() ? Number(bSnap.val().activeCounterVal || 0) : (Number(userData.activeCounterVal || 0) > 0 ? Number(userData.activeCounterVal || 0) + listingCounterVal : listingCounterVal);
                 userData.points = updatedBuyerPts;
                 userData.activeCounterVal = updatedBuyerCounter;
                 userData.activeCounter = `عداد ${updatedBuyerCounter.toLocaleString()} نقطة يومياً`;
                 updateUI();
 
-                rtdb.ref(`trading_counters/${itemKey}`).remove().catch(() => {});
-
                 rtdb.ref(`users/${actualSellerKey}`).transaction((sellerObj) => {
                     if(!sellerObj) return sellerObj;
-                    const sPts = Number(sellerObj.points || 0) + listingPrice;
-                    sellerObj.points = sPts;
+                    const sPts = Number(sellerObj.points || 0);
+                    sellerObj.points = sPts + listingPrice;
                     sellerObj.activeCounterVal = 0;
                     sellerObj.activeCounter = 'لا يوجد';
                     return sellerObj;
-                }, (sErr) => {
-                    if(sErr){
-                        rtdb.ref(`users/${actualSellerKey}`).once('value').then(uSnap => {
-                            if(uSnap.exists()){
-                                const sData = uSnap.val();
-                                return rtdb.ref(`users/${actualSellerKey}`).update({
-                                    points: Number(sData.points || 0) + listingPrice,
-                                    activeCounterVal: 0,
-                                    activeCounter: 'لا يوجد'
-                                });
-                            }
-                        });
-                    }
+                }, () => {
                     rtdb.ref(`notifications/${actualSellerKey}`).push({
                         text: `🎉 تم بيع عدادك (${listingCounterVal.toLocaleString()} نقطة) بنجاح، وأضيفت (${listingPrice.toLocaleString()} نقطة) لرصيدك وتم تصفير العداد.`,
                         timestamp: Date.now()
@@ -1605,12 +1701,8 @@
                 isProcessingCounterBuy = false;
                 closeBuyConfirmModal();
                 loadTradingCountersMarket();
-                showNeonPopup(`🎉 تمت عملية الشراء بنجاح. تم خصم (${listingPrice.toLocaleString()} نقطة) وإضافة العداد إلى حسابك.`);
+                showNeonPopup(`🎉 تمت عملية الشراء بنجاح. تم خصم (${listingPrice.toLocaleString()} نقطة) وأصبح عدادك الحالي (${updatedBuyerCounter.toLocaleString()} نقطة يومياً).`);
             });
-        }).catch(() => {
-            isProcessingCounterBuy = false;
-            closeBuyConfirmModal();
-            showNeonPopup("⚠️ حدث خطأ أثناء إتمام الشراء، يرجى المحاولة مرة أخرى.");
         });
     }
 
@@ -2432,7 +2524,7 @@
         if(list.length===0){c.innerHTML="<div style='text-align:center;padding:15px;color:#94a3b8'>لا توجد بيانات مسجلة.</div>";return;}
         let html='';list.forEach((it,i)=>{
             let r=i+1,cr=r===1?'👑 ':(r===2?'🥈 ':(r===3?'🥉 ':''));
-            html+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:8px;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)"><div style="display:flex;align-items:center;gap:8px"><span style="font-weight:900;font-size:12px;color:#38bdf8;width:22px;text-align:center">#${r}</span><img src="${it.avatar||'https://via.placeholder.com/38'}" style="width:38px;height:38px;border-radius:50%;object-fit:cover" alt="صورة"><div><b style="color:#fff;font-size:12px">${cr}${it.name}</b><div style="font-size:10px;color:#94a3b8">ID: ${it.customId}</div></div></div><div style="text-align:left"><span style="color:#34d399;font-weight:bold;font-size:12px">${it[key].toLocaleString()}</span><div style="font-size:9px;color:#94a3b8">${unit}</div></div></div>`;
+            html+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:8px;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)"><div style="display:flex;align-items:center;gap:8px"><span style="font-weight:900;font-size:12px;color:#38bdf8;width:22px;text-align:center">#${r}</span><img src="${it.avatar||'https://via.placeholder.com/38'}" style="width:38px;height:38px;border-radius:50%;object-fit:cover" alt="صورة"><div><b class="clickable-user-name" style="color:#fff;font-size:12px" onclick="openVisitedProfileModal('${escapeHtmlAttr(it.key)}', '${escapeHtmlAttr(it.name)}', '${escapeHtmlAttr(it.customId)}')">${cr}${it.name}</b><div style="font-size:10px;color:#94a3b8">ID: ${it.customId}</div></div></div><div style="text-align:left"><span style="color:#34d399;font-weight:bold;font-size:12px">${it[key].toLocaleString()}</span><div style="font-size:9px;color:#94a3b8">${unit}</div></div></div>`;
         });
         c.innerHTML=html;
     }
@@ -2481,10 +2573,12 @@
             c.innerHTML=h;
         });
         rtdb.ref(`friends/${currentUserKey}`).once('value',snap=>{
+            currentFriendKeys = new Set();
             let c=document.getElementById('friendsListContainer');if(!c)return;
             if(!snap.exists()){c.innerHTML="لا يوجد أصدقاء مضافون";return;}let h='';
             snap.forEach(f=>{
                 let d=f.val(), fk=f.key;
+                currentFriendKeys.add(fk);
                 h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px">
                     <span style="cursor:pointer">🟢 <b>${d.name}</b></span>
                     <div style="display:flex;gap:4px">
