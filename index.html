@@ -848,6 +848,10 @@
     let isCompletedToday = false;
     let clickDebounceTimer = null;
 
+    function isAdminAccount() {
+        return currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1';
+    }
+
     function initWindEffectInCircle() {
         let emblem = document.getElementById('mainDailyCircleEmblem');
         if(!emblem) return;
@@ -1074,7 +1078,7 @@
                 if(r.creatorKey === currentUserKey) userHasRoom = true;
 
                 let deleteAdminBtn = '';
-                if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
+                if(isAdminAccount()){
                     deleteAdminBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:10px;margin-top:4px;" onclick="adminDeleteRoomByAdmin('${rKey}')">حذف الغرفة (إدارة) 🗑️</button>`;
                 }
 
@@ -1106,7 +1110,7 @@
     }
 
     function adminDeleteRoomByAdmin(roomKey){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         if(!confirm("⚠️ هل أنت متأكد من حذف هذه الغرفة نهائياً؟")) return;
         rtdb.ref(`rooms/${roomKey}`).remove().then(()=>{
             showNeonPopup("✅ تم حذف الغرفة بنجاح.");
@@ -1357,20 +1361,39 @@
                 container.innerHTML = "<div style='text-align:center;color:#94a3b8;padding:20px;font-size:11px;'>لا توجد عدادات معروضة للبيع حالياً.</div>";
                 return;
             }
+            let canAdminDelete = isAdminAccount();
             let html = '';
             snap.forEach(item=>{
                 let d = item.val(), itemKey = item.key;
                 if(!d) return;
-                html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(16,185,129,0.4); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right;">
+                let adminDeleteBtn = canAdminDelete
+                    ? `<button class="action-btn" style="width:auto;padding:6px 10px;font-size:11px;background:#ef4444;color:#fff;" onclick="adminDeleteTradingCounter('${itemKey}')">حذف</button>`
+                    : '';
+
+                html += `<div style="background:rgba(30,41,59,0.85); border:1px solid rgba(16,185,129,0.4); border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center; text-align:right; gap:8px;">
                     <div style="flex:1;">
                         <div style="font-size:12px; color:#fde047; font-weight:bold;">عداد ${Number(d.counterVal).toLocaleString()} نقطة يومياً</div>
                         <div style="font-size:10px; color:#38bdf8; margin-top:2px;">👤 البائع (ID): ${d.sellerId}</div>
                         <div style="font-size:11px; color:#34d399; font-weight:bold; margin-top:3px;">💰 السعر: ${Number(d.price).toLocaleString()} نقطة</div>
                     </div>
-                    <div><button class="action-btn btn-gold" style="padding:6px 12px; font-size:11px;" onclick="promptBuyTradingCounter('${itemKey}', '${d.sellerKey}', ${d.counterVal}, ${d.price})">شراء 🛒</button></div>
+                    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                        <button class="action-btn btn-gold" style="width:auto;padding:6px 12px; font-size:11px;" onclick="promptBuyTradingCounter('${itemKey}', '${d.sellerKey}', ${d.counterVal}, ${d.price})">شراء</button>
+                        ${adminDeleteBtn}
+                    </div>
                 </div>`;
             });
             container.innerHTML = html;
+        });
+    }
+
+    function adminDeleteTradingCounter(itemKey){
+        if(!isAdminAccount()) return showNeonPopup('⚠️ هذه الميزة خاصة بالإدارة فقط.');
+        if(!confirm("⚠️ هل أنت متأكد من حذف هذا العرض من السوق؟")) return;
+        rtdb.ref(`trading_counters/${itemKey}`).remove().then(()=>{
+            showNeonPopup("✅ تم حذف العرض من السوق بنجاح.");
+            loadTradingCountersMarket();
+        }).catch(()=>{
+            showNeonPopup("⚠️ تعذر حذف العرض، يرجى المحاولة مرة أخرى.");
         });
     }
 
@@ -1438,27 +1461,25 @@
                 rtdb.ref(`users/${actualSellerKey}`).transaction((sellerObj) => {
                     if(!sellerObj) return sellerObj;
                     let sPts = Number(sellerObj.points || 0) + listingPrice;
-                    let remainingCounter = Math.max(0, Number(sellerObj.activeCounterVal || 0) - listingCounterVal);
                     sellerObj.points = sPts;
-                    sellerObj.activeCounterVal = remainingCounter;
-                    sellerObj.activeCounter = remainingCounter > 0 ? `عداد ${remainingCounter.toLocaleString()} نقطة يومياً` : 'لا يوجد';
+                    sellerObj.activeCounterVal = 0;
+                    sellerObj.activeCounter = 'لا يوجد';
                     return sellerObj;
                 }, (sErr) => {
                     if(sErr){
                         rtdb.ref(`users/${actualSellerKey}`).once('value').then(uSnap => {
                             if(uSnap.exists()){
                                 let sData = uSnap.val();
-                                let rem = Math.max(0, Number(sData.activeCounterVal || 0) - listingCounterVal);
                                 return rtdb.ref(`users/${actualSellerKey}`).update({
                                     points: Number(sData.points || 0) + listingPrice,
-                                    activeCounterVal: rem,
-                                    activeCounter: rem > 0 ? `عداد ${rem.toLocaleString()} نقطة يومياً` : 'لا يوجد'
+                                    activeCounterVal: 0,
+                                    activeCounter: 'لا يوجد'
                                 });
                             }
                         });
                     }
                     rtdb.ref(`notifications/${actualSellerKey}`).push({
-                        text: `🎉 تم بيع عدادك (${listingCounterVal.toLocaleString()} نقطة) بنجاح وأضيفت (${listingPrice.toLocaleString()} نقطة) لرصيدك.`,
+                        text: `🎉 تم بيع عدادك (${listingCounterVal.toLocaleString()} نقطة) بنجاح، وأضيفت (${listingPrice.toLocaleString()} نقطة) لرصيدك وتم تصفير العداد.`,
                         timestamp: Date.now()
                     });
                 });
@@ -1466,7 +1487,7 @@
                 isProcessingCounterBuy = false;
                 closeBuyConfirmModal();
                 loadTradingCountersMarket();
-                showNeonPopup(`🎉 تمت عملية الشراء بنجاح.`);
+                showNeonPopup(`🎉 تمت عملية الشراء بنجاح. تم خصم (${listingPrice.toLocaleString()} نقطة) وإضافة العداد إلى حسابك.`);
             });
         });
     }
@@ -1927,7 +1948,7 @@
         }
         let adminBtn=document.getElementById('adminPanelMainBtn');
         if(adminBtn){
-            if(currentEmail==='msaftwtn@gmail.com'||userData.customId==='1') adminBtn.style.display='inline-block';
+            if(isAdminAccount()) adminBtn.style.display='inline-block';
             else adminBtn.style.display='none';
         }
         updateVerificationStatusUI();
@@ -2153,7 +2174,7 @@
                 let av = d.agentAvatar || d.avatar || 'https://via.placeholder.com/45';
                 
                 let removeAgentBtn = '';
-                if(currentEmail === 'msaftwtn@gmail.com' || userData.customId === '1'){
+                if(isAdminAccount()){
                     removeAgentBtn = `<button class="action-btn" style="background:#ef4444;color:#fff;padding:3px 6px;font-size:9px;margin-top:6px;width:100%;" onclick="adminRemoveAgentStatus('${u.key}', '${d.name}')">إزالة الوكيل (إدارة) 🗑️</button>`;
                 }
 
@@ -2173,7 +2194,7 @@
     }
 
     function adminRemoveAgentStatus(targetUserKey, agentName){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         if(!confirm(`⚠️ هل أنت متأكد من إزالة صفة الوكيل عن (${agentName})؟`)) return;
         rtdb.ref(`users/${targetUserKey}`).update({
             isAgent: false,
@@ -2455,7 +2476,7 @@
     }
 
     function adminDualChargeDirectPoints(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let tId = document.getElementById('adminDualTargetId').value.trim();
         let pts = parseInt(document.getElementById('adminDualPointsAmount').value);
         if(!tId || isNaN(pts) || pts <= 0) return showNeonPopup('⚠️ أدخل معرف المستخدم (ID) وعدد النقاط.');
@@ -2473,7 +2494,7 @@
     }
 
     function adminDualChargeAgentBag(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let targetId = document.getElementById('adminDualTargetId').value.trim();
         let amt = parseInt(document.getElementById('adminDualPointsAmount').value);
         if(!targetId || isNaN(amt) || amt <= 0) return showNeonPopup("⚠️ أدخل معرف الوكيل (ID) وعدد النقاط.");
@@ -2491,7 +2512,7 @@
     }
 
     function adminToggleFreezeUser(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let tId = document.getElementById('adminFreezeTargetId').value.trim();
         if(!tId) return showNeonPopup("⚠️ أدخل معرف المستخدم (ID).");
         
@@ -2506,7 +2527,7 @@
     }
 
     function adminUpdateTicker(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let txt = document.getElementById('adminTickerInput').value.trim();
         if(!txt) return showNeonPopup("⚠️ أدخل نص الإعلان.");
         rtdb.ref('app_settings').update({tickerText: txt}).then(()=>showNeonPopup("📢 تم نشر الإعلان بنجاح."));
@@ -2520,7 +2541,7 @@
     }
 
     function openAdminAgentApplications(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         document.getElementById('adminAgentAppsModal').style.display='flex';
         rtdb.ref('agent_applications').limitToLast(20).once('value',snap=>{
             let lst = document.getElementById('adminAgentAppsList');
@@ -2587,7 +2608,7 @@
     }
 
     function adminInspectUser(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let tId=document.getElementById('adminInspectIdInput').value.trim();
         let resArea=document.getElementById('adminInspectResult');
         if(!tId)return showNeonPopup('⚠️ أدخل معرف المستخدم (ID).');
@@ -2611,26 +2632,26 @@
     }
 
     function adminToggleWithdrawFeature(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let ns=!globalAppSettings.withdrawLocked;
         rtdb.ref('app_settings').update({withdrawLocked:ns}).then(()=>showNeonPopup(ns ? '🔒 تم إغلاق السحب.' : '🔓 تم فتح السحب.'));
     }
 
     function adminToggleDailyCounterFeature(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         let ns=!globalAppSettings.dailyCounterLocked;
         rtdb.ref('app_settings').update({dailyCounterLocked:ns}).then(()=>showNeonPopup(ns?'⏳ تم قفل العداد اليومي.':'⚡ تم فتح العداد اليومي.'));
     }
 
     function openAdminPanelModal(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح. حساب الإدارة المعتمد هو (msaftwtn@gmail.com - ID: 1)');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح. حساب الإدارة المعتمد هو (msaftwtn@gmail.com - ID: 1)');
         document.getElementById('adminPanelModal').style.display='flex';
         loadAdminData(); loadAdminVerificationRequests();
     }
     function closeAdminPanelModal(){ document.getElementById('adminPanelModal').style.display='none'; }
     
     function openAdminCounterOrders(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return showNeonPopup('⚠️ غير مسموح.');
+        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
         document.getElementById('adminCounterOrdersModal').style.display='flex';
         rtdb.ref('manual_counter_orders').limitToLast(20).once('value',snap=>{
             let lst = document.getElementById('adminCounterOrdersList');
@@ -2651,7 +2672,7 @@
     function closeAdminCounterOrders(){ document.getElementById('adminCounterOrdersModal').style.display='none'; }
 
     function loadAdminData(){
-        if(currentEmail !== 'msaftwtn@gmail.com' && userData.customId !== '1') return;
+        if(!isAdminAccount()) return;
         rtdb.ref('admin_withdrawals').limitToLast(20).once('value',snap=>{
             let a=document.getElementById('adminWithdrawalsArea');
             if(!snap.exists()){ if(a) a.innerHTML="لا توجد طلبات سحب معلقة."; return; }
