@@ -144,8 +144,6 @@
         
         .wheel-box{width:140px;height:140px;border-radius:50%;border:5px solid #facc15;margin:8px auto;position:relative;overflow:hidden;-webkit-transition:-webkit-transform 5s cubic-bezier(0.1,0.9,0.1,1);transition:transform 5s cubic-bezier(0.1,0.9,0.1,1);background:conic-gradient(#ef4444 0deg 60deg,#3b82f6 60deg 120deg,#10b981 120deg 180deg,#f59e0b 180deg 240deg,#ec4899 240deg 300deg,#06b6d4 300deg 360deg);box-shadow:0 0 18px rgba(250,204,21,0.65)}
         .wheel-box-8{background:conic-gradient(#ef4444 0deg 45deg,#3b82f6 45deg 90deg,#10b981 90deg 135deg,#f59e0b 135deg 180deg,#ec4899 180deg 225deg,#06b6d4 225deg 270deg,#8b5cf6 270deg 315deg,#14b8a6 315deg 360deg);border-color:#38bdf8;box-shadow:0 0 18px rgba(56,189,248,0.65)}
-        .wheel-slots-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:8px 0;font-size:9px;color:#e2e8f0}
-        .wheel-slot-pill{background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.35);border-radius:8px;padding:4px 3px;font-weight:bold}
         .wheel-pointer{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:15px solid #fff;margin:0 auto;margin-bottom:-6px;z-index:10;position:relative;filter:drop-shadow(0 0 4px #fff)}
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:1000;padding:15px}
         .modal-content{background:linear-gradient(135deg, #130926, #070411);border:1.5px solid rgba(56,189,248,0.5);border-radius:20px;width:100%;max-width:380px;padding:16px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.9), 0 0 25px rgba(56,189,248,0.25)}
@@ -153,7 +151,7 @@
         .admin-badge{background:linear-gradient(135deg,#ef4444,#f59e0b);color:#fff;padding:5px 14px;border-radius:12px;font-size:11px;font-weight:bold;border:1px solid #fde047;cursor:pointer;display:none;margin-bottom:6px;box-shadow:0 0 15px rgba(239,68,68,0.7)}
 
         .agent-copy-btn { background: rgba(16, 185, 129, 0.25); border: 1px solid #34d399; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-right: 4px; display: inline-flex; align-items: center; gap: 2px; box-shadow: 0 0 6px rgba(52,211,153,0.4); }
-        .withdraw-methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+        .withdraw-methods-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
         .withdraw-method-btn { background: rgba(30,20,55,0.8); border: 1.2px solid rgba(56,189,248,0.35); border-radius: 8px; padding: 8px 4px; font-size: 10px; font-weight: bold; color: #cbd5e1; cursor: pointer; text-align: center; }
         .withdraw-method-btn.active { background: linear-gradient(135deg, #10b981, #0ea5e9); color: #fff; border-color: #34d399; box-shadow: 0 0 12px rgba(16,185,129,0.7); }
 
@@ -323,9 +321,10 @@
                 <h4 style="margin:0;color:#34d399;font-size:14px">💸 تحويل إلى صديق</h4>
                 <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeTransferToFriendModal()">✖</button>
             </div>
-            <p style="font-size:10px;color:#fde047;margin:0 0 10px 0;">الحد الأدنى لكل حوالة: 50,000 نقطة</p>
+            <p style="font-size:10px;color:#fde047;margin:0 0 10px 0;">الحد الأدنى لكل حوالة: 50,000 نقطة (عمولة التحويل 5% تُخصم من المرسل)</p>
             <label style="font-size:11px;color:#cbd5e1;display:block;margin-bottom:4px;">ID المستخدم المستلم:</label>
-            <input type="text" id="transferRecipientIdInput" class="input-box" placeholder="أدخل ID المستخدم المستلم">
+            <input type="text" id="transferRecipientIdInput" class="input-box" placeholder="أدخل ID المستخدم المستلم" oninput="handleLiveRecipientLookup()">
+            <div id="transferRecipientLiveNameBox" style="display:none;background:rgba(16,185,129,0.14);border:1px solid rgba(52,211,153,0.45);border-radius:10px;padding:6px 10px;margin-bottom:8px;font-size:11px;color:#34d399;font-weight:bold;"></div>
             <label style="font-size:11px;color:#cbd5e1;display:block;margin-bottom:4px;">عدد النقاط المراد تحويلها:</label>
             <input type="number" id="transferPointsAmountInput" class="input-box" placeholder="50000 فأكثر" min="50000" step="1">
             <button id="sendFriendTransferBtn" class="action-btn btn-green" style="padding:9px;font-size:12px;margin-top:4px;" onclick="submitFriendTransfer()">إرسال الحوالة 🚀</button>
@@ -530,18 +529,8 @@
 
     <div id="shopScreen" class="screen-page">
         <div class="top-nav">
-            <h3 style="margin:0;color:#34d399;font-size:15px">🛒 متجر العدادات والإيداع</h3>
+            <h3 style="margin:0;color:#34d399;font-size:15px">🛒 متجر العدادات</h3>
             <button class="nav-btn back" onclick="navigateTo('mainScreen')">⬅️ الرئيسية</button>
-        </div>
-        <div class="card" style="text-align:right;background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.5);margin-bottom:12px;padding:12px">
-            <h4 style="margin:0 0 6px 0;color:#34d399;font-size:13px">📥 إيداع USDT TRC20 وطلب عداد مخصص</h4>
-            <div style="background:rgba(2,6,23,0.9);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
-                <span id="usdtWalletAddressText" style="font-size:10px;color:#38bdf8;font-family:monospace;word-break:break-all;direction:ltr;text-align:left">TU31n5NnWAnhQ83YTpYFXvjhrAqxNfkn8F</span>
-                <button class="action-btn btn-green" style="width:auto;padding:5px 10px;font-size:10px" onclick="copyUsdtAddress()">📋 نسخ العنوان</button>
-            </div>
-            <input type="text" id="manualCounterPhone" class="input-box" placeholder="رقم عملية التحويل أو الـ Hash" style="margin-bottom:6px">
-            <input type="text" id="manualCounterDetails" class="input-box" placeholder="العداد المطلوب (مثلا: عداد 5000 نقطة)" style="margin-bottom:8px">
-            <button class="action-btn btn-green" style="padding:8px;font-size:11px" onclick="submitManualCounterOrder()">إرسال طلب الحجز للإدارة 🚀</button>
         </div>
         <div class="card">
             <div class="shop-tabs">
@@ -584,22 +573,9 @@
         </div>
 
         <div class="card" style="padding:15px 10px;text-align:center;border-color:rgba(56,189,248,0.55)">
-            <div style="font-size:13px;color:#38bdf8;font-weight:900;margin-bottom:4px">🎡 العجلة الثانية (8 خانات)</div>
-            <div style="font-size:11px;color:#fde047;font-weight:bold;margin-bottom:4px">تكلفة التدويرة الواحدة: 1,000 نقطة</div>
-            <div id="wheel2QuotaStatus" style="font-size:10px;color:#34d399;font-weight:bold;margin-bottom:6px">التدويرات المتبقية خلال 24 ساعة: 5 / 5</div>
             <div class="wheel-pointer"></div>
             <div class="wheel-box wheel-box-8" id="wheel2Graphic"></div>
-            <div class="wheel-slots-legend">
-                <div class="wheel-slot-pill">1: 1,100</div>
-                <div class="wheel-slot-pill">2: 1,075</div>
-                <div class="wheel-slot-pill">3: 1,050</div>
-                <div class="wheel-slot-pill">4: 1,025</div>
-                <div class="wheel-slot-pill">5: 1,125</div>
-                <div class="wheel-slot-pill">6: 1,150</div>
-                <div class="wheel-slot-pill">7: 1,200</div>
-                <div class="wheel-slot-pill">8: 2,000</div>
-            </div>
-            <button id="spinWheel2Btn" class="action-btn btn-blue" style="padding:8px;margin-top:4px" onclick="spinWheel2()">تدوير العجلة الثانية (1,000 نقطة) 🚀</button>
+            <button id="spinWheel2Btn" class="action-btn btn-blue" style="padding:8px;margin-top:4px" onclick="spinWheel2()">تدوير العجلة الثانية</button>
             <div id="wheel2Msg" style="margin-top:8px;font-size:12px;color:#38bdf8;font-weight:bold;min-height:20px;"></div>
         </div>
     </div>
@@ -891,25 +867,24 @@
             <h3 style="color:#34d399;margin:0;font-size:14px">💸 سحب الأرباح النقدية</h3>
             <button style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer" onclick="closeWithdrawModal()">✖</button>
         </div>
-        <div style="background:rgba(10,185,129,0.15);border:1px solid #10b981;padding:8px;border-radius:8px;margin-bottom:10px;font-size:11px;color:#10b981"><b>💼 قسم سحب الأرباح:</b><br>الحد الأدنى 50,000 نقطة (10 دولارات) والحد الأعلى 2M نقطة (600,000 دينار عراقي):</div>
+        <div style="background:rgba(10,185,129,0.15);border:1px solid #10b981;padding:8px;border-radius:8px;margin-bottom:10px;font-size:11px;color:#10b981"><b>💼 قسم سحب الأرباح:</b><br>أعلى سحب للأرباح 3M نقطة</div>
         <label style="font-size:11px;color:#cbd5e1;display:block;margin-bottom:4px">اختر طريقة السحب:</label>
         <div class="withdraw-methods-grid">
             <button class="withdraw-method-btn active" id="wBtnZain" onclick="selectWithdrawMethod('زين كاش (Zain Cash)')">زين كاش</button>
             <button class="withdraw-method-btn" id="wBtnSuper" onclick="selectWithdrawMethod('سوبركي (SuperKey)')">سوبركي</button>
-            <button class="withdraw-method-btn" id="wBtnUsdt" onclick="selectWithdrawMethod('USDT TRC20')">USDT TRC20</button>
         </div>
         <input type="text" class="input-box" id="withdrawAccount" placeholder="رقم الحساب أو المحفظة لاستلام الأرباح">
-        <input type="number" class="input-box" id="withdrawAmount" placeholder="أدخل عدد النقاط (50,000 إلى 2,000,000 نقطة)">
+        <input type="number" class="input-box" id="withdrawAmount" placeholder="أدخل عدد النقاط (50,000 إلى 3,000,000 نقطة)">
         <button class="action-btn btn-gold" onclick="submitWithdrawal()">تأكيد طلب السحب للإدارة 🚀</button>
     </div>
 </div>
 
 <script>
     let currentEmail='',currentUserKey='',rtdb=null,auth=null;
-    let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,counterSubscriptions:[],wheel2Spins:[],customId:'',name:'',avatar:'',bio:'',lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0, lastOutOfOrderTime:0};
+    let userData={points:0,gems:0,lastSpinTime:0,activeCounter:'لا يوجد',activeCounterVal:0,counterSubscriptions:[],wheel2Spins:[],lastWithdrawTime:0,isBanned:false,whatsapp:'',withdrawCount:0,isAgent:false,agentTelegram:'',agentWhatsapp:'',agentBag:0,agentProvince:'',agentAvatar:'',gameWins:0,userClicksCount:0,isVerified:false,verificationPhone:'',verificationStatus:'none',lastMemoryGameTime:0, lastOutOfOrderTime:0};
     let base64Image='',activeChatFriendKey='',activeChatFriendName='',timerInterval=null;
     let globalAppSettings={withdrawLocked:false,dailyCounterLocked:false,tickerText:'أهلاً بكم في منصة Lounge الرسمية.'};
-    let totalWheelDegrees=0, totalWheel2Degrees=0, isSpinningWheel2=false, wheel2QuotaInterval=null, pendingBuyItem = null, isProcessingCounterBuy = false, isSubmittingFriendTransfer = false;
+    let totalWheelDegrees=0, totalWheel2Degrees=0, isSpinningWheel2=false, pendingBuyItem = null, isProcessingCounterBuy = false, isSubmittingFriendTransfer = false, isClaimingDailyReward = false;
     let selectedWithdrawMethodName = 'زين كاش (Zain Cash)';
     let activeRoomKey = null;
     let weeklySettlementInterval = null;
@@ -917,6 +892,7 @@
     let currentFriendKeys = new Set();
     let navigationStack = ['mainScreen'];
     let isHandlingBackHistory = false;
+    let liveRecipientLookupTimer = null;
 
     const WHEEL2_PRIZES = [1100, 1075, 1050, 1025, 1125, 1150, 1200, 2000];
     const WHEEL2_COST = 1000;
@@ -924,8 +900,9 @@
     const WHEEL2_WINDOW_MS = 24 * 60 * 60 * 1000;
     const COUNTER_DURATION_DAYS = 365;
     const MIN_WITHDRAW_POINTS = 50000;
-    const MAX_WITHDRAW_POINTS = 2000000;
+    const MAX_WITHDRAW_POINTS = 3000000;
     const MIN_TRANSFER_POINTS = 50000;
+    const TRANSFER_FEE_RATE = 0.05;
 
     const fullQuestionsPool = [
         { id: 1, q: "ما هي عاصمة جمهورية العراق؟", correct: "بغداد", wrong: "البصرة" },
@@ -1047,42 +1024,10 @@
             .sort((a, b) => a - b);
     }
 
-    function formatDurationMs(ms) {
-        const safeMs = Math.max(0, Number(ms || 0));
-        const totalSec = Math.floor(safeMs / 1000);
-        const h = Math.floor(totalSec / 3600);
-        const m = Math.floor((totalSec % 3600) / 60);
-        const s = totalSec % 60;
-        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    }
-
     function updateWheel2QuotaUI() {
-        const statusEl = document.getElementById('wheel2QuotaStatus');
         const btnEl = document.getElementById('spinWheel2Btn');
-        if (!statusEl || !btnEl) return;
-
-        const nowMs = Date.now();
-        const activeSpins = normalizeWheel2Spins(userData.wheel2Spins, nowMs);
-        const usedCount = activeSpins.length;
-        const remainingCount = Math.max(0, WHEEL2_MAX_SPINS_PER_24H - usedCount);
-
-        if (remainingCount <= 0 && activeSpins.length > 0) {
-            const oldestSpin = activeSpins[0];
-            const waitMs = Math.max(0, WHEEL2_WINDOW_MS - (nowMs - oldestSpin));
-            statusEl.style.color = '#f87171';
-            statusEl.innerText = `⏳ استنفدت 5 تدويرات. المتبقي لإعادة التدوير: ${formatDurationMs(waitMs)}`;
-            btnEl.disabled = true;
-        } else {
-            statusEl.style.color = '#34d399';
-            statusEl.innerText = `التدويرات المتبقية خلال 24 ساعة: ${remainingCount} / ${WHEEL2_MAX_SPINS_PER_24H}`;
-            btnEl.disabled = Boolean(isSpinningWheel2);
-        }
-    }
-
-    function startWheel2QuotaTicker() {
-        if (wheel2QuotaInterval) clearInterval(wheel2QuotaInterval);
-        updateWheel2QuotaUI();
-        wheel2QuotaInterval = setInterval(updateWheel2QuotaUI, 1000);
+        if (!btnEl) return;
+        btnEl.disabled = Boolean(isSpinningWheel2);
     }
 
     function isAdminAccount() {
@@ -1328,13 +1273,71 @@
     function openTransferToFriendModal() {
         const idInput = document.getElementById('transferRecipientIdInput');
         const amtInput = document.getElementById('transferPointsAmountInput');
+        const nameBox = document.getElementById('transferRecipientLiveNameBox');
         if (idInput) idInput.value = '';
         if (amtInput) amtInput.value = '';
+        if (nameBox) {
+            nameBox.style.display = 'none';
+            nameBox.innerText = '';
+        }
         document.getElementById('transferToFriendModal').style.display = 'flex';
     }
 
     function closeTransferToFriendModal() {
+        if (liveRecipientLookupTimer) clearTimeout(liveRecipientLookupTimer);
         document.getElementById('transferToFriendModal').style.display = 'none';
+    }
+
+    function handleLiveRecipientLookup() {
+        const idInput = document.getElementById('transferRecipientIdInput');
+        const nameBox = document.getElementById('transferRecipientLiveNameBox');
+        if (!idInput || !nameBox) return;
+
+        const typedId = String(idInput.value || '').trim();
+        if (liveRecipientLookupTimer) clearTimeout(liveRecipientLookupTimer);
+
+        if (!typedId || !rtdb) {
+            nameBox.style.display = 'none';
+            nameBox.innerText = '';
+            return;
+        }
+
+        liveRecipientLookupTimer = setTimeout(() => {
+            const currentTyped = String(document.getElementById('transferRecipientIdInput')?.value || '').trim();
+            if (!currentTyped) {
+                nameBox.style.display = 'none';
+                nameBox.innerText = '';
+                return;
+            }
+            rtdb.ref('users').orderByChild('customId').equalTo(currentTyped).once('value').then((snap) => {
+                const latestTyped = String(document.getElementById('transferRecipientIdInput')?.value || '').trim();
+                if (latestTyped !== currentTyped) return;
+
+                if (!snap.exists()) {
+                    nameBox.style.display = 'none';
+                    nameBox.innerText = '';
+                    return;
+                }
+
+                let foundName = '';
+                snap.forEach((child) => {
+                    if (!foundName && child.val()) {
+                        foundName = child.val().name || 'مستخدم';
+                    }
+                });
+
+                if (foundName) {
+                    nameBox.style.display = 'block';
+                    nameBox.innerText = `👤 اسم المستلم: ${foundName}`;
+                } else {
+                    nameBox.style.display = 'none';
+                    nameBox.innerText = '';
+                }
+            }).catch(() => {
+                nameBox.style.display = 'none';
+                nameBox.innerText = '';
+            });
+        }, 120);
     }
 
     function submitFriendTransfer() {
@@ -1350,8 +1353,12 @@
         if (!Number.isFinite(amount) || amount < MIN_TRANSFER_POINTS || !Number.isInteger(amount)) {
             return showNeonPopup(`⚠️ الحد الأدنى للتحويل هو ${MIN_TRANSFER_POINTS.toLocaleString()} نقطة لكل حوالة.`);
         }
-        if (Number(userData.points || 0) < MIN_TRANSFER_POINTS || Number(userData.points || 0) < amount) {
-            return showNeonPopup("❌ رصيدك غير كافٍ لإجراء التحويل.");
+
+        const feeAmount = Math.round(amount * TRANSFER_FEE_RATE);
+        const totalSenderDebit = amount + feeAmount;
+
+        if (Number(userData.points || 0) < totalSenderDebit) {
+            return showNeonPopup(`❌ رصيدك غير كافٍ لإجراء التحويل مع عمولة 5% (المطلوب: ${totalSenderDebit.toLocaleString()} نقطة).`);
         }
         if (userData.customId && String(userData.customId).trim() === recipientId) {
             return showNeonPopup("⚠️ لا يمكنك تحويل النقاط إلى حسابك نفسه.");
@@ -1384,13 +1391,12 @@
             const senderRef = rtdb.ref(`users/${currentUserKey}`);
             const recipientRef = rtdb.ref(`users/${recipientKey}`);
             let senderDeducted = false;
-            let updatedSenderPts = Number(userData.points || 0);
 
             senderRef.transaction((currSender) => {
                 if (!currSender) return currSender;
                 const currPts = Number(currSender.points || 0);
-                if (currPts < MIN_TRANSFER_POINTS || currPts < amount) return;
-                currSender.points = currPts - amount;
+                if (currPts < totalSenderDebit) return;
+                currSender.points = currPts - totalSenderDebit;
                 return currSender;
             }, (sErr, sCommitted, sSnap) => {
                 if (sErr || !sCommitted) {
@@ -1400,8 +1406,7 @@
                 }
 
                 senderDeducted = true;
-                updatedSenderPts = sSnap && sSnap.val() ? Number(sSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - amount);
-                userData.points = updatedSenderPts;
+                userData.points = sSnap && sSnap.val() ? Number(sSnap.val().points || 0) : Math.max(0, Number(userData.points || 0) - totalSenderDebit);
                 updateUI();
 
                 recipientRef.transaction((currRecipient) => {
@@ -1414,10 +1419,10 @@
                         if (senderDeducted) {
                             senderRef.transaction((currSender) => {
                                 if (!currSender) return currSender;
-                                currSender.points = Number(currSender.points || 0) + amount;
+                                currSender.points = Number(currSender.points || 0) + totalSenderDebit;
                                 return currSender;
                             }, () => {
-                                userData.points = Number(userData.points || 0) + amount;
+                                userData.points = Number(userData.points || 0) + totalSenderDebit;
                                 updateUI();
                             });
                         }
@@ -1434,6 +1439,8 @@
                         recipientKey: recipientKey,
                         recipientId: recipientId,
                         amount: amount,
+                        fee: feeAmount,
+                        totalDeducted: totalSenderDebit,
                         timestamp: Date.now()
                     }).catch(() => {});
 
@@ -1445,7 +1452,7 @@
                     isSubmittingFriendTransfer = false;
                     if (submitBtn) submitBtn.disabled = false;
                     closeTransferToFriendModal();
-                    showNeonPopup(`✅ تمت الحوالة بنجاح! تم تحويل (${amount.toLocaleString()} نقطة) إلى ID: ${recipientId}.`);
+                    showNeonPopup(`✅ تمت الحوالة بنجاح! تم تحويل (${amount.toLocaleString()} نقطة) إلى ID: ${recipientId} وخصم عمولة 5% (${feeAmount.toLocaleString()} نقطة) من رصيدك.`);
                 });
             });
         }).catch(() => {
@@ -1516,11 +1523,6 @@
         } catch (err) {
             showNeonPopup("❌ تعذر النسخ، يرجى النسخ يدويًا.");
         }
-    }
-
-    function copyUsdtAddress(){
-        let addr = "TU31n5NnWAnhQ83YTpYFXvjhrAqxNfkn8F";
-        safeCopyTextToClipboard(addr, "📋 تم نسخ عنوان محفظة USDT TRC20 بنجاح!");
     }
 
     function copyTextToClipboard(text){
@@ -1876,10 +1878,8 @@
         selectedWithdrawMethodName = methodName;
         document.getElementById('wBtnZain').className = "withdraw-method-btn" + (methodName === 'زين كاش (Zain Cash)' ? " active" : "");
         document.getElementById('wBtnSuper').className = "withdraw-method-btn" + (methodName === 'سوبركي (SuperKey)' ? " active" : "");
-        document.getElementById('wBtnUsdt').className = "withdraw-method-btn" + (methodName === 'USDT TRC20' ? " active" : "");
         let accInput = document.getElementById('withdrawAccount');
-        if(methodName === 'USDT TRC20') accInput.placeholder = "أدخل عنوان محفظة USDT TRC20 الخاصة بك";
-        else if(methodName === 'سوبركي (SuperKey)') accInput.placeholder = "أدخل حساب سوبركي الخاص بك";
+        if(methodName === 'سوبركي (SuperKey)') accInput.placeholder = "أدخل حساب سوبركي الخاص بك";
         else accInput.placeholder = "رقم محفظة زين كاش الخاص بك";
     }
 
@@ -2364,7 +2364,6 @@
         initLoungeTickerAnimation();
         initWindEffectInCircle();
         updateUI();
-        startWheel2QuotaTicker();
         try{
             const firebaseConfig={
                 apiKey: "AIzaSyDTcDrVD2z3PT6WZSUJUtG9GIiIYHIdgSw",
@@ -2673,7 +2672,6 @@
     
     function handleLogout(){
         if(timerInterval) clearInterval(timerInterval);
-        if(wheel2QuotaInterval) clearInterval(wheel2QuotaInterval);
         if(weeklySettlementInterval) clearInterval(weeklySettlementInterval);
         try{ localStorage.removeItem('dinarUserKey'); }catch(e){}
         if(auth) auth.signOut();
@@ -2741,26 +2739,6 @@
             userData.activeCounter = `عداد ${newCounterVal.toLocaleString()} نقطة يومياً`;
             updateUI();
             showNeonPopup(`🎉 تم الشراء بنجاح (مدة العداد 365 يوماً). إجمالي إنتاجك (${newCounterVal.toLocaleString()} نقطة يومياً).`);
-        });
-    }
-    
-    function submitManualCounterOrder(){
-        let ph = document.getElementById('manualCounterPhone').value.trim();
-        let det = document.getElementById('manualCounterDetails').value.trim();
-        if(!ph || !det) return showNeonPopup("⚠️ يرجى ملء الحقول المطلوبة.");
-        rtdb.ref('manual_counter_orders').push({
-            userKey: currentUserKey,
-            userName: userData.name || 'مستخدم',
-            userId: userData.customId || '---',
-            paymentMethod: 'USDT TRC20',
-            hash: ph,
-            details: det,
-            timestamp: Date.now(),
-            status: 'pending'
-        }).then(()=>{
-            document.getElementById('manualCounterPhone').value = '';
-            document.getElementById('manualCounterDetails').value = '';
-            showNeonPopup("✅ تم إرسال الطلب للإدارة بنجاح.");
         });
     }
 
@@ -2881,46 +2859,97 @@
     }
 
     function claimDailyReward(){
+        if(isClaimingDailyReward) return;
         if(globalAppSettings.dailyCounterLocked&&currentEmail!=='msaftwtn@gmail.com') return showNeonPopup('⚠️ العداد اليومي مغلق مؤقتاً.');
-        let now=new Date().getTime();if(now-(userData.lastSpinTime||0)<24*60*60*1000)return showNeonPopup('⚠️ العداد مفعل مسبقاً. انتظر انتهاء الوقت.');
+        if(!rtdb || !currentUserKey) return showNeonPopup('❌ خطأ بالاتصال.');
+
+        let now=new Date().getTime();
+        if(now-(userData.lastSpinTime||0)<24*60*60*1000)return showNeonPopup('⚠️ العداد مفعل مسبقاً. انتظر انتهاء الوقت.');
 
         const currentSubs = normalizeCounterSubscriptions(
             userData.counterSubscriptions,
             userData.activeCounterVal,
             userData.lastSpinTime
         );
-        const rPts = currentSubs
-            .filter((s) => Number(s.counterVal || 0) > 0 && Number(s.daysLeft || 0) >= 1)
-            .reduce((sum, s) => sum + Number(s.counterVal || 0), 0);
+        const activeSubs = currentSubs.filter((s) => Number(s.counterVal || 0) > 0 && Number(s.daysLeft || 0) >= 1);
 
-        const updatedSubs = currentSubs
-            .filter((s) => Number(s.counterVal || 0) > 0 && Number(s.daysLeft || 0) >= 1)
-            .map((s) => ({
-                ...s,
-                daysLeft: Number(s.daysLeft || 0) - 1,
-                lastClaimedAt: now
-            }))
-            .filter((s) => Number(s.daysLeft || 0) >= 1);
+        if (activeSubs.length === 0) {
+            return showNeonPopup('⚠️ انتهى وقت العقد الخاص بالعداد.');
+        }
 
-        const nextDailyTotal = updatedSubs.reduce((sum, s) => sum + Number(s.counterVal || 0), 0);
+        const rPts = activeSubs.reduce((sum, s) => sum + Number(s.counterVal || 0), 0);
+        const rGems = 500;
 
-        rtdb.ref(`users/${currentUserKey}`).update({
-            points: (userData.points||0) + rPts,
-            gems: (userData.gems||0) + 500,
-            lastSpinTime: now,
-            counterSubscriptions: updatedSubs,
-            activeCounterVal: nextDailyTotal,
-            activeCounter: nextDailyTotal > 0 ? `عداد ${nextDailyTotal.toLocaleString()} نقطة يومياً` : 'لا يوجد'
-        }).then(()=>{
-            userData.points = (userData.points||0) + rPts;
-            userData.gems = (userData.gems||0) + 500;
-            userData.lastSpinTime = now;
-            userData.counterSubscriptions = updatedSubs;
-            userData.activeCounterVal = nextDailyTotal;
-            userData.activeCounter = nextDailyTotal > 0 ? `عداد ${nextDailyTotal.toLocaleString()} نقطة يومياً` : 'لا يوجد';
+        isClaimingDailyReward = true;
+        const userRef = rtdb.ref(`users/${currentUserKey}`);
+        let contractExpiredDuringTx = false;
+        let cooldownActiveDuringTx = false;
+        let appliedPts = 0;
+        let appliedGems = 0;
+
+        userRef.transaction((currUser) => {
+            if (!currUser) return currUser;
+            const txNow = Date.now();
+            const lastSpin = Number(currUser.lastSpinTime || 0);
+            if (lastSpin && (txNow - lastSpin) < 24 * 60 * 60 * 1000) {
+                cooldownActiveDuringTx = true;
+                return;
+            }
+
+            const txSubs = normalizeCounterSubscriptions(
+                currUser.counterSubscriptions,
+                currUser.activeCounterVal,
+                lastSpin
+            ).filter((s) => Number(s.counterVal || 0) > 0 && Number(s.daysLeft || 0) >= 1);
+
+            if (txSubs.length === 0) {
+                contractExpiredDuringTx = true;
+                return;
+            }
+
+            appliedPts = txSubs.reduce((sum, s) => sum + Number(s.counterVal || 0), 0);
+            appliedGems = 500;
+
+            const updatedSubs = txSubs
+                .map((s) => ({
+                    ...s,
+                    daysLeft: Number(s.daysLeft || 0) - 1,
+                    lastClaimedAt: txNow
+                }))
+                .filter((s) => Number(s.daysLeft || 0) >= 1);
+
+            const nextDailyTotal = updatedSubs.reduce((sum, s) => sum + Number(s.counterVal || 0), 0);
+
+            currUser.points = Number(currUser.points || 0) + appliedPts;
+            currUser.gems = Number(currUser.gems || 0) + appliedGems;
+            currUser.lastSpinTime = txNow;
+            currUser.counterSubscriptions = updatedSubs;
+            currUser.activeCounterVal = nextDailyTotal;
+            currUser.activeCounter = nextDailyTotal > 0 ? `عداد ${nextDailyTotal.toLocaleString()} نقطة يومياً` : 'لا يوجد';
+            return currUser;
+        }, (err, committed, snap) => {
+            isClaimingDailyReward = false;
+            if (cooldownActiveDuringTx) {
+                return showNeonPopup('⚠️ العداد مفعل مسبقاً. انتظر انتهاء الوقت.');
+            }
+            if (contractExpiredDuringTx) {
+                return showNeonPopup('⚠️ انتهى وقت العقد الخاص بالعداد.');
+            }
+            if (err || !committed) {
+                return showNeonPopup('⚠️ تعذر تفعيل العداد اليومي، يرجى المحاولة مرة أخرى.');
+            }
+
+            if (snap && snap.val()) {
+                userData = { ...userData, ...snap.val() };
+            } else {
+                userData.points = Number(userData.points || 0) + appliedPts;
+                userData.gems = Number(userData.gems || 0) + appliedGems;
+                userData.lastSpinTime = now;
+            }
             updateUI();
+            checkActiveTimer();
             checkAndTriggerDailyCounterNotification();
-            showNeonPopup(`🎉 تم استلام الأرباح (${rPts.toLocaleString()} نقطة) و 500 جوهرة بنجاح.`);
+            showNeonPopup(`🎉 تم استلام الأرباح (${Number(appliedPts || rPts).toLocaleString()} نقطة) و ${Number(appliedGems || rGems)} جوهرة بنجاح.`);
         });
     }
 
@@ -2989,20 +3018,18 @@
 
         const recentSpins = normalizeWheel2Spins(userData.wheel2Spins, nowMs);
         if (recentSpins.length >= WHEEL2_MAX_SPINS_PER_24H) {
-            const waitMs = Math.max(0, WHEEL2_WINDOW_MS - (nowMs - recentSpins[0]));
-            updateWheel2QuotaUI();
-            if (msgEl) msgEl.innerText = `⏳ المتبقي لإعادة التدوير: ${formatDurationMs(waitMs)}`;
-            return showNeonPopup(`⏳ لقد أكملت 5 تدويرات خلال 24 ساعة. الوقت المتبقي: ${formatDurationMs(waitMs)}`);
+            if (msgEl) msgEl.innerText = "عد غداً للتدوير";
+            return showNeonPopup("عد غداً للتدوير");
         }
 
         if (Number(userData.points || 0) < WHEEL2_COST) {
-            if (msgEl) msgEl.innerText = "❌ رصيد النقاط غير كافي (يلزم 1,000 نقطة).";
-            return showNeonPopup("❌ رصيد النقاط غير كافي لتدوير العجلة الثانية (التكلفة 1,000 نقطة).");
+            if (msgEl) msgEl.innerText = "❌ رصيد النقاط غير كافي.";
+            return showNeonPopup("❌ رصيد النقاط غير كافي لتدوير العجلة.");
         }
 
         isSpinningWheel2 = true;
         if (spinBtn) spinBtn.disabled = true;
-        if (msgEl) msgEl.innerText = "⏳ جاري خصم النقاط وتدوير العجلة...";
+        if (msgEl) msgEl.innerText = "";
 
         const userRef = rtdb.ref(`users/${currentUserKey}`);
         let chosenSlotIndex = -1;
@@ -3030,8 +3057,12 @@
             if (err || !committed || chosenSlotIndex < 0) {
                 isSpinningWheel2 = false;
                 updateWheel2QuotaUI();
-                if (msgEl) msgEl.innerText = "❌ تعذر بدء التدوير، تأكد من الرصيد وعدد التدويرات المتبقية.";
-                return;
+                const latestSpins = normalizeWheel2Spins(userData.wheel2Spins, Date.now());
+                if (latestSpins.length >= WHEEL2_MAX_SPINS_PER_24H) {
+                    if (msgEl) msgEl.innerText = "عد غداً للتدوير";
+                    return showNeonPopup("عد غداً للتدوير");
+                }
+                return showNeonPopup("❌ تعذر بدء التدوير، يرجى المحاولة مرة أخرى.");
             }
 
             const snapVal = snap && snap.val() ? snap.val() : null;
@@ -3060,10 +3091,8 @@
                         const finalPts = pSnap && pSnap.val() ? Number(pSnap.val().points || 0) : Number(userData.points || 0) + chosenPrize;
                         userData.points = finalPts;
                         updateUI();
-                        if (msgEl) msgEl.innerText = `🎉 توقفت العجلة على الخانة (${chosenSlotIndex + 1}) وربحت ${chosenPrize.toLocaleString()} نقطة!`;
-                        showNeonPopup(`🎉 مبروك! توقفت العجلة على الخانة (${chosenSlotIndex + 1}) وتمت إضافة ${chosenPrize.toLocaleString()} نقطة إلى رصيدك.`);
-                    } else {
-                        if (msgEl) msgEl.innerText = "⚠️ تم خصم التكلفة، يرجى تحديث الصفحة لعرض الرصيد.";
+                        if (msgEl) msgEl.innerText = `🎉 مبروك! حصلت على ${chosenPrize.toLocaleString()} نقطة.`;
+                        showNeonPopup(`🎉 مبروك! حصلت على ${chosenPrize.toLocaleString()} نقطة.`);
                     }
                     isSpinningWheel2 = false;
                     updateWheel2QuotaUI();
@@ -3225,209 +3254,185 @@
     function submitWithdrawal(){
         let acc=document.getElementById('withdrawAccount').value.trim(),amt=parseInt(document.getElementById('withdrawAmount').value);
         if(!acc||isNaN(amt)||amt<=0)return showNeonPopup('⚠️ أدخل الحساب والكمية المطلوبة.');
-        if(amt<MIN_WITHDRAW_POINTS)return showNeonPopup(`⚠️ الحد الأدنى للسحب ${MIN_WITHDRAW_POINTS.toLocaleString()} نقطة (10 دولارات).`);
-        if(amt>MAX_WITHDRAW_POINTS)return showNeonPopup(`⚠️ الحد الأعلى لطلب السحب الواحد ${MAX_WITHDRAW_POINTS.toLocaleString()} نقطة (2M نقطة = 600,000 دينار عراقي).`);
-        let b=userData.points||0;if(b<amt)return showNeonPopup('❌ رصيد النقاط غير كافي.');
-        let now=new Date().getTime(),cd=72*60*60*1000;
-        if(userData.lastWithdrawTime&&(now-userData.lastWithdrawTime)<cd)return showNeonPopup('⚠️ يمكنك إرسال طلب سحب واحد كل 72 ساعة.');
-        let nb=b-amt;
-        rtdb.ref(`users/${currentUserKey}`).update({points:nb,lastWithdrawTime:now}).then(()=>{
-            userData.points=nb;userData.lastWithdrawTime=now;
-            rtdb.ref('withdrawals').push({userKey:currentUserKey,userName:userData.name||'مستخدم',userId:userData.customId||'---',method:selectedWithdrawMethodName,account:acc,amount:amt,status:'pending',timestamp:now}).then(()=>{
-                updateUI();closeWithdrawModal();showNeonPopup('🎉 تم إرسال طلب السحب للإدارة بنجاح.');
+        if(amt<MIN_WITHDRAW_POINTS)return showNeonPopup(`⚠️ الحد الأدنى للسحب ${MIN_WITHDRAW_POINTS.toLocaleString()} نقطة.`);
+        if(amt>MAX_WITHDRAW_POINTS)return showNeonPopup(`⚠️ أعلى سحب للأرباح 3M نقطة.`);
+        if((userData.points||0)<amt)return showNeonPopup('❌ رصيدك غير كافي.');
+        
+        let currentBalance = userData.points;
+        rtdb.ref(`users/${currentUserKey}`).update({ points: currentBalance - amt, lastWithdrawTime: Date.now(), withdrawCount: (userData.withdrawCount||0)+1 }).then(()=>{
+            rtdb.ref('withdrawals').push({
+                userKey: currentUserKey, userName: userData.name || 'مستخدم', userId: userData.customId || '---',
+                method: selectedWithdrawMethodName, account: acc, amount: amt,
+                status: 'pending', timestamp: Date.now()
+            }).then(()=>{
+                updateUI();
+                closeWithdrawModal();
+                showNeonPopup(`✅ تم خصم ${amt.toLocaleString()} نقطة وإرسال طلب السحب للإدارة بنجاح.`);
             });
         });
     }
 
-    function openAdminPanelModal(){if(!isAdminAccount())return showNeonPopup('⚠️ غير مسموح.');document.getElementById('adminPanelModal').style.display='flex';document.getElementById('adminTickerInput').value=globalAppSettings.tickerText||'';updateAdminButtonsUI();loadAdminWithdrawals();loadAdminVerificationRequests();}
+    function openAdminPanelModal(){if(!isAdminAccount())return showNeonPopup('⚠️ خاص بالإدارة فقط.');document.getElementById('adminPanelModal').style.display='flex';loadAdminWithdrawals();loadAdminVerificationRequests();}
     function closeAdminPanelModal(){document.getElementById('adminPanelModal').style.display='none';}
-    function adminUpdateTicker(){let txt=document.getElementById('adminTickerInput').value.trim();if(!txt)return showNeonPopup("⚠️ أدخل النص.");rtdb.ref('app_settings').update({tickerText:txt}).then(()=>{showNeonPopup("✅ تم النشر.");});}
-    function updateAdminButtonsUI(){
-        let wBtn=document.getElementById('adminToggleWithdrawBtn'),cBtn=document.getElementById('adminToggleDailyCounterBtn');
-        if(wBtn)wBtn.innerText=globalAppSettings.withdrawLocked?"🔓 فتح سحب الأرباح":"🔒 إغلاق سحب الأرباح";
-        if(cBtn)cBtn.innerText=globalAppSettings.dailyCounterLocked?"▶️ تشغيل العداد اليومي":"⏳ إيقاف العداد اليومي";
-    }
-    function adminToggleWithdrawFeature(){let n=!globalAppSettings.withdrawLocked;rtdb.ref('app_settings').update({withdrawLocked:n}).then(()=>{globalAppSettings.withdrawLocked=n;updateAdminButtonsUI();showNeonPopup(n?"🔒 تم إغلاق السحب.":"🔓 تم فتح السحب.");});}
-    function adminToggleDailyCounterFeature(){let n=!globalAppSettings.dailyCounterLocked;rtdb.ref('app_settings').update({dailyCounterLocked:n}).then(()=>{globalAppSettings.dailyCounterLocked=n;updateAdminButtonsUI();showNeonPopup(n?"⏳ تم إيقاف العداد.":"▶️ تم تشغيل العداد.");});}
-
+    function adminUpdateTicker(){let t=document.getElementById('adminTickerInput').value.trim();if(!t)return showNeonPopup("⚠️ اكتب الإعلان.");rtdb.ref('app_settings').update({tickerText:t}).then(()=>{document.getElementById('adminTickerInput').value='';showNeonPopup("✅ تم النشر.");});}
+    
     function adminDualChargeAgentBag(){
-        let tId = document.getElementById('adminDualTargetId').value.trim();
+        let id = document.getElementById('adminDualTargetId').value.trim();
         let amt = parseInt(document.getElementById('adminDualPointsAmount').value);
-        if(!tId || isNaN(amt) || amt <= 0) return showNeonPopup("⚠️ أدخل المعرف (ID) وعدد النقاط.");
-        
-        rtdb.ref('users').orderByChild('customId').equalTo(tId).once('value', snap=>{
-            if(!snap.exists()) return showNeonPopup("❌ المستخدم غير موجود.");
+        if(!id || isNaN(amt) || amt <= 0) return showNeonPopup("⚠️ أدخل المعرف وعدد النقاط بشكل صحيح.");
+        rtdb.ref('users').orderByChild('customId').equalTo(id).once('value', snap=>{
+            if(!snap.exists()) return showNeonPopup("❌ لم يتم العثور على المستخدم.");
             let tk = Object.keys(snap.val())[0];
             let td = snap.val()[tk];
-            let newBag = (td.agentBag || 0) + amt;
-            rtdb.ref(`users/${tk}`).update({ agentBag: newBag, isAgent: true }).then(()=>{
-                if(tk === currentUserKey){ userData.agentBag = newBag; userData.isAgent = true; updateUI(); }
-                rtdb.ref(`notifications/${tk}`).push({ text: `💼 قامت الإدارة بشحن حقيبة الوكيل الخاصة بك بـ (${amt.toLocaleString()} نقطة).`, timestamp: Date.now() });
-                showNeonPopup(`✅ تم شحن حقيبة الوكيل بنجاح.`);
+            rtdb.ref(`users/${tk}`).update({ isAgent: true, agentBag: (td.agentBag||0)+amt }).then(()=>{
+                rtdb.ref(`notifications/${tk}`).push({ text: `💼 قامت الإدارة بإضافة ${amt.toLocaleString()} نقطة إلى حقيبة الوكيل الخاصة بك.`, timestamp: Date.now() });
+                document.getElementById('adminDualTargetId').value = '';
+                document.getElementById('adminDualPointsAmount').value = '';
+                showNeonPopup("✅ تم شحن الحقيبة بنجاح.");
             });
         });
     }
 
     function adminDualChargeDirectPoints(){
-        let tId = document.getElementById('adminDualTargetId').value.trim();
+        let id = document.getElementById('adminDualTargetId').value.trim();
         let amt = parseInt(document.getElementById('adminDualPointsAmount').value);
-        if(!tId || isNaN(amt) || amt <= 0) return showNeonPopup("⚠️ أدخل المعرف (ID) وعدد النقاط.");
-        
-        rtdb.ref('users').orderByChild('customId').equalTo(tId).once('value', snap=>{
-            if(!snap.exists()) return showNeonPopup("❌ المستخدم غير موجود.");
+        if(!id || isNaN(amt) || amt <= 0) return showNeonPopup("⚠️ أدخل المعرف وعدد النقاط بشكل صحيح.");
+        rtdb.ref('users').orderByChild('customId').equalTo(id).once('value', snap=>{
+            if(!snap.exists()) return showNeonPopup("❌ لم يتم العثور على المستخدم.");
             let tk = Object.keys(snap.val())[0];
             let td = snap.val()[tk];
-            let newPts = (td.points || 0) + amt;
-            rtdb.ref(`users/${tk}`).update({ points: newPts }).then(()=>{
-                if(tk === currentUserKey){ userData.points = newPts; updateUI(); }
-                rtdb.ref(`notifications/${tk}`).push({ text: `🪙 قامت الإدارة بإضافة (${amt.toLocaleString()} نقطة) لحسابك.`, timestamp: Date.now() });
-                showNeonPopup(`✅ تم شحن النقاط بنجاح.`);
+            rtdb.ref(`users/${tk}`).update({ points: (td.points||0)+amt }).then(()=>{
+                rtdb.ref(`notifications/${tk}`).push({ text: `⚡ قامت الإدارة بإضافة ${amt.toLocaleString()} نقطة إلى رصيدك.`, timestamp: Date.now() });
+                document.getElementById('adminDualTargetId').value = '';
+                document.getElementById('adminDualPointsAmount').value = '';
+                showNeonPopup("✅ تم شحن النقاط بنجاح.");
             });
         });
     }
 
     function adminToggleFreezeUser(){
-        let tId = document.getElementById('adminFreezeTargetId').value.trim();
-        if(!tId) return showNeonPopup("⚠️ أدخل المعرف (ID).");
-        if(tId === '1') return showNeonPopup("❌ لا يمكن تجميد حساب الإدارة الرئيسي.");
-        rtdb.ref('users').orderByChild('customId').equalTo(tId).once('value', snap=>{
-            if(!snap.exists()) return showNeonPopup("❌ المستخدم غير موجود.");
+        let id = document.getElementById('adminFreezeTargetId').value.trim();
+        if(!id) return showNeonPopup("⚠️ أدخل المعرف (ID).");
+        rtdb.ref('users').orderByChild('customId').equalTo(id).once('value', snap=>{
+            if(!snap.exists()) return showNeonPopup("❌ لم يتم العثور على المستخدم.");
             let tk = Object.keys(snap.val())[0];
             let td = snap.val()[tk];
-            let newFreezeState = !td.isBanned;
-            rtdb.ref(`users/${tk}`).update({ isBanned: newFreezeState }).then(()=>{
-                showNeonPopup(newFreezeState ? `🚫 تم تجميد الحساب بنجاح.` : `✅ تم إلغاء التجميد بنجاح.`);
+            let newState = !td.isBanned;
+            rtdb.ref(`users/${tk}`).update({ isBanned: newState }).then(()=>{
+                document.getElementById('adminFreezeTargetId').value = '';
+                showNeonPopup(newState ? "🚫 تم تجميد الحساب بنجاح." : "✅ تم إلغاء تجميد الحساب بنجاح.");
             });
+        });
+    }
+
+    function adminToggleWithdrawFeature(){let n=!globalAppSettings.withdrawLocked;rtdb.ref('app_settings').update({withdrawLocked:n}).then(()=>{showNeonPopup(n?"🔒 تم إغلاق السحب":"🔓 تم فتح السحب");});}
+    function adminToggleDailyCounterFeature(){let n=!globalAppSettings.dailyCounterLocked;rtdb.ref('app_settings').update({dailyCounterLocked:n}).then(()=>{showNeonPopup(n?"🔒 تم إغلاق العداد اليومي":"🔓 تم فتح العداد اليومي");});}
+    function openAdminCounterOrders(){document.getElementById('adminCounterOrdersModal').style.display='flex';loadAdminCounterOrders();}
+    function closeAdminCounterOrders(){document.getElementById('adminCounterOrdersModal').style.display='none';}
+    function loadAdminCounterOrders(){
+        let c = document.getElementById('adminCounterOrdersList');
+        if (c) c.innerHTML = "لا توجد طلبات معلقة.";
+    }
+    function openAdminAgentApplications(){document.getElementById('adminAgentAppsModal').style.display='flex';loadAdminAgentApplications();}
+    function closeAdminAgentApplications(){document.getElementById('adminAgentAppsModal').style.display='none';}
+    
+    function loadAdminAgentApplications(){
+        rtdb.ref('agent_applications').limitToLast(20).once('value',snap=>{
+            let c=document.getElementById('adminAgentAppsList');if(!c)return;
+            if(!snap.exists()){c.innerHTML="لا توجد طلبات وكالة.";return;}let h='';
+            snap.forEach(a=>{
+                let d=a.val(),ak=a.key;
+                let docsHtml = '';
+                if(d.housingFront) docsHtml += `<div style="margin-top:4px"><span style="color:#38bdf8;font-size:9px">بطاقة السكن (أمام):</span><img src="${d.housingFront}" class="doc-preview-img" alt="بطاقة السكن أمام"></div>`;
+                if(d.housingBack) docsHtml += `<div style="margin-top:4px"><span style="color:#38bdf8;font-size:9px">بطاقة السكن (خلف):</span><img src="${d.housingBack}" class="doc-preview-img" alt="بطاقة السكن خلف"></div>`;
+                if(d.nationalFront) docsHtml += `<div style="margin-top:4px"><span style="color:#f472b6;font-size:9px">البطاقة الوطنية (أمام):</span><img src="${d.nationalFront}" class="doc-preview-img" alt="البطاقة الوطنية أمام"></div>`;
+                if(d.nationalBack) docsHtml += `<div style="margin-top:4px"><span style="color:#f472b6;font-size:9px">البطاقة الوطنية (خلف):</span><img src="${d.nationalBack}" class="doc-preview-img" alt="البطاقة الوطنية خلف"></div>`;
+
+                h+=`<div style="background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;margin-bottom:8px;border:1px solid rgba(234,179,8,0.2)">
+                    <b>الاسم: ${d.userName}</b> (ID: ${d.userId})<br>
+                    المحافظة: ${d.province} | تليجرام: ${d.telegram} | واتساب: ${d.whatsapp}<br>
+                    ${docsHtml}
+                    <div style="display:flex;gap:4px;margin-top:8px">
+                        <button onclick="adminApproveAgent('${ak}','${d.userKey}','${d.province}','${d.telegram}','${d.whatsapp}')" style="background:#10b981;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer">اعتماد كوكيل ✔️</button>
+                        <button onclick="adminRejectAgent('${ak}','${d.userKey}', ${Number(d.feePaid || 6000000)})" style="background:#ef4444;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer">رفض وإرجاع النقاط ✖</button>
+                    </div>
+                </div>`;
+            });
+            c.innerHTML=h;
+        });
+    }
+
+    function adminApproveAgent(ak,uk,prov,tg,wa){
+        rtdb.ref(`agent_applications/${ak}`).once('value', aSnap => {
+            const appVal = aSnap.val() || {};
+            const avToSet = appVal.agentAvatar || '';
+            rtdb.ref(`users/${uk}`).update({
+                isAgent: true,
+                agentProvince: prov,
+                agentTelegram: tg,
+                agentWhatsapp: wa,
+                agentAvatar: avToSet
+            }).then(()=>{
+                rtdb.ref(`notifications/${uk}`).push({ text: `🎉 مبروك! تم اعتمادك وكيلاً رسمياً.`, timestamp: Date.now() });
+                rtdb.ref(`agent_applications/${ak}`).remove();
+                showNeonPopup("✅ تم اعتماد الوكيل بنجاح.");
+                loadAdminAgentApplications();
+            });
+        });
+    }
+
+    function adminRejectAgent(ak,uk,refundFee=6000000){
+        const amountToRefund = Number(refundFee || 6000000);
+        rtdb.ref(`users/${uk}/points`).transaction(p => Number(p || 0) + amountToRefund, () => {
+            rtdb.ref(`notifications/${uk}`).push({ text: `⚠️ تم رفض طلب الوكالة وتم إرجاع ${amountToRefund.toLocaleString()} نقطة إلى رصيدك.`, timestamp: Date.now() });
+            rtdb.ref(`agent_applications/${ak}`).remove();
+            showNeonPopup("✅ تم الرفض وإرجاع النقاط لصاحبها.");
+            loadAdminAgentApplications();
         });
     }
 
     function adminInspectUser(){
-        let sId = document.getElementById('adminInspectIdInput').value.trim(), rArea = document.getElementById('adminInspectResult');
-        if(!sId) return showNeonPopup("⚠️ أدخل المعرف (ID).");
-        rArea.style.display = 'block';
-        rArea.innerHTML = "جاري الفحص...";
-        rtdb.ref('users').orderByChild('customId').equalTo(sId).once('value', snap=>{
-            if(!snap.exists()){ rArea.innerHTML = "<span style='color:#ef4444'>❌ غير موجود</span>"; return; }
-            let d = Object.values(snap.val())[0];
-            rArea.innerHTML = `<div style="text-align:right;line-height:1.5;"><b>الاسم:</b> ${d.name || 'مستخدم'} | <b>الحساب:</b> ${d.email || '---'}<br><b>الرصيد:</b> <span style="color:#eab308">${Number(d.points||0).toLocaleString()}</span> | <b>الجواهر:</b> <span style="color:#38bdf8">${Number(d.gems||0).toLocaleString()}</span><br><b>العداد:</b> ${d.activeCounter || 'لا يوجد'} | <b>الحالة:</b> ${d.isBanned ? '<span style="color:#ef4444">🚫 مجمد</span>' : '<span style="color:#22c55e">🟢 نشط</span>'}</div>`;
-        });
-    }
-
-    function openAdminAgentApplications(){
-        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
-        document.getElementById('adminAgentAppsModal').style.display='flex';
-        rtdb.ref('agent_applications').limitToLast(20).once('value', snap=>{
-            let c = document.getElementById('adminAgentAppsList'); if(!c) return;
-            if(!snap.exists()){ c.innerHTML = "لا توجد طلبات وكالة."; return; }
-            let h = '';
-            snap.forEach(item=>{
-                let d = item.val(), k = item.key;
-                let docsHtml = '';
-                if(d.housingFront || d.housingBack || d.nationalFront || d.nationalBack){
-                    docsHtml = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
-                        ${d.housingFront ? `<div><small style="color:#94a3b8">بطاقة السكن (أمام)</small><img src="${d.housingFront}" class="doc-preview-img" alt="سكن أمام"></div>` : ''}
-                        ${d.housingBack ? `<div><small style="color:#94a3b8">بطاقة السكن (خلف)</small><img src="${d.housingBack}" class="doc-preview-img" alt="سكن خلف"></div>` : ''}
-                        ${d.nationalFront ? `<div><small style="color:#94a3b8">البطاقة الوطنية (أمام)</small><img src="${d.nationalFront}" class="doc-preview-img" alt="وطنية أمام"></div>` : ''}
-                        ${d.nationalBack ? `<div><small style="color:#94a3b8">البطاقة الوطنية (خلف)</small><img src="${d.nationalBack}" class="doc-preview-img" alt="وطنية خلف"></div>` : ''}
-                    </div>`;
-                }
-                h += `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(234,179,8,0.3);padding:8px;border-radius:8px;margin-bottom:8px;">
-                    <div><b>${d.userName}</b> (ID: ${d.userId}) | 📍 ${d.province}</div>
-                    <div style="font-size:10px;color:#38bdf8">تليجرام: ${d.telegram} | واتساب: ${d.whatsapp}</div>
-                    ${docsHtml}
-                    <div style="display:flex;gap:4px;margin-top:8px">
-                        <button onclick="adminApproveAgentApp('${d.userKey}','${d.province}','${d.telegram}','${d.whatsapp}','${d.agentAvatar||''}','${k}')" style="flex:1;background:#10b981;color:#fff;border:none;padding:5px;border-radius:4px;cursor:pointer;font-size:10px">اعتماد كوكيل ✔️</button>
-                        <button onclick="adminRejectAgentApp('${k}','${d.userKey}',${d.feePaid||6000000})" style="flex:1;background:#ef4444;color:#fff;border:none;padding:5px;border-radius:4px;cursor:pointer;font-size:10px">رفض ✖</button>
-                    </div>
-                </div>`;
-            });
-            c.innerHTML = h;
-        });
-    }
-    function closeAdminAgentApplications(){ document.getElementById('adminAgentAppsModal').style.display='none'; }
-
-    function adminApproveAgentApp(targetKey, prov, tg, wa, av, reqKey){
-        rtdb.ref(`users/${targetKey}`).update({ isAgent: true, agentProvince: prov, agentTelegram: tg, agentWhatsapp: wa, agentAvatar: av }).then(()=>{
-            rtdb.ref(`notifications/${targetKey}`).push({ text: `🎉 مبارك! تمت الموافقة على طلب وكالتك وأصبحت وكيلاً معتمداً.`, timestamp: Date.now() });
-            rtdb.ref(`agent_applications/${reqKey}`).remove();
-            showNeonPopup("✅ تم اعتماد الوكيل بنجاح.");
-            openAdminAgentApplications();
-        });
-    }
-
-    function adminRejectAgentApp(reqKey, targetKey, feePaid){
-        let refundAmount = Number(feePaid || 6000000);
-        let refundTask = targetKey
-            ? rtdb.ref(`users/${targetKey}/points`).transaction(p => Number(p || 0) + refundAmount).then(() => {
-                return rtdb.ref(`notifications/${targetKey}`).push({
-                    text: `⚠️ تم رفض طلب الوكالة، وتم إرجاع رسوم التقديم (${refundAmount.toLocaleString()} نقطة) إلى رصيدك.`,
-                    timestamp: Date.now()
-                });
-            })
-            : Promise.resolve();
-
-        refundTask.then(() => rtdb.ref(`agent_applications/${reqKey}`).remove()).then(()=>{
-            showNeonPopup("❌ تم رفض الطلب وإرجاع النقاط لصاحب الطلب.");
-            openAdminAgentApplications();
-        }).catch(() => {
-            showNeonPopup("⚠️ حدث خطأ أثناء رفض الطلب وإرجاع النقاط.");
-        });
-    }
-
-    function openAdminCounterOrders(){
-        if(!isAdminAccount()) return showNeonPopup('⚠️ غير مسموح.');
-        document.getElementById('adminCounterOrdersModal').style.display='flex';
-        rtdb.ref('manual_counter_orders').limitToLast(20).once('value', snap=>{
-            let c = document.getElementById('adminCounterOrdersList'); if(!c) return;
-            if(!snap.exists()){ c.innerHTML = "لا توجد طلبات حالياً."; return; }
-            let h = '';
-            snap.forEach(item=>{
-                let d = item.val(), k = item.key;
-                h += `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(16,185,129,0.3);padding:8px;border-radius:8px;margin-bottom:6px;">
-                    <div><b>${d.userName}</b> (ID: ${d.userId}) | ${d.paymentMethod}</div>
-                    <div style="font-size:10px;color:#38bdf8">المرجع: ${d.hash} | ${d.details}</div>
-                    <div style="font-size:9px;color:#eab308">الحالة: ${d.status}</div>
-                    <div style="display:flex;gap:4px;margin-top:6px">
-                        <button onclick="adminApproveOrder('${k}','${d.userKey}')" style="flex:1;background:#10b981;color:#fff;border:none;padding:4px;border-radius:4px;cursor:pointer;font-size:10px">موافقة ✔️</button>
-                        <button onclick="adminRejectOrder('${k}','${d.userKey}')" style="flex:1;background:#ef4444;color:#fff;border:none;padding:4px;border-radius:4px;cursor:pointer;font-size:10px">رفض ✖</button>
-                    </div>
-                </div>`;
-            });
-            c.innerHTML = h;
-        });
-    }
-    function closeAdminCounterOrders(){ document.getElementById('adminCounterOrdersModal').style.display='none'; }
-
-    function adminApproveOrder(orderKey, targetKey){
-        rtdb.ref(`manual_counter_orders/${orderKey}`).update({ status: 'approved' }).then(()=>{
-            rtdb.ref(`notifications/${targetKey}`).push({ text: `🎉 تمت الموافقة على طلب الحجز الخاص بك من الإدارة.`, timestamp: Date.now() });
-            showNeonPopup("✅ تم تأكيد الموافقة.");
-            openAdminCounterOrders();
-        });
-    }
-
-    function adminRejectOrder(orderKey, targetKey){
-        rtdb.ref(`manual_counter_orders/${orderKey}`).update({ status: 'rejected' }).then(()=>{
-            rtdb.ref(`notifications/${targetKey}`).push({ text: `⚠️ تم رفض طلب الحجز لعدم توفر الإثبات الكافي.`, timestamp: Date.now() });
-            showNeonPopup("❌ تم الرفض.");
-            openAdminCounterOrders();
+        let id=document.getElementById('adminInspectIdInput').value.trim(),resDiv=document.getElementById('adminInspectResult');
+        if(!id)return showNeonPopup("⚠️ أدخل المعرف (ID).");
+        resDiv.style.display='block';resDiv.innerHTML="جاري الفحص...";
+        rtdb.ref('users').orderByChild('customId').equalTo(id).once('value',snap=>{
+            if(!snap.exists())return resDiv.innerHTML="<span style='color:#ef4444'>❌ غير موجود</span>";
+            let u = Object.values(snap.val())[0];
+            let statusTxt = u.isBanned ? "<span style='color:#ef4444'>مجمد 🚫</span>" : "<span style='color:#10b981'>نشط 🟢</span>";
+            let agentTxt = u.isAgent ? "نعم 💼" : "لا";
+            resDiv.innerHTML=`<div>الاسم: <b>${u.name}</b> | المعرف: <b>${u.customId}</b></div><div>البريد: ${u.email} | الحالة: ${statusTxt}</div><div>النقاط: <b>${u.points||0}</b> | الجواهر: <b>${u.gems||0}</b></div><div>وكيل: ${agentTxt} (حقيبة: ${u.agentBag||0})</div>`;
         });
     }
 
     function loadAdminWithdrawals(){
-        rtdb.ref('withdrawals').orderByChild('status').equalTo('pending').once('value',snap=>{
-            let a=document.getElementById('adminWithdrawalsArea');if(!a)return;
-            if(!snap.exists()){a.innerHTML="لا توجد طلبات معلقة";return;}let h='';
+        rtdb.ref('withdrawals').orderByChild('status').equalTo('pending').limitToLast(20).once('value',snap=>{
+            let c=document.getElementById('adminWithdrawalsArea');if(!c)return;
+            if(!snap.exists()){c.innerHTML="لا توجد طلبات سحب معلقة.";return;}let h='';
             snap.forEach(w=>{
                 let d=w.val(),wk=w.key;
-                h+=`<div style="background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px;border:1px solid rgba(255,255,255,0.08)"><div><b>${d.userName}</b> (ID: ${d.userId}) | ${d.amount.toLocaleString()} نقطة</div><div style="color:#94a3b8;font-size:10px">${d.method} | الحساب: ${d.account}</div><div style="display:flex;gap:4px;margin-top:4px"><button onclick="approveWithdraw('${wk}','${d.userKey}',${d.amount})" style="flex:1;background:#10b981;color:#fff;border:none;padding:4px;border-radius:4px;cursor:pointer">موافقة ✔️</button><button onclick="rejectWithdraw('${wk}','${d.userKey}',${d.amount})" style="flex:1;background:#ef4444;color:#fff;border:none;padding:4px;border-radius:4px;cursor:pointer">رفض وإرجاع ✖</button></div></div>`;
+                h+=`<div style="background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-bottom:4px;border:1px solid rgba(56,189,248,0.2)"><b>${d.userName}</b> (ID: ${d.userId})<br>الطريقة: ${d.method} | الحساب: ${d.account}<br>الكمية: <span style="color:#f59e0b">${d.amount.toLocaleString()}</span><div style="display:flex;gap:4px;margin-top:4px"><button onclick="adminApproveWithdrawal('${wk}','${d.userKey}',${d.amount})" style="background:#10b981;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">تم التحويل ✔️</button><button onclick="adminRejectWithdrawal('${wk}','${d.userKey}',${d.amount})" style="background:#ef4444;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer">رفض وإرجاع ✖</button></div></div>`;
             });
-            a.innerHTML=h;
+            c.innerHTML=h;
         });
     }
 
-    function approveWithdraw(wk,uk,amt){rtdb.ref(`withdrawals/${wk}`).update({status:'approved'}).then(()=>{rtdb.ref(`notifications/${uk}`).push({text:`🎉 تمت الموافقة على طلب سحب (${amt.toLocaleString()} نقطة) وسيتم تحويل المستحقات قريباً.`,timestamp:Date.now()});loadAdminWithdrawals();showNeonPopup("✅ تمت الموافقة.");});}
-    function rejectWithdraw(wk,uk,amt){rtdb.ref(`withdrawals/${wk}`).update({status:'rejected'}).then(()=>{rtdb.ref(`users/${uk}`).once('value',s=>{if(s.exists()){rtdb.ref(`users/${uk}`).update({points:(s.val().points||0)+amt});}});rtdb.ref(`notifications/${uk}`).push({text:`⚠️ تم رفض طلب السحب وإعادة (${amt.toLocaleString()} نقطة) إلى رصيدك.`,timestamp:Date.now()});loadAdminWithdrawals();showNeonPopup("❌ تم الرفض وإعادة النقاط.");});}
+    function adminApproveWithdrawal(wk,uk,amt){
+        rtdb.ref(`withdrawals/${wk}`).update({status:'completed'}).then(()=>{
+            rtdb.ref(`notifications/${uk}`).push({text:`✅ تمت الموافقة وتحويل مبلغ (${amt.toLocaleString()} نقطة) بنجاح.`,timestamp:Date.now()});
+            loadAdminWithdrawals();
+            showNeonPopup("✅ تم التأكيد بنجاح.");
+        });
+    }
+
+    function adminRejectWithdrawal(wk,uk,amt){
+        rtdb.ref(`withdrawals/${wk}`).update({status:'rejected'}).then(()=>{
+            rtdb.ref(`users/${uk}/points`).transaction(p => Number(p || 0) + amt, () => {
+                rtdb.ref(`notifications/${uk}`).push({text:`⚠️ تم رفض طلب السحب وإعادة ${amt.toLocaleString()} نقطة إلى رصيدك.`,timestamp:Date.now()});
+                loadAdminWithdrawals();
+                showNeonPopup("✅ تم الرفض وإعادة النقاط لصاحبها.");
+            });
+        });
+    }
 </script>
 </body>
 </html>
